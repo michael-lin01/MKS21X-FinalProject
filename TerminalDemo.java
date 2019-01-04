@@ -14,6 +14,9 @@ import com.googlecode.lanterna.input.InputProvider;
 import com.googlecode.lanterna.input.Key;
 import com.googlecode.lanterna.input.KeyMappingProfile;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 public class TerminalDemo {
 
@@ -23,13 +26,32 @@ public class TerminalDemo {
 			t.putCharacter(s.charAt(i));
 		}
 	}
+
+	public static void putTextFromFile(int r, int c, Terminal t, String fileName){
+		try{
+			File f = new File(fileName);
+			Scanner in = new Scanner(f);
+			int lineCounter = c;
+			while (in.hasNext()){
+				String line = in.nextLine();
+				putString(r,lineCounter, t, line);
+				lineCounter++;
+			}
+    }catch(FileNotFoundException e){
+      System.out.println("File not found: " + fileName);
+      //e.printStackTrace();
+      System.exit(1);
+    }
+	}
+
+
 	public static void main(String[] args) {
 
 
 		int x = 10;
 		int y = 10;
 
-		Terminal terminal = TerminalFacade.createTerminal();
+		Terminal terminal = TerminalFacade.createTextTerminal();
 		terminal.enterPrivateMode();
 
 		TerminalSize terminalSize = terminal.getTerminalSize();
@@ -98,6 +120,9 @@ public class TerminalDemo {
 			//	putString(1,3,terminal,"Seconds since start of program: "+lastSecond);
 
 			//}
+
+			//putTextFromFile(1,1,terminal, AeroplaneChessBoard.txt);
+
 			putString(1,1,terminal,"                       +---+---+---+---+---+");
 			putString(1,2,terminal,"+-------+-------+    / |   |   |   |   |   | \\    +-------+-------+");
 			putString(1,3,terminal,"|   P   |   P   |  /   |   |   |   |   |   |   \\  |   P   |   P   |");
@@ -129,7 +154,8 @@ public class TerminalDemo {
 			putString(1,29,terminal,"|   P   |   P   |  \\   |   |   |   |   |   |   /  |   P   |   P  |");
 			putString(1,30,terminal,"+-------+-------+    \\ |   |   |   |   |   | /    +-------+------+");
 			putString(1,31,terminal,"                       +---+---+---+---+---+");
-			
+
+
 
 		}
 	}
