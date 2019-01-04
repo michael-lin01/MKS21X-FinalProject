@@ -16,6 +16,12 @@ public class Plane{
   }
   
   private void move(int numTiles){
+    if(numTiles == 0){
+      isAtHome = false;
+      //other stuff depending on color
+    }
+    
+    //not necessarily 1, but 1 tile
     if(direction.equals("N")) ycor -= 1;
     if(direction.equals("S")) ycor += 1;
     if(direction.equals("E")) xcor += 1;
