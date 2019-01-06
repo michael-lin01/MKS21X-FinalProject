@@ -37,11 +37,11 @@ public class TerminalDemo {
 				putString(r,lineCounter, t, line);
 				lineCounter++;
 			}
-    }catch(FileNotFoundException e){
-      System.out.println("File not found: " + fileName);
-      //e.printStackTrace();
-      System.exit(1);
-    }
+    	}catch(FileNotFoundException e){
+      		System.out.println("File not found: " + fileName);
+      		//e.printStackTrace();
+      		System.exit(1);
+    	}
 	}
 
 
@@ -51,7 +51,7 @@ public class TerminalDemo {
 		int x = 10;
 		int y = 10;
 
-		Terminal terminal = TerminalFacade.createTextTerminal();
+		Terminal terminal = TerminalFacade.createTerminal();
 		terminal.enterPrivateMode();
 
 		TerminalSize terminalSize = terminal.getTerminalSize();
@@ -121,8 +121,8 @@ public class TerminalDemo {
 
 			//}
 
-			//putTextFromFile(1,1,terminal, AeroplaneChessBoard.txt);
-
+			putTextFromFile(2,1,terminal, "AeroplaneChessBoard.txt");
+/*
 			putString(1,1,terminal,"                       +---+---+---+---+---+");
 			putString(1,2,terminal,"+-------+-------+    / |   |   |   |   |   | \\    +-------+-------+");
 			putString(1,3,terminal,"|   P   |   P   |  /   |   |   |   |   |   |   \\  |   P   |   P   |");
@@ -154,7 +154,7 @@ public class TerminalDemo {
 			putString(1,29,terminal,"|   P   |   P   |  \\   |   |   |   |   |   |   /  |   P   |   P  |");
 			putString(1,30,terminal,"+-------+-------+    \\ |   |   |   |   |   | /    +-------+------+");
 			putString(1,31,terminal,"                       +---+---+---+---+---+");
-
+*/
 
 
 		}
