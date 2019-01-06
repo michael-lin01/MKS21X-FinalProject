@@ -1,4 +1,4 @@
-public class Plane{
+public class Plane extends TerminalClass{
 
   private String color;
   private Tile tileReference;
@@ -13,6 +13,26 @@ public class Plane{
     this.color = color;
     isAtHome = true;
     hasReachedEnd = false;
+    if (color == "red"){
+      xcor = 5 - 1;
+      ycor = 29 - 1;
+    }
+  }
+
+  public int getxcor(){
+    return xcor;
+  }
+
+  public int getycor(){
+    return ycor;
+  }
+
+  public void setxcor(int x){
+    xcor = x;
+  }
+
+  public void setycor(int y){
+    ycor = y;
   }
   
   private void move(int numTiles){
@@ -20,6 +40,8 @@ public class Plane{
       isAtHome = false;
       //other stuff depending on color
     }
+    //Terminal.putString();
+  
     
     //not necessarily 1, but 1 tile
     if(direction.equals("N")) ycor -= 1;
@@ -43,5 +65,6 @@ public class Plane{
       xcor += 1;
     }
   }
+
 
 }
