@@ -2,7 +2,7 @@ public class Plane{
 
   private String color;
   private Tile tileReference;
-  private boolean isAtHome;
+  private boolean atHome;
   private int pointValue;
   private boolean hasReachedEnd;
   private int xcor;
@@ -11,16 +11,16 @@ public class Plane{
 
   public Plane(String color){
     this.color = color;
-    isAtHome = true;
+    atHome = true;
     hasReachedEnd = false;
   }
-  
+
   private void move(int numTiles){
     if(numTiles == 0){
-      isAtHome = false;
+      atHome = false;
       //other stuff depending on color
     }
-    
+
     //not necessarily 1, but 1 tile
     if(direction.equals("N")) ycor -= 1;
     if(direction.equals("S")) ycor += 1;

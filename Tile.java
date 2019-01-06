@@ -1,24 +1,24 @@
 public class Tile{
 
   private String color;
-  private boolean PlaneHere;
-  private boolean DangerZone;
-  private boolean Shortcut;
+  private boolean planeHere;
+  private boolean dangerZone;
+  private boolean shortcut;
 
   public Tile(String color){
-    PlaneHere = false;
+    planeHere = false;
   }
 
   public void setPlaneHere(boolean b){
-    PlaneHere = b;
+    planeHere = b;
   }
 
   public void setDangerZone(boolean b){
-    DangerZone = b;
+    dangerZone = b;
   }
 
   public void setShortcut(boolean b){
-    Shortcut = b;
+    shortcut = b;
   }
 
   public String getColor(){
@@ -26,15 +26,15 @@ public class Tile{
   }
 
   public boolean isPlaneHere(){
-    return PlaneHere;
+    return planeHere;
   }
 
   public boolean isDangerZone(){
-    return DangerZone;
+    return dangerZone;
   }
 
   public boolean isShortcut(){
-    return Shortcut;
+    return shortcut;
   }
-  
+
 }
