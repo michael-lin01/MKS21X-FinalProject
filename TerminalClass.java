@@ -20,13 +20,36 @@ import java.util.Scanner;
 import java.util.Random;
 
 public class TerminalClass {
-	public static void putString(int c, int r,Terminal t, String s){
-		t.moveCursor(c,r);
+    //prints out a 2d array for debugging purposes
+    public static String toString(char[][] charArray){
+        String ans = "";
+        for (int y = 0; y < charArray.length; y++){
+            for (int x = 0; x < charArray[y].length; x++){
+                ans+= charArray[y][x];
+            }
+            ans += "\n";
+        }
+        return ans;
+    }
+
+    public static void updateTerminal(Terminal t, char[][] charArray){
+        for (int y = 0; y < charArray.length; y++){
+            for (int x = 0; x < charArray[y].length; x++){
+                t.moveCursor(x,y);
+                t.putCharacter(charArray[y][x]);
+            }
+        }
+    }
+
+    //puts a string on the terminal at position (x,y)
+	public static void putString(int x, int y,Terminal t, String s){
+		t.moveCursor(x,y);
 		for(int i = 0; i < s.length();i++){
 			t.putCharacter(s.charAt(i));
 		}
 	}
-
+/*
+    //puts text from a file into (0,0) on the terminal, where (0,0) is the topleft most point
 	public static void putTextFromFile(Terminal t, String fileName, char[][] charArray){
 		try{
 			File f = new File(fileName);
@@ -35,6 +58,11 @@ public class TerminalClass {
                 String line = in.nextLine();
                 for (int col = 0; col < charArray[row].length; col++){
                     char character = line.charAt(col);
+                    /*if (character == 'P'){
+                        t.applyForegroundColor(Terminal.Color.RED);
+                    } else {
+                        t.applyForegroundColor(Terminal.Color.DEFAULT);
+                    }
                     charArray[row][col] = character;
                     t.moveCursor(col,row);
                     t.putCharacter(character);
@@ -46,24 +74,66 @@ public class TerminalClass {
       		System.exit(1);
     	}
     }
+    */
 
-    public static void updatePlaneLocation(Plane plane, char[][] charArray, Terminal t){
-        charArray[plane.getxcor()][plane.getycor()] = 'T';
-        t.moveCursor(plane.getxcor(),plane.getycor());
-        t.putCharacter('T');
+    //preCondition: must be rectangular array with size > 0, and charArray must fit the file text size perfectly
+    public static void putFileInto2dArray(String filename, char[][] charArray){
+        try {
+            File f = new File(filename);
+            Scanner in = new Scanner(f);
+            while (in.hasNext()){
+                for (int y = 0; y < charArray.length; y++){
+                    String line = in.nextLine();
+                    for (int x = 0; x < charArray[y].length; x++){
+                        charArray[y][x] = line.charAt(x);
+                    }
+                }
+            }
+        } catch (FileNotFoundException e){
+            System.out.println("File not found: " + filename);
+            //e.printStackTrace();
+            System.exit(1);
+        }
     }
 
+    public static void changePlaneLocation(Terminal t, Plane plane, char[][] charArray){
+        charArray[plane.getycor()][plane.getxcor()] = ' ';
+        updateTerminal(t, charArray);
+    }
+
+    public static void updatePlaneLocation(Terminal t, Plane plane, char[][] charArray){
+        charArray[plane.getycor()][plane.getxcor()] = 'P';
+        updateTerminal(t, charArray);
+        /*charArray[plane.getxcor()][plane.getycor()] = 'P';
+        t.moveCursor(plane.getxcor(),plane.getycor());
+        if (plane.color().equals("red")){
+            t.applyForegroundColor(Terminal.Color.RED);
+        }
+        if (plane.color().equals("green")){
+            t.applyForegroundColor(Terminal.Color.GREEN);
+        }
+        if (plane.color().equals("blue")){
+            t.applyForegroundColor(Terminal.Color.BLUE);
+        }
+        if (plane.color().equals("yellow")){
+            t.applyForegroundColor(Terminal.Color.YELLOW);
+        }
+        t.putCharacter('P');
+        t.applyForegroundColor(Terminal.Color.DEFAULT);*/
+    }
+
+    //rolls a die and displays a dieRoll on the terminal
     public static int rollDie(int numDieSides, Terminal t){
         long tStart = System.currentTimeMillis();
         Random r = new Random();
         int dieRoll = Math.abs(r.nextInt() % numDieSides) + 1;
-        putString(0, 34, t, "Die Roll: "+ dieRoll);
+        putString(0, 35, t, "Die Roll: "+ dieRoll);
         boolean timing = true;
         while (timing){
             long tEnd = System.currentTimeMillis();
             long millis = tEnd - tStart;
             if (millis/1000 > 3){
-                putString(0,34,t, "           ");
+                putString(0,35,t, "           ");
                 timing = false;
             }
         }
@@ -86,14 +156,31 @@ public class TerminalClass {
 
         char[][] board = new char[31][67];
         int numDieSides = 6;
-        putTextFromFile(terminal,"AeroplaneChessBoard.txt",board);
+        putFileInto2dArray("AeroplaneChessBoard.txt",board);
         Plane red1 = new Plane("red");
-        updatePlaneLocation(red1, board, terminal);
-        if (rollDie(numDieSides, terminal) % 2 == 0){
-            red1.setxcor(20-1);
-            red1.setycor(30-1);
-            updatePlaneLocation(red1, board, terminal); 
+        red1.setxcor(5-1);
+        red1.setycor(26-1);
+        updatePlaneLocation(terminal, red1, board);
+        Plane red2 = new Plane("red");
+        red1.setxcor(13-1);
+        red1.setycor(26-1);
+        updatePlaneLocation(terminal, red2, board);
+        Plane red3 = new Plane("red");
+        red1.setxcor(5-1);
+        red1.setycor(29-1);
+        updatePlaneLocation(terminal, red3, board);
+        Plane red4 = new Plane("red");
+        red1.setxcor(13-1);
+        red1.setycor(29-1);
+        updatePlaneLocation(terminal, red4, board);
+
+        int dieRoll = rollDie(numDieSides, terminal);
+        if (dieRoll % 2 == 0){
+            changePlaneLocation(terminal, red1, board);
+            red1.move(dieRoll);
+            updatePlaneLocation(terminal, red1, board); 
         }
+        //System.out.println(toString(board));
 
 		while(running){
 
