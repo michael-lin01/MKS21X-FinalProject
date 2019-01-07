@@ -5,6 +5,7 @@ public class Tile{
   private boolean dangerZone;
   private boolean shortcut;
   private int numPlanes;
+  private boolean launchingTile;
 
   public Tile(String color){
     planeHere = false;
@@ -21,6 +22,10 @@ public class Tile{
 
   public void setShortcut(boolean b){
     shortcut = b;
+  }
+
+  public void setLaunchingTile(boolean b){
+    launchingTile = b;
   }
 
   public void addPlanes(int n){
@@ -41,6 +46,10 @@ public class Tile{
 
   public boolean isShortcut(){
     return shortcut;
+  }
+
+  public boolean isLaunchingTile(){
+    return launchingTile;
   }
 
   public int getNumPlanes(){

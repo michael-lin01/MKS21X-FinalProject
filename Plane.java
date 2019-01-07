@@ -1,4 +1,4 @@
-public class Plane extends TerminalClass{
+public class Plane{
 
   private String color;
   private Tile tileReference;
@@ -31,12 +31,12 @@ public class Plane extends TerminalClass{
     ycor = y;
   }
 
-  public void setIsAtHome(boolean bool){
-    isAtHome = bool;
+  public void setAtHome(boolean bool){
+    atHome = bool;
   }
 
   public boolean isAtHome(){
-    return isAtHome;
+    return atHome;
   }
 
   public String color(){
@@ -44,37 +44,37 @@ public class Plane extends TerminalClass{
   }
 
   public void move(int numTiles){
-    if(numTiles % 2 == 0 && isAtHome){ //first case is to get them out of the hangar
-      isAtHome = false;
+    if(numTiles % 2 == 0 && atHome){ //first case is to get them out of the hangar
+      atHome = false;
       if (color.equals("red")){
         xcor = 20 - 1; //specific coords in the grid
         ycor = 30 - 1;
         tileReference = new Tile("red");
-        tileReference.setIsLaunchingTile(true);
+        tileReference.setLaunchingTile(true);
         direction = "N";
       }
       if (color.equals("green")){
         xcor = 48 - 1;
         ycor = 30 - 1;
         tileReference = new Tile("green");
-        tileReference.setIsLaunchingTile(true);
+        tileReference.setLaunchingTile(true);
         direction = "W";
       }
       if (color.equals("blue")){
         xcor = 48 - 1;
         ycor = 2 - 1;
         tileReference = new Tile("blue");
-        tileReference.setIsLaunchingTile(true);
+        tileReference.setLaunchingTile(true);
         direction = "S";
       }
       if (color.equals("yellow")){
         xcor = 20 - 1;
         ycor = 2 - 1;
         tileReference = new Tile("yellow");
-        tileReference.setIsLaunchingTile(true);
+        tileReference.setLaunchingTile(true);
         direction = "E";
       }
-    } else if (!isAtHome) { //if not at home, it means you're at the launchingPoint or already on the board
+    } else if (!atHome) { //if not at home, it means you're at the launchingPoint or already on the board
       if (tileReference.isLaunchingTile()){
         if (color.equals("red")){
           xcor += 2; //moves it to the first jumping spot
@@ -92,7 +92,7 @@ public class Plane extends TerminalClass{
           xcor += 2;
           ycor += 1;
         }
-        tileReference.setIsLaunchingTile(false);
+        tileReference.setLaunchingTile(false);
       }
       if(direction.equals("N")) ycor -= 1;
       if(direction.equals("S")) ycor += 1;
