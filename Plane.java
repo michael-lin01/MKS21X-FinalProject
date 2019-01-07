@@ -1,8 +1,8 @@
-public class Plane extends TerminalClass{
+public class Plane{
 
   private String color;
   private Tile tileReference; //should never be null unless the plane hasn't gotten off hangar
-  private boolean isAtHome;
+  private boolean atHome;
   private int pointValue;
   private boolean hasReachedEnd;
   private int xcor;
@@ -31,12 +31,12 @@ public class Plane extends TerminalClass{
     ycor = y;
   }
 
-  public void setIsAtHome(boolean bool){
-    isAtHome = bool;
+  public void SetAtHome(boolean bool){
+    atHome = bool;
   }
 
   public boolean isAtHome(){
-    return isAtHome;
+    return atHome;
   }
 
   public String color(){
@@ -44,8 +44,8 @@ public class Plane extends TerminalClass{
   }
 
   public void move(int numTiles){
-    if(numTiles % 2 == 0 && isAtHome){ //first case is to get them out of the hangar
-      isAtHome = false;
+    if(numTiles % 2 == 0 && atHome){ //first case is to get them out of the hangar
+      atHome = false;
       if (color.equals("red")){
         xcor = 20 - 1; //specific coords in the grid
         ycor = 30 - 1;
@@ -74,7 +74,7 @@ public class Plane extends TerminalClass{
         tileReference.setIsLaunchingTile(true);
         direction = "E";
       }
-    } else if (!isAtHome) { //if not at home, it means you're at the launchingPoint or already on the board
+    } else if (!atHome) { //if not at home, it means you're at the launchingPoint or already on the board
       if (tileReference.isLaunchingTile()){
         if (color.equals("red")){
           xcor += 2; //moves it to the first jumping spot
