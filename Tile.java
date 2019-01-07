@@ -4,9 +4,11 @@ public class Tile{
   private boolean planeHere;
   private boolean dangerZone;
   private boolean shortcut;
+  private int numPlanes;
 
   public Tile(String color){
     planeHere = false;
+    numPlanes = 0;
   }
 
   public void setPlaneHere(boolean b){
@@ -19,6 +21,10 @@ public class Tile{
 
   public void setShortcut(boolean b){
     shortcut = b;
+  }
+
+  public void addPlanes(int n){
+    numPlanes += n;
   }
 
   public String getColor(){
@@ -35,6 +41,10 @@ public class Tile{
 
   public boolean isShortcut(){
     return shortcut;
+  }
+
+  public int getNumPlanes(){
+    return numPlanes;
   }
 
 }
