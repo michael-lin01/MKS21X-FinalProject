@@ -9,16 +9,17 @@ public class Tile{
   private int ycor;
 
 
-  public Tile(int xcor, int ycor, String color, String name, Tile nextTile){
+  public Tile(int xcor, int ycor, String color){
     this.xcor = xcor;
     this.ycor = ycor;
     this.color = color;
-    this.nextTile = nextTile;
-    this.name = name;
     planeHere = false;
     numPlanes = 0;
   }
 
+  public void setNextTile(Tile next){
+    nextTile = next;
+  }
   public void setPlaneHere(boolean b){
     planeHere = b;
   }
