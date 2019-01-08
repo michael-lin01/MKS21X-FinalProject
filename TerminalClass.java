@@ -18,7 +18,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-public class TerminalDemo {
+public class TerminalClass {
 
 	public static void putString(int r, int c,Terminal t, String s){
 		t.moveCursor(r,c);
