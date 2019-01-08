@@ -89,6 +89,7 @@ public class TerminalClass {
                     }
                 }
             }
+            in.close();
         } catch (FileNotFoundException e){
             System.out.println("File not found: " + filename);
             //e.printStackTrace();
