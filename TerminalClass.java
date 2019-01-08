@@ -39,7 +39,6 @@ public class TerminalClass {
                 t.putCharacter(charArray[y][x]);
             }
         }
-        System.out.println(toString(charArray));
     }
 
     //puts a string on the terminal at position (x,y)
@@ -86,7 +85,7 @@ public class TerminalClass {
                 for (int y = 0; y < charArray.length; y++){
                     String line = in.nextLine();
                     for (int x = 0; x < charArray[y].length; x++){
-                        charArray[y][x] = line.charAt(x);
+                        charArray[y][x] = line.charAt(x); //charArray goes row,col while standard coord grid goes x,y
                     }
                 }
             }
@@ -164,23 +163,20 @@ public class TerminalClass {
         Plane red1 = new Plane("red");
         red1.setxcor(5-1);
         red1.setycor(26-1);
-        terminal.moveCursor(4,25);
-        terminal.putCharacter('P');
+        updatePlaneLocation(terminal, red1, board);
         Plane red2 = new Plane("red");
         red2.setxcor(13-1);
         red2.setycor(26-1);
-        terminal.moveCursor(12,25);
-        terminal.putCharacter('P');
+        updatePlaneLocation(terminal, red2, board);
+        System.out.println(toString(board));
         Plane red3 = new Plane("red");
         red3.setxcor(5-1);
         red3.setycor(29-1);
-        terminal.moveCursor(4,28);
-        terminal.putCharacter('P');
+        updatePlaneLocation(terminal, red3, board);
         Plane red4 = new Plane("red");
         red4.setxcor(13-1);
         red4.setycor(29-1);
-        terminal.moveCursor(12,28);
-        terminal.putCharacter('P');
+        updatePlaneLocation(terminal, red4, board);
 
         /*int dieRoll = rollDie(numDieSides, terminal);
         if (dieRoll % 2 == 0){
@@ -213,9 +209,12 @@ public class TerminalClass {
 					System.exit(0);
                 }
                 
+                String planeTurn = "red"; //default planeTurn
+
                 if (key.getKind() == Key.Kind.NormalKey){ //the spacebar
                     int dieRoll = rollDie(numDieSides, terminal);
-                    if (dieRoll % 2 == 0 && red1.isAtHome()){
+                    if (dieRoll % 2 == 0 &&
+                        (red1.isAtHome() || red2.isAtHome() || red3.isAtHome() || red4.isAtHome())){
                         boolean selecting = true;
                         boolean isTopPlane = true; //we start with these values bc our default is topleft plane
                         boolean isRightPlane = false;
@@ -225,7 +224,7 @@ public class TerminalClass {
                         terminal.applyBackgroundColor(Terminal.Color.GREEN);
                         terminal.putCharacter('P');
                         terminal.moveCursor(x,y); //to reset position
-                        while (selecting){
+                        while (selecting){ //all this code is only accounting if all 4 planes are in the hangar...
                             Key planeSelect = terminal.readInput();
                             if (planeSelect != null){
                                 if (planeSelect.getKind() == Key.Kind.Escape){
@@ -233,7 +232,7 @@ public class TerminalClass {
 					                System.exit(0);
                                 }
                                 if (planeSelect.getKind() == Key.Kind.NormalKey){
-                                    red1.move(dieRoll);
+                                    red1.move(dieRoll); //filler code, in reality we would have the plane selected move
                                     red1.setIsAtHome(false);
                                     selecting = false;
                                 }
@@ -241,14 +240,19 @@ public class TerminalClass {
                                 if (planeSelect.getKind() == Key.Kind.ArrowUp){ //if you press up
                                     terminal.applyBackgroundColor(Terminal.Color.DEFAULT); //to get rid of the background from old select slot
                                     terminal.putCharacter('P');
+                                    terminal.moveCursor(x,y);
                                     if (isTopPlane){ //if is a top plane
-                                        y += 3; //moves y to bottom row of planes
-                                        terminal.moveCursor(x,y);
-                                        isTopPlane = false;
+                                        if (board[y+3][x] != ' '){ //checks if there is a plane in hangar below
+                                            y += 3; //moves y to bottom row of planes
+                                            terminal.moveCursor(x,y);
+                                            isTopPlane = false;
+                                        }
                                     } else {
-                                        y -= 3; //moves y to top row of planes
-                                        terminal.moveCursor(x,y);
-                                        isTopPlane = true;
+                                        if (board[y-3][x] != ' '){
+                                            y -= 3; //moves y to top row of planes
+                                            terminal.moveCursor(x,y);
+                                            isTopPlane = true;
+                                        }
                                     }
                                     //System.out.println(isTopPlane);
                                     terminal.applyBackgroundColor(Terminal.Color.GREEN);
@@ -260,14 +264,19 @@ public class TerminalClass {
                                 if (planeSelect.getKind() == Key.Kind.ArrowDown){ //if you press down
                                     terminal.applyBackgroundColor(Terminal.Color.DEFAULT);
                                     terminal.putCharacter('P');
+                                    terminal.moveCursor(x,y);
                                     if (!isTopPlane){ //if is a bottom plane
-                                        y -= 3; //moves y to top row of planes
-                                        terminal.moveCursor(x,y); //the upper plane
-                                        isTopPlane = true;
+                                        if (board[y-3][x] != ' '){
+                                            y -= 3; //moves y to top row of planes
+                                            terminal.moveCursor(x,y); //the upper plane
+                                            isTopPlane = true;
+                                        }
                                     } else {
-                                        y += 3; //moves y to bottom row of planes
-                                        terminal.moveCursor(x,y);
-                                        isTopPlane = false;
+                                        if (board[y+3][x] != ' '){
+                                            y += 3; //moves y to bottom row of planes
+                                            terminal.moveCursor(x,y);
+                                            isTopPlane = false;
+                                        }
                                     }
                                     terminal.applyBackgroundColor(Terminal.Color.GREEN);
                                     terminal.putCharacter('P');
@@ -278,14 +287,19 @@ public class TerminalClass {
                                 if (planeSelect.getKind() == Key.Kind.ArrowRight){
                                     terminal.applyBackgroundColor(Terminal.Color.DEFAULT);
                                     terminal.putCharacter('P');
+                                    terminal.moveCursor(x,y);
                                     if (isRightPlane){ //if is a right plane
-                                        x -= 8; //moves x to left row of planes
-                                        terminal.moveCursor(x,y);
-                                        isRightPlane = false;
+                                        if (board[y][x-8] != ' '){
+                                            x -= 8; //moves x to left row of planes
+                                            terminal.moveCursor(x,y);
+                                            isRightPlane = false;
+                                        }
                                     } else {
-                                        x += 8; //moves x to right row of planes
-                                        terminal.moveCursor(x,y);
-                                        isRightPlane = true;
+                                        if (board[y][x+8] != ' '){
+                                            x += 8; //moves x to right row of planes
+                                            terminal.moveCursor(x,y);
+                                            isRightPlane = true;
+                                        }
                                     }
                                     terminal.applyBackgroundColor(Terminal.Color.GREEN);
                                     terminal.putCharacter('P');
@@ -296,14 +310,19 @@ public class TerminalClass {
                                 if (planeSelect.getKind() == Key.Kind.ArrowLeft){
                                     terminal.applyBackgroundColor(Terminal.Color.DEFAULT);
                                     terminal.putCharacter('P');
+                                    terminal.moveCursor(x,y);
                                     if (!isRightPlane){ //if is a left plane
-                                        x += 8; //moves x to right row of planes
-                                        terminal.moveCursor(x,y);
-                                        isRightPlane = true;
+                                        if (board[y][x+8] != ' '){
+                                            x += 8; //moves x to right row of planes
+                                            terminal.moveCursor(x,y);
+                                            isRightPlane = true;
+                                        }
                                     } else {
-                                        x -= 8; //moves x to left row of planes
-                                        terminal.moveCursor(x,y);
-                                        isRightPlane = false;
+                                        if (board[y][x-8] != ' '){
+                                            x -= 8; //moves x to left row of planes
+                                            terminal.moveCursor(x,y);
+                                            isRightPlane = false;
+                                        }
                                     }
                                     terminal.applyBackgroundColor(Terminal.Color.GREEN);
                                     terminal.putCharacter('P');
