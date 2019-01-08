@@ -26,6 +26,20 @@ public class TerminalClass {
 			t.putCharacter(s.charAt(i));
 		}
 	}
+  
+  public static void putColor(int r, int c,Terminal t, String s){
+		t.moveCursor(r,c);
+    Terminal.Color back;
+		for(int i = 0; i < s.length();i++){
+      if(s.charAt(i)==1) back = Terminal.Color.RED;
+      if(s.charAt(i)==2) back = Terminal.Color.YELLOW;
+      if(s.charAt(i)==3) back = Terminal.Color.GREEN;
+      if(s.charAt(i)==4) back = Terminal.Color.BLUE;
+			t.applyBackgroundColor(back);
+		}
+	}
+  
+
 
 	public static void putTextFromFile(int r, int c, Terminal t, String fileName){
 		try{
@@ -36,13 +50,30 @@ public class TerminalClass {
 				String line = in.nextLine();
 				putString(r,lineCounter, t, line);
 				lineCounter++;
-			}
-    	}catch(FileNotFoundException e){
-      		System.out.println("File not found: " + fileName);
-      		//e.printStackTrace();
-      		System.exit(1);
-    	}
-	}
+      }
+    }catch(FileNotFoundException e){
+      System.out.println("File not found: " + fileName);
+      //e.printStackTrace();
+      System.exit(1);
+    }
+  }
+  
+  public static void putColor(int r, int c, Terminal t){
+		try{
+			File f = new File("AeroplaneChessBoardColors.txt");
+			Scanner in = new Scanner(f);
+			int lineCounter = c;
+			while (in.hasNext()){
+				String line = in.nextLine();
+        putColor(r,lineCounter, t, line)
+				lineCounter++;
+      }
+    }catch(FileNotFoundException e){
+      System.out.println("File not found: " + fileName);
+      //e.printStackTrace();
+      System.exit(1);
+    }
+  }
 
 
 	public static void main(String[] args) {
