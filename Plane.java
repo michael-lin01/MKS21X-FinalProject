@@ -1,7 +1,7 @@
 public class Plane{
 
-  private String color;
-  private Tile tileReference;
+  private String color; //1 = red  2 = yellow  3 = green  4 = blue
+  private Tile tileReference; //should never be null unless the plane hasn't gotten off hangar
   private boolean atHome;
   private int pointValue;
   private boolean hasReachedEnd;
