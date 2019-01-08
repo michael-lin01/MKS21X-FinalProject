@@ -18,7 +18,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-public class TerminalDemo {
+public class TerminalClass {
 
 	public static void putString(int r, int c,Terminal t, String s){
 		t.moveCursor(r,c);
@@ -84,11 +84,10 @@ public class TerminalDemo {
 					System.exit(0);
 				}
 
-				// if (key.getKind() == Key.Kind.ArrowLeft) {
-				// 	terminal.moveCursor(x,y);
-				// 	terminal.putCharacter(' ');
-				// 	x--;
-				// }
+				if (key.getKind() == Key.Kind.Spacebar) {
+					System.out.println("1");
+				}
+
 
 				// if (key.getKind() == Key.Kind.ArrowRight) {
 				// 	terminal.moveCursor(x,y);
