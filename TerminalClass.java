@@ -32,6 +32,7 @@ public class TerminalClass {
         return ans;
     }
 
+    //updates the terminal so that changes in the 2d array are reflected
     public static void updateTerminal(Terminal t, char[][] charArray){
         for (int y = 0; y < charArray.length; y++){
             for (int x = 0; x < charArray[y].length; x++){
@@ -97,30 +98,16 @@ public class TerminalClass {
         }
     }
 
+    //removes the character at the old Plane location & updates terminal
     public static void changePlaneLocation(Terminal t, Plane plane, char[][] charArray){
         charArray[plane.getycor()][plane.getxcor()] = ' ';
         updateTerminal(t, charArray);
     }
 
+    //puts the character at the new Plane location & updates terminal
     public static void updatePlaneLocation(Terminal t, Plane plane, char[][] charArray){
         charArray[plane.getycor()][plane.getxcor()] = 'P';
         updateTerminal(t, charArray);
-        /*charArray[plane.getxcor()][plane.getycor()] = 'P';
-        t.moveCursor(plane.getxcor(),plane.getycor());
-        if (plane.color().equals("red")){
-            t.applyForegroundColor(Terminal.Color.RED);
-        }
-        if (plane.color().equals("green")){
-            t.applyForegroundColor(Terminal.Color.GREEN);
-        }
-        if (plane.color().equals("blue")){
-            t.applyForegroundColor(Terminal.Color.BLUE);
-        }
-        if (plane.color().equals("yellow")){
-            t.applyForegroundColor(Terminal.Color.YELLOW);
-        }
-        t.putCharacter('P');
-        t.applyForegroundColor(Terminal.Color.DEFAULT);*/
     }
 
     //rolls a die and displays a dieRoll on the terminal
@@ -155,12 +142,14 @@ public class TerminalClass {
 		long tStart = System.currentTimeMillis();
 		long lastSecond = 0;
 
-        char[][] board = new char[31][67];
-        int numDieSides = 6;
-        int x = 0;
+        char[][] board = new char[31][67]; //size of board
+        int numDieSides = 6; //default # of sides for our die
+        int x = 0; //default cursor position at (x,y)
         int y = 0;
         putFileInto2dArray("AeroplaneChessBoard.txt",board);
         updateTerminal(terminal, board);
+        
+        //instantiates our four red planes
         Plane red1 = new Plane("red");
         red1.setxcor(5-1);
         red1.setycor(26-1);
@@ -179,25 +168,7 @@ public class TerminalClass {
         red4.setycor(29-1);
         updatePlaneLocation(terminal, red4, board);
 
-        /*int dieRoll = rollDie(numDieSides, terminal);
-        if (dieRoll % 2 == 0){
-            changePlaneLocation(terminal, red1, board);
-            red1.move(dieRoll);
-            updatePlaneLocation(terminal, red1, board); 
-        }
-        */
-        //System.out.println(toString(board));
-
 		while(running){
-
-			//terminal.moveCursor(x,y);
-			//terminal.applyBackgroundColor(Terminal.Color.YELLOW);
-			//terminal.applyForegroundColor(Terminal.Color.RED);
-			//terminal.putCharacter('@');
-			//terminal.applyBackgroundColor(Terminal.Color.DEFAULT);
-			//terminal.applyForegroundColor(Terminal.Color.DEFAULT);
-
-
 
 			Key key = terminal.readInput();
 
@@ -210,13 +181,13 @@ public class TerminalClass {
 					System.exit(0);
                 }
                 
-                String planeTurn = "red"; //default planeTurn
+                String planeTurn = "red"; //default planeTurn (aka the first color plane that will move)
 
-                if (key.getKind() == Key.Kind.NormalKey){ //the spacebar
+                if (key.getKind() == Key.Kind.NormalKey){ //if the spacebar is pressed
                     int dieRoll = rollDie(numDieSides, terminal);
                     if (dieRoll % 2 == 0 &&
                         (red1.isAtHome() || red2.isAtHome() || red3.isAtHome() || red4.isAtHome())){
-                        boolean selecting = true;
+                        boolean selecting = true; //selecting runs while the player is selecting which plane to move
                         boolean isTopPlane = true; //we start with these values bc our default is topleft plane
                         boolean isRightPlane = false;
                         x = red1.getxcor();
@@ -255,7 +226,6 @@ public class TerminalClass {
                                             isTopPlane = true;
                                         }
                                     }
-                                    //System.out.println(isTopPlane);
                                     terminal.applyBackgroundColor(Terminal.Color.GREEN);
                                     terminal.putCharacter('P');
                                     terminal.applyBackgroundColor(Terminal.Color.DEFAULT);
@@ -335,28 +305,6 @@ public class TerminalClass {
                     }
                 }
 
-				 //if (key.getKind() == Key.Kind.Space) {
-				 //	int dieRoll = rollDie(6);
-				// 	
-				// }
-
-				// if (key.getKind() == Key.Kind.ArrowRight) {
-				// 	terminal.moveCursor(x,y);
-				// 	terminal.putCharacter(' ');
-				// 	x++;
-				// }
-
-				// if (key.getKind() == Key.Kind.ArrowUp) {
-				// 	terminal.moveCursor(x,y);
-				// 	terminal.putCharacter(' ');
-				// 	y--;
-				// }
-
-				// if (key.getKind() == Key.Kind.ArrowDown) {
-				// 	terminal.moveCursor(x,y);
-				// 	terminal.putCharacter(' ');
-				// 	y++;
-				// }
 				putString(1,1,terminal,key+"        ");//to clear leftover letters pad withspaces
 			}
 
