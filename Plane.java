@@ -94,25 +94,13 @@ public class Plane{
         }
         tileReference.setLaunchingTile(false);
       }
-      if(direction.equals("N")) ycor -= 1;
-      if(direction.equals("S")) ycor += 1;
-      if(direction.equals("E")) xcor += 1;
-      if(direction.equals("W")) xcor -= 1;
-      if(direction.equals("NE")) {
-        ycor -= 1;
-        xcor += 1;
-      }
-      if(direction.equals("NW")) {
-        ycor -= 1;
-        xcor -= 1;
-      }
-      if(direction.equals("SW")) {
-        ycor += 1;
-        xcor -= 1;
-      }
-      if(direction.equals("SE")) {
-        ycor += 1;
-        xcor += 1;
+      else {
+        tileReference = tileReference.getNextTile();
+        xcor = tileReference.getxcor();
+        ycor = tileReference.getycor();
+        if (tileReference == redEnd && color.equals("red")){
+
+        }
       }
     }
     //not necessarily 1, but 1 tile
