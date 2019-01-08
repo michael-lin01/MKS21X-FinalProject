@@ -20,35 +20,40 @@ import java.util.Scanner;
 
 public class TerminalClass {
 
-	public static void putString(int r, int c,Terminal t, String s){
-		t.moveCursor(r,c);
+	public static void putString(int x, int y,Terminal t, String s){
+		t.moveCursor(x,y);
 		for(int i = 0; i < s.length();i++){
 			t.putCharacter(s.charAt(i));
 		}
 	}
-  
-  public static void putColor(int r, int c,Terminal t, String s){
+
+	public static void putString(int r, int c,Terminal t, String s, String colors){
 		t.moveCursor(r,c);
-    Terminal.Color back;
+		Terminal.Color back;
 		for(int i = 0; i < s.length();i++){
-      if(s.charAt(i)==1) back = Terminal.Color.RED;
-      if(s.charAt(i)==2) back = Terminal.Color.YELLOW;
-      if(s.charAt(i)==3) back = Terminal.Color.GREEN;
-      if(s.charAt(i)==4) back = Terminal.Color.BLUE;
+			back = Terminal.Color.DEFAULT;
+			if(colors.charAt(i)=='1') back = Terminal.Color.RED;
+      if(colors.charAt(i)=='2') back = Terminal.Color.YELLOW;
+      if(colors.charAt(i)=='3') back = Terminal.Color.GREEN;
+      if(colors.charAt(i)=='4') back = Terminal.Color.BLUE;
 			t.applyBackgroundColor(back);
+			t.putCharacter(s.charAt(i));
 		}
 	}
-  
 
 
 	public static void putTextFromFile(int r, int c, Terminal t, String fileName){
 		try{
 			File f = new File(fileName);
+			File colors = new File("AeroplaneChessBoardColors.txt");
+			Scanner colorsin = new Scanner(colors);
+
 			Scanner in = new Scanner(f);
 			int lineCounter = c;
 			while (in.hasNext()){
 				String line = in.nextLine();
-				putString(r,lineCounter, t, line);
+				String linecolor = colorsin.nextLine();
+				putString(r,lineCounter, t, line, linecolor);
 				lineCounter++;
       }
     }catch(FileNotFoundException e){
@@ -57,7 +62,7 @@ public class TerminalClass {
       System.exit(1);
     }
   }
-  
+
   public static void putColor(int r, int c, Terminal t){
 		try{
 			File f = new File("AeroplaneChessBoardColors.txt");
@@ -65,11 +70,11 @@ public class TerminalClass {
 			int lineCounter = c;
 			while (in.hasNext()){
 				String line = in.nextLine();
-        putColor(r,lineCounter, t, line)
+        putColor(r,lineCounter, t, line);
 				lineCounter++;
       }
     }catch(FileNotFoundException e){
-      System.out.println("File not found: " + fileName);
+      System.out.println("File not found: AeroplaneChessBoardColors.txt");
       //e.printStackTrace();
       System.exit(1);
     }
@@ -94,15 +99,14 @@ public class TerminalClass {
 		long lastSecond = 0;
 
 		while(running){
-
+			/*
 			terminal.moveCursor(x,y);
 			terminal.applyBackgroundColor(Terminal.Color.YELLOW);
 			terminal.applyForegroundColor(Terminal.Color.RED);
 			terminal.putCharacter('@');
 			terminal.applyBackgroundColor(Terminal.Color.DEFAULT);
 			terminal.applyForegroundColor(Terminal.Color.DEFAULT);
-
-
+			*/
 
 			Key key = terminal.readInput();
 
@@ -151,8 +155,9 @@ public class TerminalClass {
 			//	putString(1,3,terminal,"Seconds since start of program: "+lastSecond);
 
 			//}
-
+			putColor(2,1,terminal);
 			putTextFromFile(2,1,terminal, "AeroplaneChessBoard.txt");
+
 /*
 			putString(1,1,terminal,"                       +---+---+---+---+---+");
 			putString(1,2,terminal,"+-------+-------+    / |   |   |   |   |   | \\    +-------+-------+");
