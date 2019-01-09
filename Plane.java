@@ -1,6 +1,9 @@
 public class Plane extends TerminalClass{
 
   private String color;
+  private int R; //variables in RBG for TerminalClass applicability ease
+  private int G;
+  private int B;
   private Tile tileReference; //should never be null unless the plane hasn't gotten off hangar
   private boolean isAtHome;
   private int pointValue;
@@ -11,8 +14,39 @@ public class Plane extends TerminalClass{
 
   public Plane(String color){
     this.color = color;
+    if (color.equals("red")){
+      R = 255;
+      G = 0;
+      B = 0;
+    } else if (color.equals("blue")){
+      R = 0;
+      G = 0;
+      B = 255;
+    } else if (color.equals("yellow")){
+      R = 255;
+      G = 255;
+      B = 0;
+    } else if (color.equals("green")){
+      R = 0;
+      G = 255;
+      B = 0;
+    } else {
+      throw new IllegalArgumentException("inputted non-valid color... only valid colors are red, green, blue, and yellow");
+    }
     isAtHome = true;
     hasReachedEnd = false;
+  }
+
+  public int R(){
+    return R;
+  }
+
+  public int G(){
+    return G;
+  }
+
+  public int B(){
+    return B;
   }
 
   public int getxcor(){
@@ -93,26 +127,27 @@ public class Plane extends TerminalClass{
           ycor += 1;
         }
         tileReference.setIsLaunchingTile(false);
-      }
-      if(direction.equals("N")) ycor -= 1;
-      if(direction.equals("S")) ycor += 1;
-      if(direction.equals("E")) xcor += 1;
-      if(direction.equals("W")) xcor -= 1;
-      if(direction.equals("NE")) {
-        ycor -= 1;
-        xcor += 1;
-      }
-      if(direction.equals("NW")) {
-        ycor -= 1;
-        xcor -= 1;
-      }
-      if(direction.equals("SW")) {
-        ycor += 1;
-        xcor -= 1;
-      }
-      if(direction.equals("SE")) {
-        ycor += 1;
-        xcor += 1;
+      } else {
+        if(direction.equals("N")) ycor -= 1;
+        if(direction.equals("S")) ycor += 1;
+        if(direction.equals("E")) xcor += 1;
+        if(direction.equals("W")) xcor -= 1;
+        if(direction.equals("NE")) {
+          ycor -= 1;
+          xcor += 1;
+        }
+        if(direction.equals("NW")) {
+          ycor -= 1;
+          xcor -= 1;
+        }
+        if(direction.equals("SW")) {
+          ycor += 1;
+          xcor -= 1;
+        }
+        if(direction.equals("SE")) {
+          ycor += 1;
+          xcor += 1;
+        }
       }
     }
     //not necessarily 1, but 1 tile
