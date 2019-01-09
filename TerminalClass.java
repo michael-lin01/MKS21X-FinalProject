@@ -17,6 +17,7 @@ import com.googlecode.lanterna.input.KeyMappingProfile;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+import java.util.Random;
 
 public class TerminalClass {
     //prints out a 2d array for debugging purposes
@@ -53,8 +54,8 @@ public class TerminalClass {
 		}
 	}
 
-
-	public static void putTextFromFile(int r, int c, Terminal t, String fileName){
+  //puts text from a file into (r,c) on the terminal, where (r,c) is the topleft most point
+	public static void putTextFromFile(int r, int c, Terminal t, String fileName, char[][] charArray){
 		try{
 			File f = new File(fileName);
 			File colors = new File("AeroplaneChessBoardColors.txt");
@@ -66,6 +67,10 @@ public class TerminalClass {
 				String line = in.nextLine();
 				String linecolor = colorsin.nextLine();
 				putString(r,lineCounter, t, line, linecolor);
+				for (int index = 0; index < line.length(); index++){
+					char character = line.charAt(index);
+					charArray[lineCounter][index] = character;
+				}
 				lineCounter++;
       }
     }catch(FileNotFoundException e){
@@ -74,55 +79,6 @@ public class TerminalClass {
       System.exit(1);
 		}
 	}
-    //puts text from a file into (0,0) on the terminal, where (0,0) is the topleft most point
-	public static void putTextFromFile(Terminal t, String fileName, char[][] charArray){
-		try{
-			File f = new File(fileName);
-			Scanner in = new Scanner(f);
-            for (int row = 0; row < charArray.length; row++){
-                String line = in.nextLine();
-                for (int col = 0; col < charArray[row].length; col++){
-                    char character = line.charAt(col);
-                    /*if (character == 'P'){
-                        t.applyForegroundColor(Terminal.Color.RED);
-                    } else {
-                        t.applyForegroundColor(Terminal.Color.DEFAULT);
-                    }*/
-                    charArray[row][col] = character;
-                    t.moveCursor(col,row);
-                    t.putCharacter(character);
-                }
-            }
-    	}catch(FileNotFoundException e){
-      		System.out.println("File not found: " + fileName);
-      		//e.printStackTrace();
-      		System.exit(1);
-    	}
-    }
-
-
-    //preCondition: must be rectangular array with size > 0, and charArray must fit the file text size perfectly
-    public static void putFileIntoTerminal(String filename, char[][] charArray, Terminal t){
-        try {
-            File f = new File(filename);
-            Scanner in = new Scanner(f);
-            while (in.hasNext()){
-                for (int y = 0; y < charArray.length; y++){
-                    String line = in.nextLine();
-                    for (int x = 0; x < charArray[y].length; x++){
-                        charArray[y][x] = line.charAt(x); //charArray goes row,col while standard coord grid goes x,y
-                        t.moveCursor(x,y);
-                        t.putCharacter(line.charAt(x));
-                    }
-                }
-            }
-            in.close();
-        } catch (FileNotFoundException e){
-            System.out.println("File not found: " + filename);
-            //e.printStackTrace();
-            System.exit(1);
-        }
-    }
 
     //removes the character at the old Plane location & updates terminal
     //postCondition: resets background color of cursor character
@@ -176,7 +132,6 @@ public class TerminalClass {
         t.putCharacter((char)(' ' + numPlanesOnLaunchingTile));
         t.applyForegroundColor(Terminal.Color.DEFAULT);
     }
-  }
 
     //rolls a die and displays a dieRoll on the terminal
     public static int rollDie(int numDieSides, Terminal t, String planeTurn){
@@ -189,9 +144,6 @@ public class TerminalClass {
 
 	public static void main(String[] args) {
 
-
-		int x = 10;
-		int y = 10;
 
 		Terminal terminal = TerminalFacade.createTerminal();
 		terminal.enterPrivateMode();
@@ -208,7 +160,7 @@ public class TerminalClass {
         int numDieSides = 6; //default # of sides for our die
         int x = 0; //default cursor position at (x,y)
         int y = 0;
-        putFileIntoTerminal("AeroplaneChessBoard.txt",board,terminal);
+        putTextFromFile(x, y, terminal, "AeroplaneChessBoard.txt", board);
 
         //instantiates all the planes, 1 is topleft, 2 is topright, 3 is bottomleft, 4 is bottomright
         Plane red1 = new Plane("red");
@@ -454,44 +406,6 @@ public class TerminalClass {
                     putString(0,32,terminal,planeTurn + "'s Turn!");
                 }
 			}
-
-			putTextFromFile(2,1,terminal, "AeroplaneChessBoard.txt");
-
-/*
-			putString(1,1,terminal,"                       +---+---+---+---+---+");
-			putString(1,2,terminal,"+-------+-------+    / |   |   |   |   |   | \\    +-------+-------+");
-			putString(1,3,terminal,"|   P   |   P   |  /   |   |   |   |   |   |   \\  |   P   |   P   |");
-			putString(1,4,terminal,"|       |       |/-----+---+---+---+---+---+-----\\|       |       |");
-			putString(1,5,terminal,"+-------+-------+      |       |   |       |      +-------+-------+");
-			putString(1,6,terminal,"|   P   |   P   |------+       +---+       +------|   P   |   P   |");
-			putString(1,7,terminal,"|       |       |      |       |   |       |      |       |       |");
-			putString(1,8,terminal,"+-------+---+---+------+       +---+       +------+---+---+-------+");
-			putString(1,9,terminal,"      / |   |   | \\    |= = = =|= =|= = = =|    / |   |   | \\");
-			putString(1,10,terminal,"    /   |   |   |   \\  |       +---+       |  /   |   |   |   \\");
-			putString(1,11,terminal," +/-----+---+---+-----\\+       |   |       +/-----+---+---+-----\\+");
-			putString(1,12,terminal," |      |         =            +---+            =         |      |");
-			putString(1,13,terminal," +------+         =            |   |            =         +------+");
-			putString(1,14,terminal," |      |         =         +\\-------/+         =         |      |");
-			putString(1,15,terminal," +------+---+---+---+---+---| \\ ___ / |---+---+---+---+---+------+");
-			putString(1,16,terminal," |      |   |   | = |   |   |  |___|  |   |   | = |   |   |      |");
-			putString(1,17,terminal," +------+---+---+---+---+---| /     \\ |---+---+---+---+---+------+");
-			putString(1,18,terminal," |      |         =         +/-------\\+         =         |      |");
-			putString(1,19,terminal," +------+         =            |   |            =         +------+");
-			putString(1,20,terminal," |      |         =            +---+            =         |      |");
-			putString(1,21,terminal," +\\-----+---+---+-----/+       |   |       +\\-----+---+---+-----/+");
-			putString(1,22,terminal,"    \\   |   |   |   /  |       +---+       |  \\   |   |   |   /");
-			putString(1,23,terminal,"      \\ |   |   | /    |= = = =|= =|= = = =|    \\ |   |   | /");
-			putString(1,24,terminal,"+-------+---+---+------+       +---+       +------+---+---+------+");
-			putString(1,25,terminal,"|       |       |      |       |   |       |      |       |      |");
-			putString(1,26,terminal,"|   P   |   P   |------+       +---+       +------|   P   |   P  |");
-			putString(1,27,terminal,"+-------+-------+      |       |   |       |      +-------+------+");
-			putString(1,28,terminal,"|       |       |\\-----+---+---+---+---+---+-----/|       |      |");
-			putString(1,29,terminal,"|   P   |   P   |  \\   |   |   |   |   |   |   /  |   P   |   P  |");
-			putString(1,30,terminal,"+-------+-------+    \\ |   |   |   |   |   | /    +-------+------+");
-			putString(1,31,terminal,"                       +---+---+---+---+---+");
-*/
-
-
 		}
 	}
 }
