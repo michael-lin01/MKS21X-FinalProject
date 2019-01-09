@@ -8,4 +8,4 @@ DEVELOPMENT LOG
 
 1/7, Victor: added a way to select which plane to take off the hangar (in a primitive, simplified form); EDIT: generalized it so accounts if not all planes are in the hangar
 
-1/8, Victor: added the turn counter, colorized planes
+1/8, Victor: added the turn counter, colorized planes. !!need to figure out numPlanesOnLaunchingTiles && fix where planes aren't properly selected after at least one has left the hangar
