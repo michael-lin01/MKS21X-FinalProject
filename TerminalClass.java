@@ -115,6 +115,23 @@ public class TerminalClass {
         t.applyForegroundColor(Terminal.Color.DEFAULT);
     }
 
+    //puts the correct number of planes on each color's respective launching tile
+    //postCondition: resets background color of the character
+    public static void updateLaunchingTiles(Terminal terminal, String planeTurn, char[][] charArray, int numPlanesOnLaunchingTile){
+        if (planeTurn == "red"){
+            charArray[30-1][19-1] = numPlanesOnLaunchingTile;
+        }
+        if (planeTurn == "green"){
+            charArray[49-1][19-1] = numPlanesOnLaunchingTile;
+        }
+        if (planeTurn == "blue"){
+            charArray[49-1][2-1] = numPlanesOnLaunchingTile;
+        }
+        if (planeTurn == "yellow"){
+            charArray[30-1][2-1] = numPlanesOnLaunchingTile;
+        }
+    }
+
     //rolls a die and displays a dieRoll on the terminal
     public static int rollDie(int numDieSides, Terminal t, String planeTurn){
         long tStart = System.currentTimeMillis();
@@ -219,6 +236,11 @@ public class TerminalClass {
         Plane plane3 = red3;
         Plane plane4 = red4;
         putString(0,32,terminal,"red's Turn!");
+        int redPlanesOnLaunchingTile = 0;
+        int greenPlanesOnLaunchingTile = 0;
+        int bluePlanesOnLaunchingTile = 0;
+        int yellowPlanesOnLaunchingTile = 0;
+        int numPlanesOnLaunchingTile = redPlanesOnLaunchingTile;
 
 
 		while(running){
@@ -262,7 +284,7 @@ public class TerminalClass {
                         }
                         terminal.moveCursor(x,y); //default location for cursor after selecting default is top plane)
                         terminal.applyBackgroundColor(Terminal.Color.GREEN);
-                        terminal.applyForegroundColor(plane1.R(),plane1.G(),plane1.B());
+                        terminal.applyForegroundColor(plane1.R(),plane1.G(),plane1.B()); //so the color of planes don't change when you are moving cursor around
                         terminal.putCharacter('P');
                         terminal.moveCursor(x,y); //to reset position
                         while (selecting){ 
@@ -295,8 +317,9 @@ public class TerminalClass {
                                     plane4.setIsAtHome(false);
                                     updatePlaneLocation(terminal, plane4, board);
                                   }
-                                  putString(20,35,terminal, "                 "); //to reset the Die Roll text after a plane is selected
                                   selecting = false;
+                                  numPlanesOnLaunchingTile++;
+                                  updateLaunchingTiles(terminal, planeTurn, board, numPlanesOnLaunchingTile);
                                 }
 
                                 if (planeSelect.getKind() == Key.Kind.ArrowUp){ //if you press up
@@ -404,9 +427,11 @@ public class TerminalClass {
                                 isMessagingTime = false;
                             }
                         }
-                        putString(40,34,terminal,"                      ");
+                        putString(40,34,terminal,"                                  ");
                     }
                     if (planeTurn.equals("red")){ //once you have selected, then switch plane turns
+                        redPlanesOnLaunchingTile = numPlanesOnLaunchingTile; //stores redPlanesOnLaunchingTile
+                        numPlanesOnLaunchingTile = greenPlanesOnLaunchingTile; //switches over to greenPlanesOnLaunchingTile
                         planeTurn = "green";
                         plane1 = green1;
                         plane2 = green2;
@@ -431,7 +456,7 @@ public class TerminalClass {
                         plane3 = red3;
                         plane4 = red4;
                     }
-                    //putString(0,32,terminal,"                              ");
+                    putString(0,32,terminal,"                                     ");
                     putString(0,32,terminal,planeTurn + "'s Turn!");
                 }
 			}
