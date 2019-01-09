@@ -1,13 +1,12 @@
-public class Plane extends TerminalClass{
+public abstract class Plane{
 
-  private String color;
+  private String color; //1 = red  2 = yellow  3 = green  4 = blue
   private Tile tileReference; //should never be null unless the plane hasn't gotten off hangar
-  private boolean isAtHome;
+  private boolean atHome;
   private int pointValue;
   private boolean hasReachedEnd;
   private int xcor;
   private int ycor;
-  private String direction;
 
   public Plane(String color){
     this.color = color;
@@ -31,12 +30,12 @@ public class Plane extends TerminalClass{
     ycor = y;
   }
 
-  public void setIsAtHome(boolean bool){
-    isAtHome = bool;
+  public void setAtHome(boolean bool){
+    atHome = bool;
   }
 
   public boolean isAtHome(){
-    return isAtHome;
+    return atHome;
   }
 
   public String color(){
@@ -44,38 +43,30 @@ public class Plane extends TerminalClass{
   }
 
   public void move(int numTiles){
-    if(numTiles % 2 == 0 && isAtHome){ //first case is to get them out of the hangar
-      isAtHome = false;
+    if(numTiles % 2 == 0 && atHome){ //first case is to get them out of the hangar
+      atHome = false;
       if (color.equals("red")){
         xcor = 20 - 1; //specific coords in the grid
         ycor = 30 - 1;
-        tileReference = new Tile("red");
-        tileReference.setIsLaunchingTile(true);
-        direction = "N";
+
       }
       if (color.equals("green")){
         xcor = 48 - 1;
         ycor = 30 - 1;
-        tileReference = new Tile("green");
-        tileReference.setIsLaunchingTile(true);
-        direction = "W";
+
       }
       if (color.equals("blue")){
         xcor = 48 - 1;
         ycor = 2 - 1;
-        tileReference = new Tile("blue");
-        tileReference.setIsLaunchingTile(true);
-        direction = "S";
+
       }
       if (color.equals("yellow")){
         xcor = 20 - 1;
         ycor = 2 - 1;
-        tileReference = new Tile("yellow");
-        tileReference.setIsLaunchingTile(true);
-        direction = "E";
+
       }
-    } else if (!isAtHome) { //if not at home, it means you're at the launchingPoint or already on the board
-      if (tileReference.isLaunchingTile()){
+    } else if (!atHome) { //if not at home, it means you're at the launchingPoint or already on the board
+      if (tileReference.tileName().equals("LaunchingTile")){
         if (color.equals("red")){
           xcor += 2; //moves it to the first jumping spot
           ycor -= 1; // "-1" so that the plane goes up the board, since our origin is at the topleft
@@ -92,31 +83,13 @@ public class Plane extends TerminalClass{
           xcor += 2;
           ycor += 1;
         }
-        tileReference.setIsLaunchingTile(false);
       }
-      if(direction.equals("N")) ycor -= 1;
-      if(direction.equals("S")) ycor += 1;
-      if(direction.equals("E")) xcor += 1;
-      if(direction.equals("W")) xcor -= 1;
-      if(direction.equals("NE")) {
-        ycor -= 1;
-        xcor += 1;
-      }
-      if(direction.equals("NW")) {
-        ycor -= 1;
-        xcor -= 1;
-      }
-      if(direction.equals("SW")) {
-        ycor += 1;
-        xcor -= 1;
-      }
-      if(direction.equals("SE")) {
-        ycor += 1;
-        xcor += 1;
+      else {
+        tileReference = tileReference.getNextTile();
+        xcor = tileReference.getxcor();
+        ycor = tileReference.getycor();
       }
     }
     //not necessarily 1, but 1 tile
   }
-
-
 }

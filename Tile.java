@@ -2,25 +2,26 @@ public class Tile{
 
   private String color;
   private boolean planeHere;
-  private boolean dangerZone;
-  private boolean shortcut;
   private int numPlanes;
+  private String name;
+  private Tile nextTile;
+  private int xcor;
+  private int ycor;
 
-  public Tile(String color){
+
+  public Tile(int xcor, int ycor, String color){
+    this.xcor = xcor;
+    this.ycor = ycor;
+    this.color = color;
     planeHere = false;
     numPlanes = 0;
   }
 
+  public void setNextTile(Tile next){
+    nextTile = next;
+  }
   public void setPlaneHere(boolean b){
     planeHere = b;
-  }
-
-  public void setDangerZone(boolean b){
-    dangerZone = b;
-  }
-
-  public void setShortcut(boolean b){
-    shortcut = b;
   }
 
   public void addPlanes(int n){
@@ -35,16 +36,24 @@ public class Tile{
     return planeHere;
   }
 
-  public boolean isDangerZone(){
-    return dangerZone;
-  }
-
-  public boolean isShortcut(){
-    return shortcut;
+  public String tileName(){
+    return name;
   }
 
   public int getNumPlanes(){
     return numPlanes;
+  }
+
+  public int getxcor(){
+    return xcor;
+  }
+
+  public int getycor(){
+    return ycor;
+  }
+
+  public Tile getNextTile(){
+    return nextTile;
   }
 
 }

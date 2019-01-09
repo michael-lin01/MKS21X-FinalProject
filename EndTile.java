@@ -1,7 +1,7 @@
 public class EndTile extends Tile{
 
-  public EndTile(String color){
-    super(color);
-
+  public EndTile(int xcor, int ycor, String color){
+    super(xcor,ycor,color);
   }
+
 }

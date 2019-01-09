@@ -20,29 +20,48 @@ import java.util.Scanner;
 
 public class TerminalClass {
 
-	public static void putString(int r, int c,Terminal t, String s){
-		t.moveCursor(r,c);
+	public static void putString(int x, int y,Terminal t, String s){
+		t.moveCursor(x,y);
 		for(int i = 0; i < s.length();i++){
 			t.putCharacter(s.charAt(i));
 		}
 	}
 
+	public static void putString(int r, int c,Terminal t, String s, String colors){
+		t.moveCursor(r,c);
+		Terminal.Color back;
+		for(int i = 0; i < s.length();i++){
+			back = Terminal.Color.DEFAULT; //if not a 1,2,3, or 4, background color is the default color
+			if(colors.charAt(i)=='1') back = Terminal.Color.RED;
+      if(colors.charAt(i)=='2') back = Terminal.Color.YELLOW;
+      if(colors.charAt(i)=='3') back = Terminal.Color.GREEN;
+      if(colors.charAt(i)=='4') back = Terminal.Color.BLUE;
+			t.applyBackgroundColor(back);
+			t.putCharacter(s.charAt(i));
+		}
+	}
+
+
 	public static void putTextFromFile(int r, int c, Terminal t, String fileName){
 		try{
 			File f = new File(fileName);
+			File colors = new File("AeroplaneChessBoardColors.txt");
+			Scanner colorsin = new Scanner(colors);
+
 			Scanner in = new Scanner(f);
 			int lineCounter = c;
 			while (in.hasNext()){
 				String line = in.nextLine();
-				putString(r,lineCounter, t, line);
+				String linecolor = colorsin.nextLine();
+				putString(r,lineCounter, t, line, linecolor);
 				lineCounter++;
-			}
-    	}catch(FileNotFoundException e){
-      		System.out.println("File not found: " + fileName);
-      		//e.printStackTrace();
-      		System.exit(1);
-    	}
-	}
+      }
+    }catch(FileNotFoundException e){
+      System.out.println("File not found: " + fileName);
+      //e.printStackTrace();
+      System.exit(1);
+    }
+  }
 
 
 	public static void main(String[] args) {
@@ -63,16 +82,6 @@ public class TerminalClass {
 		long lastSecond = 0;
 
 		while(running){
-
-			terminal.moveCursor(x,y);
-			terminal.applyBackgroundColor(Terminal.Color.YELLOW);
-			terminal.applyForegroundColor(Terminal.Color.RED);
-			terminal.putCharacter('@');
-			terminal.applyBackgroundColor(Terminal.Color.DEFAULT);
-			terminal.applyForegroundColor(Terminal.Color.DEFAULT);
-
-
-
 			Key key = terminal.readInput();
 
 			if (key != null)
@@ -109,18 +118,8 @@ public class TerminalClass {
 				putString(1,1,terminal,key+"        ");//to clear leftover letters pad withspaces
 			}
 
-			//DO EVEN WHEN NO KEY PRESSED:
-			//long tEnd = System.currentTimeMillis();
-			//long millis = tEnd - tStart;
-			//putString(1,2,terminal,"Milliseconds since start of program: "+millis);
-			//if(millis/1000 > lastSecond){
-			//	lastSecond = millis / 1000;
-			//	//one second has passed.
-			//	putString(1,3,terminal,"Seconds since start of program: "+lastSecond);
-
-			//}
-
 			putTextFromFile(2,1,terminal, "AeroplaneChessBoard.txt");
+
 /*
 			putString(1,1,terminal,"                       +---+---+---+---+---+");
 			putString(1,2,terminal,"+-------+-------+    / |   |   |   |   |   | \\    +-------+-------+");
