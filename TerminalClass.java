@@ -176,7 +176,7 @@ public class TerminalClass {
         t.putCharacter((char)(' ' + numPlanesOnLaunchingTile));
         t.applyForegroundColor(Terminal.Color.DEFAULT);
     }
-  }
+  
 
     //rolls a die and displays a dieRoll on the terminal
     public static int rollDie(int numDieSides, Terminal t, String planeTurn){

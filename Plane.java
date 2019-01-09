@@ -1,4 +1,4 @@
-public abstract class Plane{
+public class Plane{
 
   private String color;
   private int R; //variables in RBG for TerminalClass applicability ease
@@ -32,7 +32,7 @@ public abstract class Plane{
     } else {
       throw new IllegalArgumentException("inputted non-valid color... only valid colors are red, green, blue, and yellow");
     }
-    isAtHome = true;
+    atHome = true;
     hasReachedEnd = false;
   }
 
@@ -76,6 +76,12 @@ public abstract class Plane{
     return color;
   }
 
+  public void move(Tile tile){
+    tileReference = tile;
+    xcor = tile.getxcor();
+    ycor = tile.getycor();
+  }
+
   public void move(int numTiles){
     if(numTiles % 2 == 0 && atHome){ //first case is to get them out of the hangar
       atHome = false;
@@ -100,7 +106,7 @@ public abstract class Plane{
 
       }
     } else if (!atHome) { //if not at home, it means you're at the launchingPoint or already on the board
-      if (tileReference.tileName().equals("LaunchingTile")){
+      if (tileReference.name().equals("LaunchingTile")){
         if (color.equals("red")){
           xcor += 2; //moves it to the first jumping spot
           ycor -= 1; // "-1" so that the plane goes up the board, since our origin is at the topleft
