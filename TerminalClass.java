@@ -237,9 +237,9 @@ public class TerminalClass {
                 if (key.getKind() == Key.Kind.NormalKey){ //if the spacebar is pressed
                     int dieRoll = rollDie(numDieSides, terminal, planeTurn);
                     if (dieRoll % 2 == 0 &&
-                        (plane1.isAtHome() || plane2.isAtHome() || plane3.isAtHome() || plane4.isAtHome())){
+                        (plane1.isAtHome() && plane2.isAtHome() && plane3.isAtHome() && plane4.isAtHome())){
                         boolean selecting = true; //selecting runs while the player is selecting which plane to move
-                        boolean isTopPlane = true; //these values are for plane1
+                        boolean isTopPlane = true; //these values are default for plane1
                         boolean isRightPlane = false;
                         if (plane1.isAtHome()){ //these if cases are to set which default plane the cursor goes to when selecting
                           x = plane1.getxcor();
@@ -392,33 +392,47 @@ public class TerminalClass {
                                 }
                             }
                         }
-                        if (planeTurn.equals("red")){ //once you have selected, then switch plane turns
-                            planeTurn = "green";
-                            plane1 = green1;
-                            plane2 = green2;
-                            plane3 = green3;
-                            plane4 = green4;
-                        } else if (planeTurn.equals("green")){
-                            planeTurn = "blue";
-                            plane1 = blue1;
-                            plane2 = blue2;
-                            plane3 = blue3;
-                            plane4 = blue4;
-                        } else if (planeTurn.equals("blue")){
-                            planeTurn = "yellow";
-                            plane1 = yellow1;
-                            plane2 = yellow2;
-                            plane3 = yellow3;
-                            plane4 = yellow4;
-                        } else if (planeTurn.equals("yellow")){
-                            planeTurn = "red";
-                            plane1 = red1;
-                            plane2 = red2;
-                            plane3 = red3;
-                            plane4 = red4;
-                        }
-                        putString(0,32,terminal,planeTurn + "'s Turn!");
                     }
+                    if (dieRoll % 2 == 1){
+                        boolean isMessagingTime = true;
+                        putString(40,32,terminal,"Do this odd case later");
+                        long timerStartMillis = System.currentTimeMillis();
+                        while (isMessagingTime){
+                            long timerEndMillis = System.currentTimeMillis();
+                            long diffMillis = timerEndMillis - timerStartMillis;
+                            if (diffMillis / 1000 > 2){
+                                isMessagingTime = false;
+                            }
+                        }
+                        putString(40,34,terminal,"                      ");
+                    }
+                    if (planeTurn.equals("red")){ //once you have selected, then switch plane turns
+                        planeTurn = "green";
+                        plane1 = green1;
+                        plane2 = green2;
+                        plane3 = green3;
+                        plane4 = green4;
+                    } else if (planeTurn.equals("green")){
+                        planeTurn = "blue";
+                        plane1 = blue1;
+                        plane2 = blue2;
+                        plane3 = blue3;
+                        plane4 = blue4;
+                    } else if (planeTurn.equals("blue")){
+                        planeTurn = "yellow";
+                        plane1 = yellow1;
+                        plane2 = yellow2;
+                        plane3 = yellow3;
+                        plane4 = yellow4;
+                    } else if (planeTurn.equals("yellow")){
+                        planeTurn = "red";
+                        plane1 = red1;
+                        plane2 = red2;
+                        plane3 = red3;
+                        plane4 = red4;
+                    }
+                    //putString(0,32,terminal,"                              ");
+                    putString(0,32,terminal,planeTurn + "'s Turn!");
                 }
 			}
 
