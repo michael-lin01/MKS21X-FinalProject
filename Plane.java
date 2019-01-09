@@ -1,6 +1,9 @@
 public abstract class Plane{
 
-  private String color; //1 = red  2 = yellow  3 = green  4 = blue
+  private String color;
+  private int R; //variables in RBG for TerminalClass applicability ease
+  private int G;
+  private int B;
   private Tile tileReference; //should never be null unless the plane hasn't gotten off hangar
   private boolean atHome;
   private int pointValue;
@@ -10,8 +13,39 @@ public abstract class Plane{
 
   public Plane(String color){
     this.color = color;
-    atHome = true;
+    if (color.equals("red")){
+      R = 255;
+      G = 0;
+      B = 0;
+    } else if (color.equals("blue")){
+      R = 0;
+      G = 0;
+      B = 255;
+    } else if (color.equals("yellow")){
+      R = 255;
+      G = 255;
+      B = 0;
+    } else if (color.equals("green")){
+      R = 0;
+      G = 255;
+      B = 0;
+    } else {
+      throw new IllegalArgumentException("inputted non-valid color... only valid colors are red, green, blue, and yellow");
+    }
+    isAtHome = true;
     hasReachedEnd = false;
+  }
+
+  public int R(){
+    return R;
+  }
+
+  public int G(){
+    return G;
+  }
+
+  public int B(){
+    return B;
   }
 
   public int getxcor(){
