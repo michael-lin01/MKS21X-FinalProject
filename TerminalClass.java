@@ -27,7 +27,7 @@ public class TerminalClass {
   private static Tile yellowStart;
   private static Tile blueStart;
 
-  private static CircularLinkedList Tiles = new CircularLinkedList();
+  private static TilePath Tiles = new TilePath();
 
     //prints out a 2d array for debugging purposes
     public static String toString(char[][] charArray){
@@ -115,70 +115,71 @@ public class TerminalClass {
 
     //preCondition: must be rectangular array with size > 0, and charArray must fit the file text size perfectly
     public static void putFileIntoTerminal(String filename, char[][] charArray, Terminal t){
-        try {
-            File f = new File(filename);
-            Scanner in = new Scanner(f);
-            int count;
-            CircularLinkedList l = new CircularLinkedList();
-            while (in.hasNext()){
-                for (int y = 0; y < charArray.length; y++){
-                    String line = in.nextLine();
-                    //System.out.println(line);
-                    count = 0;
-                    l.clear();           
-                    for (int x = 0; x < charArray[y].length; x++){
-                      //System.out.println(x);
-                      //System.out.println(line.length());
-                    
-                      char c = line.charAt(x);
-                      if(c=='T'||c=='R'||c=='Y'||c=='B'||c=='G'){
-                        if (y == 1 || y == 29){
-                          if (line.charAt(x) == 'B'){
-                            blueStart = new Tile(y,x,"blueS");
-                            Tiles.add(blueStart);
-                          }
-                          else {
-                            if (line.charAt(x) == 'R'){
-                              redStart = new Tile(y,x,"redS");
-                              Tiles.add(redStart);
-                            }
-                            else Tiles.add(y,x);
-                          }
-                        }
-                        else{
-                          if(x<34){
-                            if (line.charAt(x) == 'Y'){
-                              yellowStart = new Tile(y,x,"yellowS");
-                              l.add(yellowStart);
-                            }
-                            else l.add(y,x);
-                          }
-                          else{
-                            if (line.charAt(x) == 'G'){
-                              greenStart = new Tile(y,x,"greenS");
-                              Tiles.add(greenStart);
-                            }
-                            Tiles.add(y,x);
-                          }
-                        }
-                      }
-                      if(x==34&&l.size()>0){
-                        Tiles.attach(l);
-                      }
+      try {
+        File f = new File(filename);
+        Scanner in = new Scanner(f);
+        int count;
+        TilePath l = new TilePath();
+        while (in.hasNext()){
+          for (int y = 0; y < charArray.length; y++){
+            String line = in.nextLine();
+            //System.out.println(line);
+            count = 0;
+            l.clear();
+            for (int x = 0; x < line.length(); x++){
+              //System.out.println(x);
+              //System.out.println(line.length());
 
-                      charArray[y][x] = line.charAt(x); //charArray goes row,col while standard coord grid goes x,y
-                      t.moveCursor(x,y);
-                      t.putCharacter(line.charAt(x));
+              char c = line.charAt(x);
+              //System.out.println(c);
+              if(c=='T'||c=='R'||c=='Y'||c=='B'||c=='G'){
+                if (y == 1 || y == 28){
+                  if (c == 'B'){
+                    blueStart = new Tile(x,y,"blueS");
+                    Tiles.add(blueStart);
+                  }
+                  else {
+                    if (c == 'R'){
+                      redStart = new Tile(x,y,"redS");
+                      Tiles.add(redStart);
                     }
+                    else Tiles.add(x,y);
+                  }
                 }
+                else{
+                  if(x<34){
+                    if (c == 'Y'){
+                      yellowStart = new Tile(x,y,"yellowS");
+                      l.add(yellowStart);
+                    }
+                    else l.add(x,y);
+                  }
+                  else{
+                    if (c == 'G'){
+                      greenStart = new Tile(x,y,"greenS");
+                      Tiles.add(greenStart);
+                    }
+                    Tiles.add(x,y);
+                  }
+                }
+              }
+              if(x==34&&l.size()>0){
+                Tiles.attach(l);
+              }
+
+              charArray[y][x] = line.charAt(x); //charArray goes row,col while standard coord grid goes x,y
+              t.moveCursor(x,y);
+              t.putCharacter(line.charAt(x));
             }
-            
-            in.close();
-        } catch (FileNotFoundException e){
-            System.out.println("File not found: " + filename);
-            //e.printStackTrace();
-            System.exit(1);
+          }
         }
+
+        in.close();
+      } catch (FileNotFoundException e){
+        System.out.println("File not found: " + filename);
+        //e.printStackTrace();
+        System.exit(1);
+      }
     }
 
     //removes the character at the old Plane location & updates terminal
@@ -245,7 +246,7 @@ public class TerminalClass {
 	}
 
 	public static void main(String[] args) {
-    
+
 		Terminal terminal = TerminalFacade.createTerminal();
 		//terminal.enterPrivateMode();
 
@@ -256,7 +257,7 @@ public class TerminalClass {
 
 		long tStart = System.currentTimeMillis();
 		long lastSecond = 0;
-    
+
 
         char[][] board = new char[31][67]; //size of board
         int numDieSides = 6; //default # of sides for our die
@@ -265,8 +266,8 @@ public class TerminalClass {
         putFileIntoTerminal("AeroplaneChessBoard.txt",board,terminal);
         System.out.println(Tiles);
         /*
-        
-        
+
+
         //instantiates all the planes, 1 is topleft, 2 is topright, 3 is bottomleft, 4 is bottomright
         Plane red1 = new Plane("red");
         red1.setxcor(5-1);
@@ -413,7 +414,7 @@ public class TerminalClass {
                                     terminal.exitPrivateMode();
                                     System.exit(0);
                                 }
-                                
+
                                 if (key.getKind() == Key.Kind.NormalKey){ //once we have selected a plane
                                     if (x == plane1.getxcor() && y == plane1.getycor()){ //if cases used to see which plane to move
                                     erasePlaneLocation(terminal, plane1, board);
@@ -509,14 +510,14 @@ public class TerminalClass {
                     }
                     //putString(0,32,terminal,"                                  ");
                     //putString(0,32,terminal,planeTurn + "'s Turn!");
-                    
+
                 }
-                
+
 			}
-      
+
 			putTextFromFile(2,1,terminal, "AeroplaneChessBoard.txt");
       */
-      
+
 		}
   }
 }
