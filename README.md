@@ -17,4 +17,4 @@ fixed some bugs
 discovered new bugs... when there is an even roll & at least two planes out of hangar, there can be a character placed at bottom right corner of the same color of the planeTurn for some reason;
 also another bug arises cuz we havent implemented the tile system yet (when we have numPlaneCounterOnTile < 0 and the number counting system shouldnt ever go < 0)
 also need to implement numberPlane counting system for BOARD tiles (dont need to tell about the color of the planes there bc opposite color planes destroy each other so assumed all tiles with > 1 plane have their planes of the same color)
-also when there are two planes stacked on top of each other, you can't subtract one from the pile, the whole character has to disappear when moving... can be remedied by having the planeCountingOnLaunchingTile system but making that each plane occupies a different space within the launching area...
+also when there are two planes stacked on top of each other, you can't subtract one from the pile, the whole character has to disappear when moving... can be remedied by not "erasingPlaneLocation" when the tile's planesHere > 1
