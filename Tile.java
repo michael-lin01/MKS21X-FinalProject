@@ -8,7 +8,11 @@ public class Tile{
   private int xcor;
   private int ycor;
 
-
+  public Tile(int xcor, int ycor){
+    this.xcor = xcor;
+    this.ycor = ycor;
+    planeHere = false;
+  }
   public Tile(int xcor, int ycor, String color){
     this.xcor = xcor;
     this.ycor = ycor;
@@ -17,6 +21,9 @@ public class Tile{
     numPlanes = 0;
   }
 
+  public String name(){
+    return name;
+  }
   public void setNextTile(Tile next){
     nextTile = next;
   }
@@ -56,4 +63,7 @@ public class Tile{
     return nextTile;
   }
 
+  public String toString(){
+    return ""+xcor+", "+ycor;
+  }
 }

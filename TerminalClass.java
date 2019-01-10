@@ -17,8 +17,18 @@ import com.googlecode.lanterna.input.KeyMappingProfile;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+import java.util.Random;
+
+
 
 public class TerminalClass {
+  private static Tile redStart;
+  private static Tile greenStart;
+  private static Tile yellowStart;
+  private static Tile blueStart;
+
+  private static CircularLinkedList Tiles = new CircularLinkedList();
+
     //prints out a 2d array for debugging purposes
     public static String toString(char[][] charArray){
         String ans = "";
@@ -41,14 +51,16 @@ public class TerminalClass {
 
 	public static void putString(int r, int c,Terminal t, String s, String colors){
 		t.moveCursor(r,c);
-		Terminal.Color back;
+		//Terminal.Color back;
 		for(int i = 0; i < s.length();i++){
+      /*
 			back = Terminal.Color.DEFAULT; //if not a 1,2,3, or 4, background color is the default color
 			if(colors.charAt(i)=='1') back = Terminal.Color.RED;
       if(colors.charAt(i)=='2') back = Terminal.Color.YELLOW;
       if(colors.charAt(i)=='3') back = Terminal.Color.GREEN;
       if(colors.charAt(i)=='4') back = Terminal.Color.BLUE;
 			t.applyBackgroundColor(back);
+      */
 			t.putCharacter(s.charAt(i));
 		}
 	}
@@ -106,16 +118,61 @@ public class TerminalClass {
         try {
             File f = new File(filename);
             Scanner in = new Scanner(f);
+            int count;
+            CircularLinkedList l = new CircularLinkedList();
             while (in.hasNext()){
                 for (int y = 0; y < charArray.length; y++){
                     String line = in.nextLine();
+                    //System.out.println(line);
+                    count = 0;
+                    l.clear();           
                     for (int x = 0; x < charArray[y].length; x++){
-                        charArray[y][x] = line.charAt(x); //charArray goes row,col while standard coord grid goes x,y
-                        t.moveCursor(x,y);
-                        t.putCharacter(line.charAt(x));
+                      //System.out.println(x);
+                      //System.out.println(line.length());
+                    
+                      char c = line.charAt(x);
+                      if(c=='T'||c=='R'||c=='Y'||c=='B'||c=='G'){
+                        if (y == 1 || y == 29){
+                          if (line.charAt(x) == 'B'){
+                            blueStart = new Tile(y,x,"blueS");
+                            Tiles.add(blueStart);
+                          }
+                          else {
+                            if (line.charAt(x) == 'R'){
+                              redStart = new Tile(y,x,"redS");
+                              Tiles.add(redStart);
+                            }
+                            else Tiles.add(y,x);
+                          }
+                        }
+                        else{
+                          if(x<34){
+                            if (line.charAt(x) == 'Y'){
+                              yellowStart = new Tile(y,x,"yellowS");
+                              l.add(yellowStart);
+                            }
+                            else l.add(y,x);
+                          }
+                          else{
+                            if (line.charAt(x) == 'G'){
+                              greenStart = new Tile(y,x,"greenS");
+                              Tiles.add(greenStart);
+                            }
+                            Tiles.add(y,x);
+                          }
+                        }
+                      }
+                      if(x==34&&l.size()>0){
+                        Tiles.attach(l);
+                      }
+
+                      charArray[y][x] = line.charAt(x); //charArray goes row,col while standard coord grid goes x,y
+                      t.moveCursor(x,y);
+                      t.putCharacter(line.charAt(x));
                     }
                 }
             }
+            
             in.close();
         } catch (FileNotFoundException e){
             System.out.println("File not found: " + filename);
@@ -176,25 +233,21 @@ public class TerminalClass {
         t.putCharacter((char)(' ' + numPlanesOnLaunchingTile));
         t.applyForegroundColor(Terminal.Color.DEFAULT);
     }
-  
+
 
     //rolls a die and displays a dieRoll on the terminal
     public static int rollDie(int numDieSides, Terminal t, String planeTurn){
         long tStart = System.currentTimeMillis();
         Random r = new Random();
         int dieRoll = Math.abs(r.nextInt() % numDieSides) + 1;
-        putString(20, 32, t, "Roll: "+ dieRoll);
+        //putString(20, 32, t, "Roll: "+ dieRoll);
         return dieRoll;
 	}
 
 	public static void main(String[] args) {
-
-
-		int x = 10;
-		int y = 10;
-
+    
 		Terminal terminal = TerminalFacade.createTerminal();
-		terminal.enterPrivateMode();
+		//terminal.enterPrivateMode();
 
 		TerminalSize terminalSize = terminal.getTerminalSize();
 		terminal.setCursorVisible(false);
@@ -203,13 +256,17 @@ public class TerminalClass {
 
 		long tStart = System.currentTimeMillis();
 		long lastSecond = 0;
+    
 
         char[][] board = new char[31][67]; //size of board
         int numDieSides = 6; //default # of sides for our die
         int x = 0; //default cursor position at (x,y)
         int y = 0;
         putFileIntoTerminal("AeroplaneChessBoard.txt",board,terminal);
-
+        System.out.println(Tiles);
+        /*
+        
+        
         //instantiates all the planes, 1 is topleft, 2 is topright, 3 is bottomleft, 4 is bottomright
         Plane red1 = new Plane("red");
         red1.setxcor(5-1);
@@ -284,16 +341,16 @@ public class TerminalClass {
         Plane plane2 = red2;
         Plane plane3 = red3;
         Plane plane4 = red4;
-        putString(0,32,terminal,"red's Turn!");
+        //putString(0,32,terminal,"red's Turn!");
         int redPlanesOnLaunchingTile = 0;
         int greenPlanesOnLaunchingTile = 0;
         int bluePlanesOnLaunchingTile = 0;
         int yellowPlanesOnLaunchingTile = 0;
         int numPlanesOnLaunchingTile = redPlanesOnLaunchingTile;
         boolean selecting = true;
-
+      */
 		while(running){
-
+/*
 			Key key = terminal.readInput();
 
 			if (key != null)
@@ -312,7 +369,7 @@ public class TerminalClass {
                         (plane1.isAtHome() && plane2.isAtHome() &&
                         plane3.isAtHome() && plane4.isAtHome())){
                         boolean isMessagingTime = true;
-                        putString(40,32,terminal,"Do this odd case later");
+                        //putString(40,32,terminal,"Do this odd case later");
                         long timerStartMillis = System.currentTimeMillis();
                         while (isMessagingTime){
                             long timerEndMillis = System.currentTimeMillis();
@@ -321,7 +378,7 @@ public class TerminalClass {
                                 isMessagingTime = false;
                             }
                         }
-                        putString(40,34,terminal,"                                  ");
+                        //putString(40,34,terminal,"                                  ");
                         selecting = false;
                     }
 
@@ -345,7 +402,7 @@ public class TerminalClass {
                         terminal.moveCursor(x,y); //default location for cursor after selecting default is top plane)
                         terminal.applyBackgroundColor(Terminal.Color.MAGENTA);
                         terminal.applyForegroundColor(plane1.R(),plane1.G(),plane1.B()); //so the color of planes don't change when you are moving cursor around
-                        terminal.putCharacter('P'); //so that the cursor shows up by default
+                        //terminal.putCharacter('P'); //so that the cursor shows up by default
                         terminal.moveCursor(x,y); //to reset position
 
                         selecting = true;
@@ -356,7 +413,7 @@ public class TerminalClass {
                                     terminal.exitPrivateMode();
                                     System.exit(0);
                                 }
-
+                                
                                 if (key.getKind() == Key.Kind.NormalKey){ //once we have selected a plane
                                     if (x == plane1.getxcor() && y == plane1.getycor()){ //if cases used to see which plane to move
                                     erasePlaneLocation(terminal, plane1, board);
@@ -383,7 +440,7 @@ public class TerminalClass {
 
                                 if (key.getKind() == Key.Kind.Tab){
                                     terminal.applyBackgroundColor(Terminal.Color.DEFAULT); //to get rid of the background from old select slot
-                                    terminal.putCharacter('P');
+                                    //terminal.putCharacter('P');
                                     if (x == plane1.getxcor() && y == plane1.getycor()){
                                         if (plane2.isAtHome() && dieRoll % 2 == 0){
                                             x = plane2.getxcor();
@@ -407,7 +464,7 @@ public class TerminalClass {
                                     }
                                     terminal.moveCursor(x,y);
                                     terminal.applyBackgroundColor(Terminal.Color.MAGENTA);
-                                    terminal.putCharacter('P');
+                                    //terminal.putCharacter('P');
                                     terminal.applyBackgroundColor(Terminal.Color.DEFAULT);
                                     terminal.moveCursor(x,y); //moves back to position the cursor is over
                                 }
@@ -450,48 +507,16 @@ public class TerminalClass {
                         plane3 = red3;
                         plane4 = red4;
                     }
-                    putString(0,32,terminal,"                                  ");
-                    putString(0,32,terminal,planeTurn + "'s Turn!");
+                    //putString(0,32,terminal,"                                  ");
+                    //putString(0,32,terminal,planeTurn + "'s Turn!");
+                    
                 }
+                
 			}
-
+      
 			putTextFromFile(2,1,terminal, "AeroplaneChessBoard.txt");
-
-/*
-			putString(1,1,terminal,"                       +---+---+---+---+---+");
-			putString(1,2,terminal,"+-------+-------+    / |   |   |   |   |   | \\    +-------+-------+");
-			putString(1,3,terminal,"|   P   |   P   |  /   |   |   |   |   |   |   \\  |   P   |   P   |");
-			putString(1,4,terminal,"|       |       |/-----+---+---+---+---+---+-----\\|       |       |");
-			putString(1,5,terminal,"+-------+-------+      |       |   |       |      +-------+-------+");
-			putString(1,6,terminal,"|   P   |   P   |------+       +---+       +------|   P   |   P   |");
-			putString(1,7,terminal,"|       |       |      |       |   |       |      |       |       |");
-			putString(1,8,terminal,"+-------+---+---+------+       +---+       +------+---+---+-------+");
-			putString(1,9,terminal,"      / |   |   | \\    |= = = =|= =|= = = =|    / |   |   | \\");
-			putString(1,10,terminal,"    /   |   |   |   \\  |       +---+       |  /   |   |   |   \\");
-			putString(1,11,terminal," +/-----+---+---+-----\\+       |   |       +/-----+---+---+-----\\+");
-			putString(1,12,terminal," |      |         =            +---+            =         |      |");
-			putString(1,13,terminal," +------+         =            |   |            =         +------+");
-			putString(1,14,terminal," |      |         =         +\\-------/+         =         |      |");
-			putString(1,15,terminal," +------+---+---+---+---+---| \\ ___ / |---+---+---+---+---+------+");
-			putString(1,16,terminal," |      |   |   | = |   |   |  |___|  |   |   | = |   |   |      |");
-			putString(1,17,terminal," +------+---+---+---+---+---| /     \\ |---+---+---+---+---+------+");
-			putString(1,18,terminal," |      |         =         +/-------\\+         =         |      |");
-			putString(1,19,terminal," +------+         =            |   |            =         +------+");
-			putString(1,20,terminal," |      |         =            +---+            =         |      |");
-			putString(1,21,terminal," +\\-----+---+---+-----/+       |   |       +\\-----+---+---+-----/+");
-			putString(1,22,terminal,"    \\   |   |   |   /  |       +---+       |  \\   |   |   |   /");
-			putString(1,23,terminal,"      \\ |   |   | /    |= = = =|= =|= = = =|    \\ |   |   | /");
-			putString(1,24,terminal,"+-------+---+---+------+       +---+       +------+---+---+------+");
-			putString(1,25,terminal,"|       |       |      |       |   |       |      |       |      |");
-			putString(1,26,terminal,"|   P   |   P   |------+       +---+       +------|   P   |   P  |");
-			putString(1,27,terminal,"+-------+-------+      |       |   |       |      +-------+------+");
-			putString(1,28,terminal,"|       |       |\\-----+---+---+---+---+---+-----/|       |      |");
-			putString(1,29,terminal,"|   P   |   P   |  \\   |   |   |   |   |   |   /  |   P   |   P  |");
-			putString(1,30,terminal,"+-------+-------+    \\ |   |   |   |   |   | /    +-------+------+");
-			putString(1,31,terminal,"                       +---+---+---+---+---+");
-*/
-
-
+      */
+      
 		}
-	}
+  }
 }
