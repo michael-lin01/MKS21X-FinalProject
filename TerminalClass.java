@@ -129,7 +129,11 @@ public class TerminalClass {
             t.applyForegroundColor(Terminal.Color.YELLOW);
         }
         //-48 is bc ints are +48 when converting to chars
-        t.putCharacter((char)(numPlanesOnLaunchingTile+48));
+        if (numPlanesOnLaunchingTile > 0){
+            t.putCharacter((char)(numPlanesOnLaunchingTile+48));
+        } else {
+            t.putCharacter(' ');
+        }
         t.applyForegroundColor(Terminal.Color.DEFAULT);
     }
 
@@ -242,6 +246,7 @@ public class TerminalClass {
         Plane plane2 = red2;
         Plane plane3 = red3;
         Plane plane4 = red4;
+        Plane cursorPlane = plane1;
         putString(0,32,terminal,"red's Turn!");
         boolean selecting = true;
 
@@ -274,7 +279,7 @@ public class TerminalClass {
                                 isMessagingTime = false;
                             }
                         }
-                        putString(40,34,terminal,"                                    ");
+                        putString(40,32,terminal,"                                    ");
                         selecting = false;
                     }
 
@@ -283,33 +288,42 @@ public class TerminalClass {
                             if (!plane1.isAtHome()){ //checks which planes are out of the hangar, then moves cursor to them
                                 x = plane1.getxcor();
                                 y = plane1.getycor();
+                                cursorPlane = plane1;
                             } else if (!plane2.isAtHome()){
                                 x = plane2.getxcor();
                                 y = plane2.getycor();
+                                cursorPlane = plane2;
                             } else if (!plane3.isAtHome()){
                                 x = plane3.getxcor();
                                 y = plane3.getycor();
+                                cursorPlane = plane3;
                             } else if (!plane4.isAtHome()){
                                 x = plane4.getxcor();
                                 y = plane4.getycor();
+                                cursorPlane = plane4;
                             }
                         } 
                         else { //if you rolled an even #
                             if (plane1.isAtHome()){ //these if cases are to set which default plane the cursor goes to when selecting
                                 x = plane1.getxcor();
                                 y = plane1.getycor();
+                                cursorPlane = plane1;
                             } else if (plane2.isAtHome()){
                                 x = plane2.getxcor();
                                 y = plane2.getxcor();
+                                cursorPlane = plane2;
                             } else if (plane3.isAtHome()){
                                 x = plane3.getxcor();
                                 y = plane3.getycor();
+                                cursorPlane = plane3;
                             } else if (plane4.isAtHome()){
                                 x = plane4.getxcor();
                                 y = plane4.getycor();
+                                cursorPlane = plane4;
                             } else { //if none of them are home, default to plane1
                                 x = plane1.getxcor();
                                 y = plane1.getycor();
+                                cursorPlane = plane1;
                             }
                         }
                         terminal.moveCursor(x,y); //default location for cursor after selecting default is top plane)
@@ -328,19 +342,19 @@ public class TerminalClass {
                                 }
 
                                 if (key.getKind() == Key.Kind.NormalKey){ //once we have selected a plane
-                                    if (x == plane1.getxcor() && y == plane1.getycor()){ //if cases used to see which plane to move
+                                    if (cursorPlane == plane1){ //if cases used to see which plane to move
                                     erasePlaneLocation(terminal, plane1, board);
                                     updateLaunchingTiles(terminal, planeTurn, board, plane1.move(dieRoll, launchingTile));
                                     updatePlaneLocation(terminal, plane1, board);
-                                } else if (x == plane2.getxcor() && y == plane2.getycor()){
+                                } else if (cursorPlane == plane2){
                                     erasePlaneLocation(terminal, plane2, board);
                                     updateLaunchingTiles(terminal, planeTurn, board, plane2.move(dieRoll, launchingTile));
                                     updatePlaneLocation(terminal, plane2, board);
-                                } else if (x == plane3.getxcor() && y == plane3.getycor()){
+                                } else if (cursorPlane == plane3){
                                     erasePlaneLocation(terminal, plane3, board);
                                     updateLaunchingTiles(terminal, planeTurn, board, plane3.move(dieRoll, launchingTile));
                                     updatePlaneLocation(terminal, plane3, board);
-                                } else if (x == plane4.getxcor() && y == plane4.getycor()){
+                                } else if (cursorPlane == plane4){
                                     erasePlaneLocation(terminal, plane4, board);
                                     updateLaunchingTiles(terminal, planeTurn, board, plane4.move(dieRoll, launchingTile));
                                     updatePlaneLocation(terminal, plane4, board);
@@ -349,28 +363,85 @@ public class TerminalClass {
                                 }
 
 
-                                if (key.getKind() == Key.Kind.Tab){
+                                if (key.getKind() == Key.Kind.Tab){ //selecting through planes
                                     terminal.applyBackgroundColor(Terminal.Color.DEFAULT); //to get rid of the background from old select slot
                                     terminal.putCharacter('P');
-                                    if (x == plane1.getxcor() && y == plane1.getycor()){
-                                        if (plane2.isAtHome() && dieRoll % 2 == 0){
+                                    if (dieRoll % 2 == 0){
+                                        if (cursorPlane == plane1){
                                             x = plane2.getxcor();
                                             y = plane2.getycor();
-                                        }
-                                    } else if (x == plane2.getxcor() && y == plane2.getycor()){
-                                        if (plane2.isAtHome() && dieRoll % 2 == 0){
+                                            cursorPlane = plane2;
+                                        } else if (cursorPlane == plane2){
                                             x = plane3.getxcor();
                                             y = plane3.getycor();
-                                        }
-                                    } else if (x == plane3.getxcor() && y == plane3.getycor()){
-                                        if (plane2.isAtHome() && dieRoll % 2 == 0){
+                                            cursorPlane = plane3;
+                                        } else if (cursorPlane == plane3){
                                             x = plane4.getxcor();
                                             y = plane4.getycor();
-                                        }
-                                    } else if (x == plane4.getxcor() && y == plane4.getycor()){
-                                        if (plane2.isAtHome() && dieRoll % 2 == 0){
+                                            cursorPlane = plane4;
+                                        } else if (cursorPlane == plane4){
                                             x = plane1.getxcor();
                                             y = plane1.getycor();
+                                            cursorPlane = plane1;
+                                        }
+                                    }
+                                    if (dieRoll % 2 == 1){
+                                        if (cursorPlane == plane1){
+                                            if (!plane2.isAtHome()){
+                                                x = plane2.getxcor();
+                                                y = plane2.getycor();
+                                                cursorPlane = plane2;
+                                            } else if (!plane3.isAtHome()){
+                                                x = plane3.getxcor();
+                                                y = plane3.getycor();
+                                                cursorPlane = plane3;
+                                            } else if (!plane4.isAtHome()){
+                                                x = plane4.getxcor();
+                                                y = plane4.getycor();
+                                                cursorPlane = plane4;
+                                            }
+                                        } else if (cursorPlane == plane2){
+                                            if (!plane3.isAtHome()){
+                                                x = plane3.getxcor();
+                                                y = plane3.getycor();
+                                                cursorPlane = plane3;
+                                            } else if (!plane4.isAtHome()){
+                                                x = plane4.getxcor();
+                                                y = plane4.getycor();
+                                                cursorPlane = plane4;
+                                            } else if (!plane1.isAtHome()){
+                                                x = plane1.getxcor();
+                                                y = plane1.getycor();
+                                                cursorPlane = plane4;
+                                            }
+                                        } else if (cursorPlane == plane3){
+                                            if (!plane4.isAtHome()){
+                                                x = plane4.getxcor();
+                                                y = plane4.getycor();
+                                                cursorPlane = plane4;
+                                            } else if (!plane1.isAtHome()){
+                                                x = plane1.getxcor();
+                                                y = plane1.getycor();
+                                                cursorPlane = plane1;
+                                            } else if (!plane2.isAtHome()){
+                                                x = plane2.getxcor();
+                                                y = plane2.getycor();
+                                                cursorPlane = plane2;
+                                            }
+                                        } else if (cursorPlane == plane4){
+                                            if (!plane1.isAtHome()){
+                                                x = plane1.getxcor();
+                                                y = plane1.getycor();
+                                                cursorPlane = plane1;
+                                            } else if (!plane2.isAtHome()){
+                                                x = plane2.getxcor();
+                                                y = plane2.getycor();
+                                                cursorPlane = plane2;
+                                            } else if (!plane3.isAtHome()){
+                                                x = plane3.getxcor();
+                                                y = plane3.getycor();
+                                                cursorPlane = plane3;
+                                            }
                                         }
                                     }
                                     terminal.moveCursor(x,y);
