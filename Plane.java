@@ -34,6 +34,7 @@ public class Plane{
     }
     isAtHome = true;
     hasReachedEnd = false;
+    tileReference = new Tile(-1,-1,"filler","filler"); //is here just to avoid NullPointerException
   }
 
   public int R(){
@@ -76,54 +77,67 @@ public class Plane{
     return color;
   }
 
-  public void move(int numTiles){
+  public void setTileReference(Tile tile){
+    tileReference = tile;
+  }
+
+  //method does two functions: moves the plane AND returns how many planes are on the tile that the plane has moved to
+  public int move(int numTiles, Tile launchingTile){
     if(numTiles % 2 == 0 && isAtHome){ //first case is to get them out of the hangar
       isAtHome = false;
       if (color.equals("red")){
-        xcor = 20 - 1; //specific coords in the grid
-        ycor = 30 - 1;
-
+        tileReference = launchingTile;
       }
       if (color.equals("green")){
-        xcor = 48 - 1;
-        ycor = 30 - 1;
-
+        tileReference = launchingTile;
       }
       if (color.equals("blue")){
-        xcor = 48 - 1;
-        ycor = 2 - 1;
-
+        tileReference = launchingTile;
       }
       if (color.equals("yellow")){
-        xcor = 20 - 1;
-        ycor = 2 - 1;
-
+        tileReference = launchingTile;
       }
+      xcor = tileReference.getxcor();
+      ycor = tileReference.getycor();
+      tileReference.addPlanes(1);
+      return tileReference.getNumPlanes();
+      
     } else if (!isAtHome) { //if not at home, it means you're at the launchingPoint or already on the board
       if (tileReference.tileName().equals("LaunchingTile")){
         if (color.equals("red")){
           xcor += 2; //moves it to the first jumping spot
           ycor -= 1; // "-1" so that the plane goes up the board, since our origin is at the topleft
+          tileReference.addPlanes(-1);
+          //tileReference = redStart;
         }
         if (color.equals("green")){
           xcor -= 2;
           ycor -= 1;
+          tileReference.addPlanes(-1);
+          //tileReference = greenStart;
         }
         if (color.equals("blue")){
           xcor -= 2;
           ycor += 1;
+          tileReference.addPlanes(-1);
+          //tileReference = blueStart;
         }
         if (color.equals("yellow")){
           xcor += 2;
           ycor += 1;
+          tileReference.addPlanes(-1);
+          //tileReference = yellowStart;
         }
+        return tileReference.getNumPlanes();
       }
       else {
         tileReference = tileReference.getNextTile();
         xcor = tileReference.getxcor();
         ycor = tileReference.getycor();
+        return tileReference.getNumPlanes();
       }
     }
     //not necessarily 1, but 1 tile
+    return tileReference.getNumPlanes(); //here just to compile?
   }
 }

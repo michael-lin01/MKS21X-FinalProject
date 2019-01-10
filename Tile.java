@@ -9,10 +9,11 @@ public class Tile{
   private int ycor;
 
 
-  public Tile(int xcor, int ycor, String color){
+  public Tile(int xcor, int ycor, String color, String name){
     this.xcor = xcor;
     this.ycor = ycor;
     this.color = color;
+    this.name = name;
     planeHere = false;
     numPlanes = 0;
   }
