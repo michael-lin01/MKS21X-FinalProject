@@ -85,8 +85,8 @@ public class Plane{
     return tileReference;
   }
 
-  //method does two functions: moves the plane AND returns how many planes are on the tile that the plane has moved to
-  public int move(Tile tile){
+  //method does two functions: moves the plane AND returns the tile that the plane has moved to
+  public Tile move(Tile tile){
     if(isAtHome){ //first case is to get them out of the hangar (the only way to move
       //them out of hangar is if you select it, and you can only select planes atHome in that case)
       isAtHome = false;
@@ -105,17 +105,16 @@ public class Plane{
       xcor = tileReference.getxcor();
       ycor = tileReference.getycor();
       tileReference.addPlanes(1);
-      return tileReference.getNumPlanes();
+      return tileReference;
 
     } else if (!isAtHome) { //if not at home, it means you're at the launchingTile or already on the board
         tileReference.addPlanes(-1);
         tileReference = tile;
         xcor = tileReference.getxcor();
         ycor = tileReference.getycor();
-        return tileReference.getNumPlanes();
-      }
+        return tileReference;
     }
     //not necessarily 1, but 1 tile
-    return tileReference.getNumPlanes(); //here just to compile?
+    return tileReference; //here just to compile?
   }
 }

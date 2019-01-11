@@ -107,30 +107,30 @@ public class TerminalClass {
 
     //puts the correct number of planes on each color's respective launching tile
     //postCondition: resets background color of the character
-    public static void updateLaunchingTiles(Terminal t, String planeTurn, char[][] charArray, int numPlanesOnLaunchingTile){
+    public static void updateTileNumber(Terminal t, String planeTurn, char[][] charArray, Tile tile){
+        int xcor = tile.getxcor();
+        int ycor = tile.getycor();
         if (planeTurn == "red"){
-            charArray[30-1][19-1] = (char)numPlanesOnLaunchingTile;
-            t.moveCursor(19-1,30-1);
             t.applyForegroundColor(Terminal.Color.RED);
+            xcor -=2; //REMOVE LATER, JUST FOR TESTING PURPOSES. WHEN WE HAVE A TILE FOR STORING THE DISPLAY OF NUMBERS, USE numTile as a parameter
         }
         if (planeTurn == "green"){
-            charArray[30-1][49-1] = (char)numPlanesOnLaunchingTile;
-            t.moveCursor(49-1,30-1);
             t.applyForegroundColor(Terminal.Color.GREEN);
+            xcor -=2; //REMOVE LATER, JUST FOR TESTING PURPOSES. WHEN WE HAVE A TILE FOR STORING THE DISPLAY OF NUMBERS, USE numTile as a parameter
         }
         if (planeTurn == "blue"){
-            charArray[2-1][49-1] = (char)numPlanesOnLaunchingTile;
-            t.moveCursor(49-1,2-1);
             t.applyForegroundColor(Terminal.Color.BLUE);
+            xcor -=2; //REMOVE LATER, JUST FOR TESTING PURPOSES. WHEN WE HAVE A TILE FOR STORING THE DISPLAY OF NUMBERS, USE numTile as a parameter
         }
         if (planeTurn == "yellow"){
-            charArray[2-1][19-1] = (char)numPlanesOnLaunchingTile;
-            t.moveCursor(19-1,2-1);
             t.applyForegroundColor(Terminal.Color.YELLOW);
+            xcor -=2; //REMOVE LATER, JUST FOR TESTING PURPOSES. WHEN WE HAVE A TILE FOR STORING THE DISPLAY OF NUMBERS, USE numTile as a parameter
         }
-        //-48 is bc ints are +48 when converting to chars
-        if (numPlanesOnLaunchingTile > 0){
-            t.putCharacter((char)(numPlanesOnLaunchingTile+48));
+        charArray[ycor][xcor] = (char)tile.getNumPlanes();
+        t.moveCursor(xcor,ycor);
+        if (tile.getNumPlanes() > 1){
+            t.putCharacter((char)(tile.getNumPlanes()+48));
+            //+48 is bc ints are -48 when converting to chars
         } else {
             t.putCharacter(' ');
         }
@@ -149,7 +149,7 @@ public class TerminalClass {
 	public static void main(String[] args) {
 
 
-		Terminal terminal = TerminalFacade.createTextTerminal();
+		Terminal terminal = TerminalFacade.createTerminal();
 		terminal.enterPrivateMode();
 
 		TerminalSize terminalSize = terminal.getTerminalSize();
@@ -348,67 +348,27 @@ public class TerminalClass {
                                 }
 
                                 if (key.getKind() == Key.Kind.NormalKey){ //once we have selected a plane
-                                    if (cursorPlane == plane1){ //if cases used to see which plane to move
-                                    erasePlaneLocation(terminal, cursorPlane, board);
+                                    if (cursorPlane.getTileReference().getNumPlanes() < 2){
+                                        erasePlaneLocation(terminal, cursorPlane, board);
+                                        //basically, if the tile is a home tile, erase plane, or if the tile the plane is 
+                                        //leaving from has < 2 planes, then we don't remove the 'P'
+                                    }
                                     if (cursorPlane.isAtHome()){
-                                      updateLaunchingTiles(terminal, planeTurn, board, cursorPlane.move(launchingTile));
+                                      updateTileNumber(terminal, planeTurn, board, cursorPlane.move(launchingTile));
                                     } else if (cursorPlane.getTileReference() == launchingTile){
                                       for (int n = 1; n <= dieRoll; n++){ //n represents how many moves you have made
                                         if (n == 1){
-                                          cursorPlane.move(planeStart);
+                                            updateTileNumber(terminal, planeTurn, board, cursorPlane.move(planeStart));
                                         } else {
                                           //later implement code if it happens to stumble upon a plane of opposite color
-                                          cursorPlane.move(getTileReference.getNextTile())
+                                          //updateTileNumber(terminal, planeTurn, board, cursorPlane.move(cursorPlane.getTileReference().getNextTile()));
                                         }
                                       }
+                                    } else { //add an if case here later for if this tile is on an endTile 
+                                        //DEBUGGING, REMOVE LATER
+                                          //updateTileNumber(terminal, planeTurn, board, cursorPlane.move(cursorPlane.getTileReference().getNextTile()));
                                     }
-                                    updatePlaneLocation(terminal, cursorPlane, board);
-                                } else if (cursorPlane == plane2){
-                                    erasePlaneLocation(terminal, cursorPlane, board);
-                                    if (cursorPlane.isAtHome()){
-                                      updateLaunchingTiles(terminal, planeTurn, board, cursorPlane.move(launchingTile));
-                                    } else if (cursorPlane.getTileReference() == launchingTile){
-                                      for (int n = 1; n <= dieRoll; n++){ //n represents how many moves you have made
-                                        if (n == 1){
-                                          cursorPlane.move(planeStart);
-                                        } else {
-                                          //later implement code if it happens to stumble upon a plane of opposite color
-                                          cursorPlane.move(getTileReference.getNextTile())
-                                        }
-                                      }
-                                    }
-                                    updatePlaneLocation(terminal, cursorPlane, board);
-                                } else if (cursorPlane == plane3){
-                                    erasePlaneLocation(terminal, cursorPlane, board);
-                                    if (cursorPlane.isAtHome()){
-                                      updateLaunchingTiles(terminal, planeTurn, board, cursorPlane.move(launchingTile));
-                                    } else if (cursorPlane.getTileReference() == launchingTile){
-                                      for (int n = 1; n <= dieRoll; n++){ //n represents how many moves you have made
-                                        if (n == 1){
-                                          cursorPlane.move(planeStart);
-                                        } else {
-                                          //later implement code if it happens to stumble upon a plane of opposite color
-                                          cursorPlane.move(getTileReference.getNextTile())
-                                        }
-                                      }
-                                    }
-                                    updatePlaneLocation(terminal, cursorPlane, board);
-                                } else if (cursorPlane == plane4){
-                                    erasePlaneLocation(terminal, cursorPlane, board);
-                                    if (cursorPlane.isAtHome()){
-                                      updateLaunchingTiles(terminal, planeTurn, board, cursorPlane.move(launchingTile));
-                                    } else if (cursorPlane.getTileReference() == launchingTile){
-                                      for (int n = 1; n <= dieRoll; n++){ //n represents how many moves you have made
-                                        if (n == 1){
-                                          cursorPlane.move(planeStart);
-                                        } else {
-                                          //later implement code if it happens to stumble upon a plane of opposite color
-                                          cursorPlane.move(getTileReference.getNextTile())
-                                        }
-                                      }
-                                    }
-                                    updatePlaneLocation(terminal, cursorPlane, board);
-                                }
+                                    updatePlaneLocation(terminal, cursorPlane, board); 
                                     selecting = false;
                                 }
 
