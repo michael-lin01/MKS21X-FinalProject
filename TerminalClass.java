@@ -309,28 +309,36 @@ public class TerminalClass {
                             }
                         }
                         else { //if you rolled an even #, use these if cases to decide default placement for cursor
+                            //System.out.println("debugging");
                             if (plane1.isAtHome()){ //these if cases are to set which default plane the cursor goes to when selecting
                                 x = plane1.getxcor();
                                 y = plane1.getycor();
                                 cursorPlane = plane1;
+                                //System.out.println("plane1 if?" + "x: " + x + " y: " + y);
                             } else if (plane2.isAtHome()){
                                 x = plane2.getxcor();
-                                y = plane2.getxcor();
+                                y = plane2.getycor();
                                 cursorPlane = plane2;
+                                //System.out.println("plane2 if?" + "x: " + x + " y: " + y);
                             } else if (plane3.isAtHome()){
                                 x = plane3.getxcor();
                                 y = plane3.getycor();
                                 cursorPlane = plane3;
+                                //System.out.println("plane3 if?" + "x: " + x + " y: " + y);
                             } else if (plane4.isAtHome()){
                                 x = plane4.getxcor();
                                 y = plane4.getycor();
                                 cursorPlane = plane4;
+                                //System.out.println("plane4 if?" + "x: " + x + " y: " + y);
                             } else { //if none of them are home, default to plane1
                                 x = plane1.getxcor();
                                 y = plane1.getycor();
                                 cursorPlane = plane1;
+                                //System.out.println("should have worked?" + "plane1: x: " + x + " y: " + y);
                             }
                         }
+
+                        //this part occurs regardless if it was an odd or even roll (a desired feature)
                         System.out.println("x: "+x + " y: "+y); //debugging
                         terminal.moveCursor(x,y); //default location for cursor after selecting default is top plane)
                         terminal.applyBackgroundColor(Terminal.Color.MAGENTA);
