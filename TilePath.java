@@ -66,12 +66,15 @@ public class TilePath{
   }
   
   public void add(int index, Tile tile){
-    if (size == 0) add(xcor, ycor);
+    if (size == 0){
+      start = tile;
+      end = tile;
+    }
     else{
       tile.setNextTile(start);
-      start = t;
-      size++;
+      start = tile;
     }
+    size++;
   }
   
   

@@ -123,10 +123,11 @@ public class TerminalClass {
           for (int x = 0; x < line.length(); x++){
             char c = line.charAt(x);
             if(c=='T'||c=='R'||c=='Y'||c=='B'||c=='G'){
-              if(c=='R'){
-                redStart = new Tile(x,y,red);
-                Tiles.add(0,redStart);
-              }
+              if(c=='R') redStart = new Tile(x,y,"red");
+              if(c=='Y') yellowStart = new Tile(x,y,"yellow");
+              if(c=='B') blueStart = new Tile(x,y,"blue");
+              if(c=='G') greenStart = new Tile(x,y,"green");
+              
               if(y==1){
                 Tiles.add(x,y);  
               }
@@ -134,17 +135,27 @@ public class TerminalClass {
                 if(y==28) Tiles.add(0,x,y);
                 else{
                   if(y==21){
-                    if(x<34) Tiles.add(0,x,y);
-                    else {
-                      l.add(0,x,y);
+                    if(x==14) Tiles.add(0, redStart);
+                    else{
+                      if(x<34){ 
+                        Tiles.add(0,x,y);
+                      }
+                      else{
+                        l.add(0,x,y);
+                      }
                     }
                   }
                   else{
                     if(x<34){
-                      l.add(x,y);
+                      if(x==20&&y==6) l.add(yellowStart);
+                      else l.add(x,y);
                     }
                     else{
-                      Tiles.add(x,y);
+                      if(x==52&&y==8) Tiles.add(blueStart);
+                      else{
+                        if(x==46&&y==24) Tiles.add(greenStart);
+                        else Tiles.add(x,y);
+                      }
                     }
                   }
                 }
@@ -162,10 +173,6 @@ public class TerminalClass {
         }
         Tiles.close();
         in.close();
-        //System.out.println(blueStart);
-        //System.out.println(redStart);
-        //System.out.println(yellowStart);
-        //System.out.println(greenStart);
       }
         
        catch (FileNotFoundException e){
