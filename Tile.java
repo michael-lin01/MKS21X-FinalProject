@@ -12,6 +12,7 @@ public class Tile{
     this.xcor = xcor;
     this.ycor = ycor;
     planeHere = false;
+    numPlanes=0;
   }
   public Tile(int xcor, int ycor, String color){
     this.xcor = xcor;

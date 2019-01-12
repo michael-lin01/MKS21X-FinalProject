@@ -111,25 +111,84 @@ public class TerminalClass {
       		System.exit(1);
     	}
     }
+    
+    public static void mapTiles(){
+      try {
+        File f = new File("AeroplaneChessBoard.txt");
+        Scanner in = new Scanner(f);
+        TilePath l = new TilePath();
+        for (int y = 0; y < 31; y++){
+          String line = in.nextLine();
+          l.clear();
+          for (int x = 0; x < line.length(); x++){
+            char c = line.charAt(x);
+            if(c=='T'||c=='R'||c=='Y'||c=='B'||c=='G'){
+              if(c=='R'){
+                redStart = new Tile(x,y,red);
+                Tiles.add(0,redStart);
+              }
+              if(y==1){
+                Tiles.add(x,y);  
+              }
+              else{
+                if(y==28) Tiles.add(0,x,y);
+                else{
+                  if(y==21){
+                    if(x<34) Tiles.add(0,x,y);
+                    else {
+                      l.add(0,x,y);
+                    }
+                  }
+                  else{
+                    if(x<34){
+                      l.add(x,y);
+                    }
+                    else{
+                      Tiles.add(x,y);
+                    }
+                  }
+                }
+              }
+            }
+            if(x==line.length()-1&&y==21&&l.size()>0){
 
+              Tiles.extend(l);
+              l.clear();
+            }
+            if(x==34&&l.size()>0){
+              Tiles.attach(l);
+            }
+          }
+        }
+        Tiles.close();
+        in.close();
+        //System.out.println(blueStart);
+        //System.out.println(redStart);
+        //System.out.println(yellowStart);
+        //System.out.println(greenStart);
+      }
+        
+       catch (FileNotFoundException e){
+        //e.printStackTrace();
+        System.exit(1);
+      }
+    }
 
     //preCondition: must be rectangular array with size > 0, and charArray must fit the file text size perfectly
     public static void putFileIntoTerminal(String filename, char[][] charArray, Terminal t){
       try {
         File f = new File(filename);
         Scanner in = new Scanner(f);
-        int count;
-        TilePath l = new TilePath();
+        //TilePath l = new TilePath();
         while (in.hasNext()){
           for (int y = 0; y < charArray.length; y++){
             String line = in.nextLine();
             //System.out.println(line);
-            count = 0;
-            l.clear();
+            //l.clear();
             for (int x = 0; x < line.length(); x++){
               //System.out.println(x);
               //System.out.println(line.length());
-
+              /*
               char c = line.charAt(x);
               //System.out.println(c);
               if(c=='T'||c=='R'||c=='Y'||c=='B'||c=='G'){
@@ -166,7 +225,7 @@ public class TerminalClass {
               if(x==34&&l.size()>0){
                 Tiles.attach(l);
               }
-
+              */
               charArray[y][x] = line.charAt(x); //charArray goes row,col while standard coord grid goes x,y
               t.moveCursor(x,y);
               t.putCharacter(line.charAt(x));
@@ -264,6 +323,7 @@ public class TerminalClass {
         int x = 0; //default cursor position at (x,y)
         int y = 0;
         putFileIntoTerminal("AeroplaneChessBoard.txt",board,terminal);
+        mapTiles();
         System.out.println(Tiles);
         /*
 

@@ -27,9 +27,16 @@ public class TilePath{
   }
 
   public void add(Tile n){
-    end.setNextTile(n);
-    end = n;
-    size++;
+    if (size == 0){
+      start = n;
+      end = n;
+      size++;
+    }
+    else{
+      end.setNextTile(n);
+      end = n;
+      size++;
+    }
   }
 
   public boolean add(int xcor, int ycor){
@@ -50,20 +57,44 @@ public class TilePath{
 
   public void add(int index, int xcor, int ycor){
     if (size == 0) add(xcor, ycor);
-    Tile t = new Tile(xcor, ycor);
-    t.setNextTile(start);
-    start = t;
-    size++;
+    else{
+      Tile t = new Tile(xcor, ycor);
+      t.setNextTile(start);
+      start = t;
+      size++;
+    }
   }
+  
+  public void add(int index, Tile tile){
+    if (size == 0) add(xcor, ycor);
+    else{
+      tile.setNextTile(start);
+      start = t;
+      size++;
+    }
+  }
+  
+  
 
   public void attach(TilePath l){
     l.end().setNextTile(start);
     start = l.start();
     size += l.size();
   }
+  
+  public void extend(TilePath l){
+    end.setNextTile(l.start());
+    end = l.end();
+    size+= l.size();
+    
+  }
 
   public void clear(){
     size = 0;
+  }
+  
+  public void close(){
+    end.setNextTile(start);
   }
 
   public String toString(){
@@ -73,16 +104,14 @@ public class TilePath{
     String ans = "[";
     //transversing list
     Tile current = start;
-    System.out.println(current);
     int counter = 0;
-    while(current != null && counter != 50){
-      System.out.println(current);
+    while(current != null && counter!= 52){
       ans += ("("+current.getxcor()+", "+current.getycor()+") ");
       current = current.getNextTile();
       counter++;
       //System.out.println(current);
     }
-    return ans;
+    return ans+"]";
     //return ans.substring(0,ans.length()-2)+"]";
   }
 
