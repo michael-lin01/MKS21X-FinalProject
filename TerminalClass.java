@@ -128,34 +128,32 @@ public class TerminalClass {
               if(c=='B') blueStart = new Tile(x,y,"blue");
               if(c=='G') greenStart = new Tile(x,y,"green");
               
-              if(y==1){
-                Tiles.add(x,y);  
+              if(y==2){
+                if(blueStart != null && x==blueStart.getxcor()) Tiles.add(blueStart);
+                else Tiles.add(x,y);  
               }
               else{
-                if(y==28) Tiles.add(0,x,y);
+                if(y==28){
+                  if(redStart != null && x==redStart.getxcor()) Tiles.add(0,redStart);
+                  else Tiles.add(0,x,y);
+                }
                 else{
                   if(y==21){
-                    if(redStart != null && x==redStart.getxcor()) Tiles.add(0, redStart);
+                    if(x<34){ 
+                      Tiles.add(0,x,y);
+                    }
                     else{
-                      if(x<34){ 
-                        Tiles.add(0,x,y);
-                      }
-                      else{
-                        l.add(0,x,y);
-                      }
+                      if(greenStart!=null&&x==greenStart.getxcor()) l.add(0,greenStart);
+                      else l.add(0,x,y);
                     }
                   }
                   else{
                     if(x<34){
-                      if(yellowStart != null && x==yellowStart.getxcor()&&y==yellowStart.getycor()) l.add(yellowStart);
+                      if(yellowStart != null && x==yellowStart.getxcor()&& y==yellowStart.getycor()) l.add(yellowStart);
                       else l.add(x,y);
                     }
                     else{
-                      if(blueStart != null && x==blueStart.getxcor() &&y==blueStart.getycor()) Tiles.add(blueStart);
-                      else{
-                        if(greenStart != null && x==greenStart.getxcor() &&y==greenStart.getycor()) Tiles.add(greenStart);
-                        else Tiles.add(x,y);
-                      }
+                      Tiles.add(x,y);
                     }
                   }
                 }
@@ -173,12 +171,12 @@ public class TerminalClass {
         }
         Tiles.close();
         in.close();
+        System.out.println(redStart);
+        System.out.println(redStart.getNextTile());
         System.out.println(yellowStart);
         System.out.println(yellowStart.getNextTile());
         System.out.println(blueStart);
         System.out.println(blueStart.getNextTile());
-        System.out.println(redStart);
-        System.out.println(redStart.getNextTile());
         System.out.println(greenStart);
         System.out.println(greenStart.getNextTile());
       }
