@@ -26,5 +26,14 @@ SOLVED BUG3, but found a new bug where moving a plane doesn't subtract from prev
 
 
 
-BUGS TO FIX:
+BUGS TO FIX: ------------------------------------------
 bug2 
+TO DO: ----------------------------------------------
+createTextTerminal instead of createTerminal
+numberTiles
+when three 6's are rolled in a roll, retract every step?? kinda complicated tho cuz u need a memory storer...
+endTiles
+Settings & Pausing
+Menu so its not boring
+plane attacks
+short haul shortcuts and long haul shortcuts
