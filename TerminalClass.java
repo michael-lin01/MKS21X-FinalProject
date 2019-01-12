@@ -135,7 +135,7 @@ public class TerminalClass {
                 if(y==28) Tiles.add(0,x,y);
                 else{
                   if(y==21){
-                    if(x==14) Tiles.add(0, redStart);
+                    if(redStart != null && x==redStart.getxcor()) Tiles.add(0, redStart);
                     else{
                       if(x<34){ 
                         Tiles.add(0,x,y);
@@ -147,13 +147,13 @@ public class TerminalClass {
                   }
                   else{
                     if(x<34){
-                      if(x==20&&y==6) l.add(yellowStart);
+                      if(yellowStart != null && x==yellowStart.getxcor()&&y==yellowStart.getycor()) l.add(yellowStart);
                       else l.add(x,y);
                     }
                     else{
-                      if(x==52&&y==8) Tiles.add(blueStart);
+                      if(blueStart != null && x==blueStart.getxcor() &&y==blueStart.getycor()) Tiles.add(blueStart);
                       else{
-                        if(x==46&&y==24) Tiles.add(greenStart);
+                        if(greenStart != null && x==greenStart.getxcor() &&y==greenStart.getycor()) Tiles.add(greenStart);
                         else Tiles.add(x,y);
                       }
                     }
@@ -173,6 +173,14 @@ public class TerminalClass {
         }
         Tiles.close();
         in.close();
+        System.out.println(yellowStart);
+        System.out.println(yellowStart.getNextTile());
+        System.out.println(blueStart);
+        System.out.println(blueStart.getNextTile());
+        System.out.println(redStart);
+        System.out.println(redStart.getNextTile());
+        System.out.println(greenStart);
+        System.out.println(greenStart.getNextTile());
       }
         
        catch (FileNotFoundException e){
@@ -332,7 +340,7 @@ public class TerminalClass {
         putFileIntoTerminal("AeroplaneChessBoard.txt",board,terminal);
         mapTiles();
         System.out.println(Tiles);
-        /*
+        
 
 
         //instantiates all the planes, 1 is topleft, 2 is topright, 3 is bottomleft, 4 is bottomright
@@ -416,7 +424,7 @@ public class TerminalClass {
         int yellowPlanesOnLaunchingTile = 0;
         int numPlanesOnLaunchingTile = redPlanesOnLaunchingTile;
         boolean selecting = true;
-      */
+      
 		while(running){
 /*
 			Key key = terminal.readInput();
