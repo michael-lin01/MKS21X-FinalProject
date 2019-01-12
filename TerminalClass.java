@@ -124,31 +124,26 @@ public class TerminalClass {
               }
               else{
                 if(y==28){
-                    if(redStart != null && x==redStart.getxcor()) Tiles.add(0,redStart);
-                    else Tiles.add(0,x,y);
-                  }
+                  if(redStart != null && x==redStart.getxcor()) Tiles.add(0,redStart);
+                  else Tiles.add(0,x,y);
+                }
                 else{
                   if(y==21){
+                    if(x<34){ 
+                      Tiles.add(0,x,y);
+                    }
                     else{
-                      if(x<34){ 
-                        Tiles.add(0,x,y);
-                      }
-                      else{
-                        l.add(0,x,y);
-                      }
+                      if(greenStart!=null&&x==greenStart.getxcor()) l.add(0,greenStart);
+                      else l.add(0,x,y);
                     }
                   }
                   else{
                     if(x<34){
-                      if(yellowStart != null && x==yellowStart.getxcor()&&y==yellowStart.getycor()) l.add(yellowStart);
+                      if(yellowStart != null && x==yellowStart.getxcor()&& y==yellowStart.getycor()) l.add(yellowStart);
                       else l.add(x,y);
                     }
                     else{
-                      if(blueStart != null && x==blueStart.getxcor() &&y==blueStart.getycor()) Tiles.add(blueStart);
-                      else{
-                        if(greenStart != null && x==greenStart.getxcor() &&y==greenStart.getycor()) Tiles.add(greenStart);
-                        else Tiles.add(x,y);
-                      }
+                      Tiles.add(x,y);
                     }
                   }
                 }
@@ -166,21 +161,21 @@ public class TerminalClass {
         }
         Tiles.close();
         in.close();
-        System.out.println(Tiles);
-        Tile nextTile = blueStart;
-        for (int n = 0; n < 52; n++){
-            System.out.print("looping through test: " + "n: " + n + "  nextTile: ");
+        Tile nextTile = greenStart;
+        for (int n = 0; n < 10; n++){
+            System.out.print("nextTile: ");
             System.out.println(nextTile);
             nextTile = nextTile.getNextTile();
-        }
+        }/*
+        System.out.println(redStart);
+        System.out.println(redStart.getNextTile());
         System.out.println(yellowStart);
         System.out.println(yellowStart.getNextTile());
         System.out.println(blueStart);
         System.out.println(blueStart.getNextTile());
-        System.out.println(redStart);
-        System.out.println(redStart.getNextTile()); //broken
         System.out.println(greenStart);
-        System.out.println(greenStart.getNextTile()); //broken
+        System.out.println(greenStart.getNextTile());
+        */
       }
         
        catch (FileNotFoundException e){
@@ -468,7 +463,7 @@ public class TerminalClass {
                         }
 
                         //this part occurs regardless if it was an odd or even roll (a desired feature)
-                        System.out.println("x: "+x + " y: "+y); //debugging
+                        //System.out.println("x: "+x + " y: "+y); //debugging
                         terminal.moveCursor(x,y); //default location for cursor after selecting default is top plane)
                         terminal.applyBackgroundColor(Terminal.Color.MAGENTA);
                         terminal.applyForegroundColor(plane1.R(),plane1.G(),plane1.B()); //so the color of planes don't change when you are moving cursor around
@@ -485,6 +480,7 @@ public class TerminalClass {
                                 }
 
                                 if (key.getKind() == Key.Kind.NormalKey){ //once we have selected a plane
+                                    System.out.println("planeTurn: "+planeTurn);
                                     if (cursorPlane.getTileReference().getNumPlanes() < 2){
                                         erasePlaneLocation(terminal, cursorPlane, board);
                                     }
@@ -492,25 +488,26 @@ public class TerminalClass {
                                       updateTileNumber(terminal, planeTurn, board, cursorPlane.move(launchingTile));
                                       updatePlaneLocation(terminal, cursorPlane, board); 
                                     } else {
-                                        boolean animating = true;
-                                        long milliStart = System.currentTimeMillis();
-                                        while (animating){
-                                            long milliEnd = System.currentTimeMillis();
-                                            long milliDiff = milliEnd - milliStart;
-                                            //if (milliDiff % 100 == 0) System.out.println(milliDiff);
-                                            if (cursorPlane.getTileReference() == launchingTile){ //if plane is on launchingTile
-                                                updateTileNumber(terminal, planeTurn, board, cursorPlane.move(planeStart));
-                                            } else { //if plane is already on the board
-                                                //updateTileNumber(terminal, planeTurn, board, cursorPlane.move(cursorPlane.getTileReference().getNextTile()));
-                                            } //else {
-                                                //this section will be for if the plane is on an endTile
-                                            //}
-                                            //occurs regardless of what tile the plane is on
-                                            if (milliDiff / 1000.0 >= 0.5){
-                                                //later implement code if it happens to stumble upon a plane of opposite color
-                                                System.out.println(cursorPlane.getTileReference().getNextTile());
-                                                updatePlaneLocation(terminal, cursorPlane, board);
-                                                animating = false;
+                                        for (int n = 1; n <= dieRoll; n++){
+                                            boolean animating = true;
+                                            long milliStart = System.currentTimeMillis();
+                                            while (animating){
+                                                long milliEnd = System.currentTimeMillis();
+                                                long milliDiff = milliEnd - milliStart;
+                                                //if (milliDiff % 100 == 0) System.out.println(milliDiff);
+                                                if (milliDiff / 1000.0 >= 0.5){
+                                                    if (cursorPlane.getTileReference() == launchingTile){ //if plane is on launchingTile
+                                                        updateTileNumber(terminal, planeTurn, board, cursorPlane.move(planeStart));
+                                                        System.out.println("I'm on planeStart!");
+                                                    } else { //if plane is already on the board
+                                                        updateTileNumber(terminal, planeTurn, board, cursorPlane.move(cursorPlane.getTileReference().getNextTile()));
+                                                    } //else {
+                                                        //this section will be for if the plane is on an endTile
+                                                    //}
+                                                    //occurs regardless of what tile the plane is on
+                                                    updatePlaneLocation(terminal, cursorPlane, board);
+                                                    animating = false;
+                                                }
                                             }
                                         }
                                     }
