@@ -18,6 +18,17 @@ public class TilePath{
     return current;
   }
 
+  public Tile getTileAt(int xcor, int ycor){
+    Tile current = start;
+    for (int n = 0; n < size; n++){
+      if (current.getxcor() == xcor && current.getycor() == ycor){
+        return current;
+      }
+      current = current.getNextTile();
+    }
+    return new Tile(-1,-1); //if no tile is found
+  }
+
   public Tile start(){
     return start;
   }

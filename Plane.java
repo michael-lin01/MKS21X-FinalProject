@@ -5,14 +5,16 @@ public class Plane{
   private int G;
   private int B;
   private Tile tileReference; //should never be null unless the plane hasn't gotten off hangar
-  private boolean atHome;
+  private boolean isAtHome;
   private int pointValue;
   private boolean hasReachedEnd;
   private int xcor;
   private int ycor;
 
-  public Plane(String color){
+  public Plane(String color, int xcor, int ycor){
     this.color = color;
+    this.xcor = xcor;
+    this.ycor = ycor;
     if (color.equals("red")){
       R = 255;
       G = 0;
@@ -32,8 +34,9 @@ public class Plane{
     } else {
       throw new IllegalArgumentException("inputted non-valid color... only valid colors are red, green, blue, and yellow");
     }
-    atHome = true;
+    isAtHome = true;
     hasReachedEnd = false;
+    tileReference = new Tile(-1,-1,"filler"); //is here just to avoid NullPointerException
   }
 
   public int R(){
@@ -65,71 +68,44 @@ public class Plane{
   }
 
   public void setAtHome(boolean bool){
-    atHome = bool;
+    isAtHome = bool;
   }
 
   public boolean isAtHome(){
-    return atHome;
+    return isAtHome;
   }
 
   public String color(){
     return color;
   }
 
-  public void move(Tile tile){
-    tileReference = tile;
-    xcor = tile.getxcor();
-    ycor = tile.getycor();
+  public Tile getTileReference(){
+    return tileReference;
   }
 
-  public void move(int numTiles){
-    if(numTiles % 2 == 0 && atHome){ //first case is to get them out of the hangar
-      atHome = false;
-      if (color.equals("red")){
-        xcor = 20 - 1; //specific coords in the grid
-        ycor = 30 - 1;
+  public void setTileReference(Tile tile){
+    tileReference = tile;
+  }
 
-      }
-      if (color.equals("green")){
-        xcor = 48 - 1;
-        ycor = 30 - 1;
+  //method does two functions: moves the plane AND returns the tile that the plane has moved to
+  public Tile move(Tile tile){
+    if(isAtHome){ //first case is to get them out of the hangar (the only way to move
+      //them out of hangar is if you select it, and you can only select planes atHome in that case)
+      isAtHome = false;
+      tileReference = tile;
+      xcor = tileReference.getxcor();
+      ycor = tileReference.getycor();
+      tileReference.addPlanes(1);
+      return tileReference;
 
-      }
-      if (color.equals("blue")){
-        xcor = 48 - 1;
-        ycor = 2 - 1;
-
-      }
-      if (color.equals("yellow")){
-        xcor = 20 - 1;
-        ycor = 2 - 1;
-
-      }
-    } else if (!atHome) { //if not at home, it means you're at the launchingPoint or already on the board
-      if (tileReference.name().equals("LaunchingTile")){
-        if (color.equals("red")){
-          xcor += 2; //moves it to the first jumping spot
-          ycor -= 1; // "-1" so that the plane goes up the board, since our origin is at the topleft
-        }
-        if (color.equals("green")){
-          xcor -= 2;
-          ycor -= 1;
-        }
-        if (color.equals("blue")){
-          xcor -= 2;
-          ycor += 1;
-        }
-        if (color.equals("yellow")){
-          xcor += 2;
-          ycor += 1;
-        }
-      }
-      else {
-        tileReference = tileReference.getNextTile();
+    } else if (!isAtHome) { //if not at home, it means you're at the launchingTile or already on the board
+        tileReference.addPlanes(-1);
+        tileReference = tile;
         xcor = tileReference.getxcor();
         ycor = tileReference.getycor();
-      }
+        return tileReference;
     }
     //not necessarily 1, but 1 tile
+    return tileReference; //here just to compile?
   }
 }

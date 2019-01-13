@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.Random;
+import java.util.ArrayList;
 
 
 
@@ -26,6 +27,10 @@ public class TerminalClass {
   private static Tile greenStart;
   private static Tile yellowStart;
   private static Tile blueStart;
+  private static Tile redLaunchingTile;
+  private static Tile greenLaunchingTile;
+  private static Tile yellowLaunchingTile;
+  private static Tile blueLaunchingTile;
 
   private static TilePath Tiles = new TilePath();
 
@@ -65,8 +70,8 @@ public class TerminalClass {
 		}
 	}
 
-
-	public static void putTextFromFile(int r, int c, Terminal t, String fileName){
+  //puts text from a file into (r,c) on the terminal, where (r,c) is the topleft most point
+	public static void putTextFromFile(int r, int c, Terminal t, String fileName, char[][] charArray){
 		try{
 			File f = new File(fileName);
 			File colors = new File("AeroplaneChessBoardColors.txt");
@@ -76,8 +81,12 @@ public class TerminalClass {
 			int lineCounter = c;
 			while (in.hasNext()){
 				String line = in.nextLine();
-				String linecolor = colorsin.nextLine();
-				putString(r,lineCounter, t, line, linecolor);
+				//String linecolor = colorsin.nextLine();
+				putString(r,lineCounter, t, line);//, linecolor);
+				for (int index = 0; index < line.length(); index++){
+					char character = line.charAt(index);
+					charArray[lineCounter][index] = character;
+				}
 				lineCounter++;
       }
     }catch(FileNotFoundException e){
@@ -86,31 +95,6 @@ public class TerminalClass {
       System.exit(1);
 		}
 	}
-    //puts text from a file into (0,0) on the terminal, where (0,0) is the topleft most point
-	public static void putTextFromFile(Terminal t, String fileName, char[][] charArray){
-		try{
-			File f = new File(fileName);
-			Scanner in = new Scanner(f);
-            for (int row = 0; row < charArray.length; row++){
-                String line = in.nextLine();
-                for (int col = 0; col < charArray[row].length; col++){
-                    char character = line.charAt(col);
-                    /*if (character == 'P'){
-                        t.applyForegroundColor(Terminal.Color.RED);
-                    } else {
-                        t.applyForegroundColor(Terminal.Color.DEFAULT);
-                    }*/
-                    charArray[row][col] = character;
-                    t.moveCursor(col,row);
-                    t.putCharacter(character);
-                }
-            }
-    	}catch(FileNotFoundException e){
-      		System.out.println("File not found: " + fileName);
-      		//e.printStackTrace();
-      		System.exit(1);
-    	}
-    }
     
     public static void mapTiles(){
       try {
@@ -122,11 +106,18 @@ public class TerminalClass {
           l.clear();
           for (int x = 0; x < line.length(); x++){
             char c = line.charAt(x);
-            if(c=='T'||c=='R'||c=='Y'||c=='B'||c=='G'){
+            if (c=='r'||c=='y'||c=='b'||c=='g'){
+              if(c=='r') redLaunchingTile = new Tile(x,y,"red");
+              if(c=='y') yellowLaunchingTile = new Tile(x,y,"yellow");
+              if(c=='b') blueLaunchingTile = new Tile(x,y,"blue");
+              if(c=='g') greenLaunchingTile = new Tile(x,y,"green");
+            } 
+            else if(c=='T'||c=='R'||c=='Y'||c=='B'||c=='G'){
               if(c=='R') redStart = new Tile(x,y,"red");
               if(c=='Y') yellowStart = new Tile(x,y,"yellow");
               if(c=='B') blueStart = new Tile(x,y,"blue");
               if(c=='G') greenStart = new Tile(x,y,"green");
+
               
               if(y==2){
                 if(blueStart != null && x==blueStart.getxcor()) Tiles.add(blueStart);
@@ -171,6 +162,12 @@ public class TerminalClass {
         }
         Tiles.close();
         in.close();
+        /*Tile nextTile = greenStart;
+        for (int n = 0; n < 10; n++){
+            System.out.print("nextTile: ");
+            System.out.println(nextTile);
+            nextTile = nextTile.getNextTile();
+        }
         System.out.println(redStart);
         System.out.println(redStart.getNextTile());
         System.out.println(yellowStart);
@@ -179,6 +176,7 @@ public class TerminalClass {
         System.out.println(blueStart.getNextTile());
         System.out.println(greenStart);
         System.out.println(greenStart.getNextTile());
+        */
       }
         
        catch (FileNotFoundException e){
@@ -196,49 +194,7 @@ public class TerminalClass {
         while (in.hasNext()){
           for (int y = 0; y < charArray.length; y++){
             String line = in.nextLine();
-            //System.out.println(line);
-            //l.clear();
             for (int x = 0; x < line.length(); x++){
-              //System.out.println(x);
-              //System.out.println(line.length());
-              /*
-              char c = line.charAt(x);
-              //System.out.println(c);
-              if(c=='T'||c=='R'||c=='Y'||c=='B'||c=='G'){
-                if (y == 1 || y == 28){
-                  if (c == 'B'){
-                    blueStart = new Tile(x,y,"blueS");
-                    Tiles.add(blueStart);
-                  }
-                  else {
-                    if (c == 'R'){
-                      redStart = new Tile(x,y,"redS");
-                      Tiles.add(redStart);
-                    }
-                    else Tiles.add(x,y);
-                  }
-                }
-                else{
-                  if(x<34){
-                    if (c == 'Y'){
-                      yellowStart = new Tile(x,y,"yellowS");
-                      l.add(yellowStart);
-                    }
-                    else l.add(x,y);
-                  }
-                  else{
-                    if (c == 'G'){
-                      greenStart = new Tile(x,y,"greenS");
-                      Tiles.add(greenStart);
-                    }
-                    Tiles.add(x,y);
-                  }
-                }
-              }
-              if(x==34&&l.size()>0){
-                Tiles.attach(l);
-              }
-              */
               charArray[y][x] = line.charAt(x); //charArray goes row,col while standard coord grid goes x,y
               t.moveCursor(x,y);
               t.putCharacter(line.charAt(x));
@@ -281,48 +237,53 @@ public class TerminalClass {
 
     //puts the correct number of planes on each color's respective launching tile
     //postCondition: resets background color of the character
-    public static void updateLaunchingTiles(Terminal t, String planeTurn, char[][] charArray, int numPlanesOnLaunchingTile){
+    public static void updateTileNumber(Terminal t, String planeTurn, char[][] charArray, Tile tile){
+        int xcor = tile.getxcor();
+        int ycor = tile.getycor();
+        t.applyBackgroundColor(Terminal.Color.DEFAULT);
         if (planeTurn == "red"){
-            charArray[19-1][30-1] = (char)numPlanesOnLaunchingTile;
-            t.moveCursor(30-1,19-1);
             t.applyForegroundColor(Terminal.Color.RED);
+            xcor --; //REMOVE LATER, JUST FOR TESTING PURPOSES. WHEN WE HAVE A TILE FOR STORING THE DISPLAY OF NUMBERS, USE numTile as a parameter
         }
-        if (planeTurn == "green"){
-            charArray[19-1][49-1] = (char)numPlanesOnLaunchingTile;
-            t.moveCursor(49-1,19-1);
+        else if (planeTurn == "green"){
             t.applyForegroundColor(Terminal.Color.GREEN);
+            xcor --; //REMOVE LATER, JUST FOR TESTING PURPOSES. WHEN WE HAVE A TILE FOR STORING THE DISPLAY OF NUMBERS, USE numTile as a parameter
         }
-        if (planeTurn == "blue"){
-            charArray[2-1][49-1] = (char)numPlanesOnLaunchingTile;
-            t.moveCursor(49-1,2-1);
+        else if (planeTurn == "blue"){
             t.applyForegroundColor(Terminal.Color.BLUE);
+            xcor --; //REMOVE LATER, JUST FOR TESTING PURPOSES. WHEN WE HAVE A TILE FOR STORING THE DISPLAY OF NUMBERS, USE numTile as a parameter
         }
-        if (planeTurn == "yellow"){
-            charArray[2-1][30-1] = (char)numPlanesOnLaunchingTile;
-            t.moveCursor(30-1,2-1);
+        else if (planeTurn == "yellow"){
             t.applyForegroundColor(Terminal.Color.YELLOW);
+            xcor --; //REMOVE LATER, JUST FOR TESTING PURPOSES. WHEN WE HAVE A TILE FOR STORING THE DISPLAY OF NUMBERS, USE numTile as a parameter
         }
-        //-48 is bc ints are +48 when converting to chars
-        t.putCharacter((char)(' ' + numPlanesOnLaunchingTile));
+        charArray[ycor][xcor] = (char)tile.getNumPlanes();
+        t.moveCursor(xcor,ycor);
+        System.out.println("number of planes on current tile: "+tile.getNumPlanes());
+        if (tile.getNumPlanes() > 1){
+            t.putCharacter((char)(tile.getNumPlanes()+48));
+            //+48 is bc ints are -48 when converting to chars
+        } else {
+            t.putCharacter(' ');
+        }
         t.applyForegroundColor(Terminal.Color.DEFAULT);
     }
-
 
     //rolls a die and displays a dieRoll on the terminal
     public static int rollDie(int numDieSides, Terminal t, String planeTurn){
         long tStart = System.currentTimeMillis();
         Random r = new Random();
         int dieRoll = Math.abs(r.nextInt() % numDieSides) + 1;
-        //putString(20, 32, t, "Roll: "+ dieRoll);
+        putString(20, 32, t, "Roll: "+ dieRoll);
         return dieRoll;
 	}
 
 	public static void main(String[] args) {
 
 		Terminal terminal = TerminalFacade.createTerminal();
-		//terminal.enterPrivateMode();
+		terminal.enterPrivateMode();
 
-		TerminalSize terminalSize = terminal.getTerminalSize();
+        TerminalSize terminalSize = new TerminalSize(31,67); //terminal.getTerminalSize();
 		terminal.setCursorVisible(false);
 
 		boolean running = true;
@@ -337,95 +298,61 @@ public class TerminalClass {
         int y = 0;
         putFileIntoTerminal("AeroplaneChessBoard.txt",board,terminal);
         mapTiles();
-        System.out.println(Tiles);
+        Tile planeStart = redStart;
+        Tile launchingTile = redLaunchingTile; //default
         
 
 
         //instantiates all the planes, 1 is topleft, 2 is topright, 3 is bottomleft, 4 is bottomright
-        Plane red1 = new Plane("red");
-        red1.setxcor(5-1);
-        red1.setycor(26-1);
+        Plane red1 = new Plane("red",5-1,26-1);
         updatePlaneLocation(terminal, red1, board);
-        Plane red2 = new Plane("red");
-        red2.setxcor(13-1);
-        red2.setycor(26-1);
+        Plane red2 = new Plane("red",13-1,26-1);
         updatePlaneLocation(terminal, red2, board);
-        Plane red3 = new Plane("red");
-        red3.setxcor(5-1);
-        red3.setycor(29-1);
+        Plane red3 = new Plane("red",5-1,29-1);
         updatePlaneLocation(terminal, red3, board);
-        Plane red4 = new Plane("red");
-        red4.setxcor(13-1);
-        red4.setycor(29-1);
+        Plane red4 = new Plane("red",13-1,29-1);
         updatePlaneLocation(terminal, red4, board);
 
-        Plane green1 = new Plane("green");
-        green1.setxcor(55-1);
-        green1.setycor(26-1);
+        Plane green1 = new Plane("green",55-1,26-1);
         updatePlaneLocation(terminal, green1, board);
-        Plane green2 = new Plane("green");
-        green2.setxcor(63-1);
-        green2.setycor(26-1);
+        Plane green2 = new Plane("green",63-1,26-1);
         updatePlaneLocation(terminal, green2, board);
-        Plane green3 = new Plane("green");
-        green3.setxcor(55-1);
-        green3.setycor(29-1);
+        Plane green3 = new Plane("green",55-1,29-1);
         updatePlaneLocation(terminal, green3, board);
-        Plane green4 = new Plane("green");
-        green4.setxcor(63-1);
-        green4.setycor(29-1);
+        Plane green4 = new Plane("green",63-1,29-1);
         updatePlaneLocation(terminal, green4, board);
 
-        Plane blue1 = new Plane("blue");
-        blue1.setxcor(55-1);
-        blue1.setycor(3-1);
+        Plane blue1 = new Plane("blue",55-1,3-1);
         updatePlaneLocation(terminal, blue1, board);
-        Plane blue2 = new Plane("blue");
-        blue2.setxcor(63-1);
-        blue2.setycor(3-1);
+        Plane blue2 = new Plane("blue",63-1,3-1);
         updatePlaneLocation(terminal, blue2, board);
-        Plane blue3 = new Plane("blue");
-        blue3.setxcor(55-1);
-        blue3.setycor(6-1);
+        Plane blue3 = new Plane("blue",55-1,6-1);
         updatePlaneLocation(terminal, blue3, board);
-        Plane blue4 = new Plane("blue");
-        blue4.setxcor(63-1);
-        blue4.setycor(6-1);
+        Plane blue4 = new Plane("blue",63-1,6-1);
         updatePlaneLocation(terminal, blue4, board);
 
-        Plane yellow1 = new Plane("yellow");
-        yellow1.setxcor(5-1);
-        yellow1.setycor(3-1);
+        Plane yellow1 = new Plane("yellow",5-1,3-1);
         updatePlaneLocation(terminal, yellow1, board);
-        Plane yellow2 = new Plane("yellow");
-        yellow2.setxcor(13-1);
-        yellow2.setycor(3-1);
+        Plane yellow2 = new Plane("yellow",13-1,3-1);
         updatePlaneLocation(terminal, yellow2, board);
-        Plane yellow3 = new Plane("yellow");
-        yellow3.setxcor(5-1);
-        yellow3.setycor(6-1);
+        Plane yellow3 = new Plane("yellow",5-1,6-1);
         updatePlaneLocation(terminal, yellow3, board);
-        Plane yellow4 = new Plane("yellow");
-        yellow4.setxcor(13-1);
-        yellow4.setycor(6-1);
+        Plane yellow4 = new Plane("yellow",13-1,6-1);
         updatePlaneLocation(terminal, yellow4, board);
+
 
         String planeTurn = "red"; //default planeTurn (aka the first color plane that will move)
         Plane plane1 = red1;
         Plane plane2 = red2;
         Plane plane3 = red3;
         Plane plane4 = red4;
-        //putString(0,32,terminal,"red's Turn!");
-        int redPlanesOnLaunchingTile = 0;
-        int greenPlanesOnLaunchingTile = 0;
-        int bluePlanesOnLaunchingTile = 0;
-        int yellowPlanesOnLaunchingTile = 0;
-        int numPlanesOnLaunchingTile = redPlanesOnLaunchingTile;
+        Plane cursorPlane = plane1;
+        putString(0,32,terminal,"red's Turn!");
         boolean selecting = true;
       
 		while(running){
-/*
-			Key key = terminal.readInput();
+
+            Key key = terminal.readInput();
 
 			if (key != null)
 			{
@@ -436,14 +363,24 @@ public class TerminalClass {
 					System.exit(0);
                 }
 
-                if (key.getKind() == Key.Kind.NormalKey){
+                boolean editorMode = false;
+
+                if (key.getCharacter() == ' '){
                     //if the player is unfortunate enough to roll an odd number when none of their planes are on board yet...
                     int dieRoll = rollDie(numDieSides, terminal, planeTurn);
+
+                    ArrayList<Plane> planes = new ArrayList();
+                    int editorPlaneNumber = 0;
+                    if (args.length > 0){
+                        if (args[0].equals("editorMode")) editorMode = true;
+                    }
+
+
                     if (dieRoll % 2 == 1 &&
                         (plane1.isAtHome() && plane2.isAtHome() &&
-                        plane3.isAtHome() && plane4.isAtHome())){
+                        plane3.isAtHome() && plane4.isAtHome()) && !editorMode){
                         boolean isMessagingTime = true;
-                        //putString(40,32,terminal,"Do this odd case later");
+                        putString(40,32,terminal,"Sorry, but you rolled an odd number!");
                         long timerStartMillis = System.currentTimeMillis();
                         while (isMessagingTime){
                             long timerEndMillis = System.currentTimeMillis();
@@ -452,93 +389,323 @@ public class TerminalClass {
                                 isMessagingTime = false;
                             }
                         }
-                        //putString(40,34,terminal,"                                  ");
+                        putString(40,32,terminal,"                                    ");
                         selecting = false;
                     }
 
                     else { //aka any other case than being stuck in the hangar at the beginning of the game
-                        if (plane1.isAtHome()){ //these if cases are to set which default plane the cursor goes to when selecting
-                            x = plane1.getxcor();
-                            y = plane1.getycor();
-                        } else if (plane2.isAtHome()){
-                            x = plane2.getxcor();
-                            y = plane2.getxcor();
-                        } else if (plane3.isAtHome()){
-                            x = plane3.getxcor();
-                            y = plane3.getycor();
-                        } else if (plane4.isAtHome()){
-                            x = plane4.getxcor();
-                            y = plane4.getycor();
-                        } else {
-                            x = plane1.getxcor();
-                            y = plane1.getycor();
+                        if (!editorMode){
+                            if (dieRoll % 2 == 1){ //don't need to check if all planes are in hangar, since that was the if case before this one
+                                if (!plane1.isAtHome()){ //checks which planes are out of the hangar, then moves cursor to them
+                                    x = plane1.getxcor();
+                                    y = plane1.getycor();
+                                    cursorPlane = plane1;
+                                } else if (!plane2.isAtHome()){
+                                    x = plane2.getxcor();
+                                    y = plane2.getycor();
+                                    cursorPlane = plane2;
+                                } else if (!plane3.isAtHome()){
+                                    x = plane3.getxcor();
+                                    y = plane3.getycor();
+                                    cursorPlane = plane3;
+                                } else if (!plane4.isAtHome()){
+                                    x = plane4.getxcor();
+                                    y = plane4.getycor();
+                                    cursorPlane = plane4;
+                                }
+                            }
+                            else{ //if you rolled an even #, use these if cases to decide default placement for cursor
+                                //System.out.println("debugging");
+                                if (plane1.isAtHome()){ //these if cases are to set which default plane the cursor goes to when selecting
+                                    x = plane1.getxcor();
+                                    y = plane1.getycor();
+                                    cursorPlane = plane1;
+                                    //System.out.println("plane1 if?" + "x: " + x + " y: " + y);
+                                } else if (plane2.isAtHome()){
+                                    x = plane2.getxcor();
+                                    y = plane2.getycor();
+                                    cursorPlane = plane2;
+                                    //System.out.println("plane2 if?" + "x: " + x + " y: " + y);
+                                } else if (plane3.isAtHome()){
+                                    x = plane3.getxcor();
+                                    y = plane3.getycor();
+                                    cursorPlane = plane3;
+                                    //System.out.println("plane3 if?" + "x: " + x + " y: " + y);
+                                } else if (plane4.isAtHome()){
+                                    x = plane4.getxcor();
+                                    y = plane4.getycor();
+                                    cursorPlane = plane4;
+                                    //System.out.println("plane4 if?" + "x: " + x + " y: " + y);
+                                } else { //if none of them are home, default to plane1
+                                    x = plane1.getxcor();
+                                    y = plane1.getycor();
+                                    cursorPlane = plane1;
+                                    //System.out.println("should have worked?" + "plane1: x: " + x + " y: " + y);
+                                }
+                            }
+
+                            //this part occurs regardless if it was an odd or even roll (a desired feature)
+                            //System.out.println("x: "+x + " y: "+y); //debugging
+                            terminal.moveCursor(x,y); //default location for cursor after selecting default is top plane)
+                            terminal.applyBackgroundColor(Terminal.Color.MAGENTA);
+                            terminal.applyForegroundColor(plane1.R(),plane1.G(),plane1.B()); //so the color of planes don't change when you are moving cursor around
+                            terminal.putCharacter('P'); //so that the cursor shows up by default
+                            terminal.moveCursor(x,y); //to reset position
                         }
-                        terminal.moveCursor(x,y); //default location for cursor after selecting default is top plane)
-                        terminal.applyBackgroundColor(Terminal.Color.MAGENTA);
-                        terminal.applyForegroundColor(plane1.R(),plane1.G(),plane1.B()); //so the color of planes don't change when you are moving cursor around
-                        //terminal.putCharacter('P'); //so that the cursor shows up by default
-                        terminal.moveCursor(x,y); //to reset position
 
                         selecting = true;
                         while (selecting){
                             key = terminal.readInput();
                             if (key != null){
+
+                                while (editorMode){
+                                    key = terminal.readInput();
+                                    if (key != null){
+                                        System.out.println("In placing planes mode. Press 'e' to get out");
+                                        if (key.getKind() == Key.Kind.ArrowUp && y-1 >= 0){
+                                            //removing background color from old cursor position
+                                            terminal.applyBackgroundColor(Terminal.Color.DEFAULT);
+                                            terminal.putCharacter(board[y][x]);
+                                            //applying background color to new cursor position
+                                            terminal.applyBackgroundColor(255,102,9); //orange
+                                            y--;
+                                            terminal.moveCursor(x,y);
+                                            terminal.putCharacter(board[y][x]);
+                                            terminal.moveCursor(x,y); //to reset position
+                                        }
+                                        if (key.getKind() == Key.Kind.ArrowDown && y+1 <= 30){
+                                            //removing background color from old cursor position
+                                            terminal.applyBackgroundColor(Terminal.Color.DEFAULT);
+                                            terminal.putCharacter(board[y][x]);
+                                            //applying background color to new cursor position
+                                            terminal.applyBackgroundColor(255,102,9); //orange
+                                            y++;
+                                            terminal.moveCursor(x,y);
+                                            terminal.putCharacter(board[y][x]);
+                                            terminal.moveCursor(x,y); //to reset position
+                                        }
+                                        if (key.getKind() == Key.Kind.ArrowLeft && x-1 >= 0){
+                                            //removing background color from old cursor position
+                                            terminal.applyBackgroundColor(Terminal.Color.DEFAULT);
+                                            terminal.putCharacter(board[y][x]);
+                                            //applying background color to new cursor position
+                                            terminal.applyBackgroundColor(255,102,9); //orange
+                                            x--;
+                                            terminal.moveCursor(x,y);
+                                            terminal.putCharacter(board[y][x]);
+                                            terminal.moveCursor(x,y); //to reset position
+                                        }
+                                        if (key.getKind() == Key.Kind.ArrowRight && x+1 <= 67){
+                                            //removing background color from old cursor position
+                                            terminal.applyBackgroundColor(Terminal.Color.DEFAULT);
+                                            terminal.putCharacter(board[y][x]);
+                                            //applying background color to new cursor position
+                                            terminal.applyBackgroundColor(255,102,9); //orange
+                                            x++;
+                                            terminal.moveCursor(x,y);
+                                            terminal.putCharacter(board[y][x]);
+                                            terminal.moveCursor(x,y); //to reset position
+                                        }
+                                        if (key.getCharacter() == ' '){
+                                            cursorPlane = new Plane(planeTurn,x,y);
+                                            board[y][x] = 'P';
+                                            planes.add(cursorPlane);
+                                            Tile tile = Tiles.getTileAt(x,y);
+                                            if (tile.getxcor() == -1 && tile.getycor() == -1){
+                                                System.out.println("tile not found");
+                                            }
+                                            cursorPlane.setTileReference(tile);
+                                            tile.addPlanes(1);
+                                            updateTileNumber(terminal, planeTurn, board, tile);
+                                            editorPlaneNumber++;
+                                            cursorPlane.setAtHome(false);
+                                            if (planeTurn.equals("red")){
+                                                terminal.applyForegroundColor(Terminal.Color.RED);
+                                            } else if (planeTurn.equals("green")){
+                                                terminal.applyForegroundColor(Terminal.Color.GREEN);
+                                            } else if (planeTurn.equals("blue")){
+                                                terminal.applyForegroundColor(Terminal.Color.BLUE);
+                                            } else if (planeTurn.equals("yellow")){
+                                                terminal.applyForegroundColor(Terminal.Color.YELLOW);
+                                            }
+                                            terminal.putCharacter('P');
+                                            terminal.applyForegroundColor(Terminal.Color.DEFAULT);
+                                        }
+                                        if (key.getCharacter() == 'e'){
+                                            editorMode = false;
+                                            System.out.println("Exiting placing planes mode. Press Tab to select planes or spacebar to move planes.");
+                                        }
+                                    }
+                                }
+
+
+
                                 if (key.getKind() == Key.Kind.Escape){
                                     terminal.exitPrivateMode();
                                     System.exit(0);
                                 }
 
-                                if (key.getKind() == Key.Kind.NormalKey){ //once we have selected a plane
-                                    if (x == plane1.getxcor() && y == plane1.getycor()){ //if cases used to see which plane to move
-                                    erasePlaneLocation(terminal, plane1, board);
-                                    plane1.move(dieRoll);
-                                    updatePlaneLocation(terminal, plane1, board);
-                                } else if (x == plane2.getxcor() && y == plane2.getycor()){
-                                    erasePlaneLocation(terminal, plane2, board);
-                                    plane2.move(dieRoll);
-                                    updatePlaneLocation(terminal, plane2, board);
-                                } else if (x == plane3.getxcor() && y == plane3.getycor()){
-                                    erasePlaneLocation(terminal, plane3, board);
-                                    plane3.move(dieRoll);
-                                    updatePlaneLocation(terminal, plane3, board);
-                                } else if (x == red4.getxcor() && y == red4.getycor()){
-                                    erasePlaneLocation(terminal, plane4, board);
-                                    plane4.move(dieRoll);
-                                    updatePlaneLocation(terminal, plane4, board);
-                                }
-                                    selecting = false;
-                                    numPlanesOnLaunchingTile++;
-                                    updateLaunchingTiles(terminal, planeTurn, board, numPlanesOnLaunchingTile);
-                                }
 
-
-                                if (key.getKind() == Key.Kind.Tab){
-                                    terminal.applyBackgroundColor(Terminal.Color.DEFAULT); //to get rid of the background from old select slot
-                                    //terminal.putCharacter('P');
-                                    if (x == plane1.getxcor() && y == plane1.getycor()){
-                                        if (plane2.isAtHome() && dieRoll % 2 == 0){
-                                            x = plane2.getxcor();
-                                            y = plane2.getycor();
-                                        }
-                                    } else if (x == plane2.getxcor() && y == plane2.getycor()){
-                                        if (plane2.isAtHome() && dieRoll % 2 == 0){
-                                            x = plane3.getxcor();
-                                            y = plane3.getycor();
-                                        }
-                                    } else if (x == plane3.getxcor() && y == plane3.getycor()){
-                                        if (plane2.isAtHome() && dieRoll % 2 == 0){
-                                            x = plane4.getxcor();
-                                            y = plane4.getycor();
-                                        }
-                                    } else if (x == plane4.getxcor() && y == plane4.getycor()){
-                                        if (plane2.isAtHome() && dieRoll % 2 == 0){
-                                            x = plane1.getxcor();
-                                            y = plane1.getycor();
+                                if (key.getCharacter() == ' '){ //once we have selected a plane
+                                    //System.out.println("planeTurn: "+planeTurn);
+                                    if (args.length > 0){
+                                        editorMode = true;
+                                        dieRoll = 0;
+                                        while (editorMode){
+                                            key = terminal.readInput();
+                                            if (key != null){
+                                                System.out.println("In deciding dice roll mode. Press 'i' to increment numbers on dieRoll. Press 'e' to get out");
+                                                if (key.getCharacter() == 'i'){
+                                                    if (dieRoll == 6){
+                                                        dieRoll = 1;
+                                                    } else {
+                                                        dieRoll++;
+                                                    }
+                                                    putString(20,32,terminal,"Roll: "+dieRoll);
+                                                }
+                                                if (key.getCharacter() == 'e'){
+                                                    editorMode = false;
+                                                    System.out.println("Exiting deciding dice mode. Press spacebar to place planes again.");
+                                                }
+                                            }
                                         }
                                     }
+                                    if (cursorPlane.getTileReference().getNumPlanes() < 2){
+                                        erasePlaneLocation(terminal, cursorPlane, board);
+                                    }
+                                    if (cursorPlane.isAtHome()){
+                                      updateTileNumber(terminal, planeTurn, board, cursorPlane.move(launchingTile));
+                                      updatePlaneLocation(terminal, cursorPlane, board); 
+                                    } else {
+                                        for (int n = 1; n <= dieRoll; n++){
+                                            boolean animating = true;
+                                            long milliStart = System.currentTimeMillis();
+                                            while (animating){
+                                                long milliEnd = System.currentTimeMillis();
+                                                long milliDiff = milliEnd - milliStart;
+                                                //if (milliDiff % 100 == 0) System.out.println(milliDiff);
+                                                if (milliDiff / 1000.0 >= 0.5){
+                                                    if (cursorPlane.getTileReference().getNumPlanes() < 2){
+                                                        erasePlaneLocation(terminal, cursorPlane, board);
+                                                    }
+                                                    if (cursorPlane.getTileReference() == launchingTile){ //if plane is on launchingTile
+                                                        updateTileNumber(terminal, planeTurn, board, cursorPlane.move(planeStart));
+                                                        //System.out.println("I'm on planeStart!");
+                                                    } else { //if plane is already on the board
+                                                        updateTileNumber(terminal, planeTurn, board, cursorPlane.move(cursorPlane.getTileReference().getNextTile()));
+                                                    } //else {
+                                                        //this section will be for if the plane is on an endTile
+                                                    //}
+                                                    //occurs regardless of what tile the plane is on
+                                                    updatePlaneLocation(terminal, cursorPlane, board);
+                                                    animating = false;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    selecting = false;
+                                }
+
+                                editorPlaneNumber = 0;
+
+                                if (key.getKind() == Key.Kind.Tab){ //selecting through planes
+                                    terminal.applyBackgroundColor(Terminal.Color.DEFAULT); //to get rid of the background from old select slot
+                                    terminal.putCharacter('P');
+                                    if (args.length > 0){ //if in editorMode
+                                        System.out.println("In selecting planes mode. Press spacebar when you want to move planes.");
+                                        cursorPlane = planes.get(editorPlaneNumber);
+                                        if (editorPlaneNumber == planes.size() - 1){
+                                            editorPlaneNumber = 0;
+                                        } else {
+                                            editorPlaneNumber++;
+                                        }
+                                        x = cursorPlane.getxcor();
+                                        y = cursorPlane.getycor();
+                                    } else {
+                                        if (dieRoll % 2 == 0){
+                                            if (cursorPlane == plane1){
+                                                x = plane2.getxcor();
+                                                y = plane2.getycor();
+                                                cursorPlane = plane2;
+                                            } else if (cursorPlane == plane2){
+                                                x = plane3.getxcor();
+                                                y = plane3.getycor();
+                                                cursorPlane = plane3;
+                                            } else if (cursorPlane == plane3){
+                                                x = plane4.getxcor();
+                                                y = plane4.getycor();
+                                                cursorPlane = plane4;
+                                            } else if (cursorPlane == plane4){
+                                                x = plane1.getxcor();
+                                                y = plane1.getycor();
+                                                cursorPlane = plane1;
+                                            }
+                                        }
+                                        if (dieRoll % 2 == 1){
+                                            if (cursorPlane == plane1){
+                                                if (!plane2.isAtHome()){
+                                                    x = plane2.getxcor();
+                                                    y = plane2.getycor();
+                                                    cursorPlane = plane2;
+                                                } else if (!plane3.isAtHome()){
+                                                    x = plane3.getxcor();
+                                                    y = plane3.getycor();
+                                                    cursorPlane = plane3;
+                                                } else if (!plane4.isAtHome()){
+                                                    x = plane4.getxcor();
+                                                    y = plane4.getycor();
+                                                    cursorPlane = plane4;
+                                                }
+                                            } else if (cursorPlane == plane2){
+                                                if (!plane3.isAtHome()){
+                                                    x = plane3.getxcor();
+                                                    y = plane3.getycor();
+                                                    cursorPlane = plane3;
+                                                } else if (!plane4.isAtHome()){
+                                                    x = plane4.getxcor();
+                                                    y = plane4.getycor();
+                                                    cursorPlane = plane4;
+                                                } else if (!plane1.isAtHome()){
+                                                    x = plane1.getxcor();
+                                                    y = plane1.getycor();
+                                                    cursorPlane = plane4;
+                                                }
+                                            } else if (cursorPlane == plane3){
+                                                if (!plane4.isAtHome()){
+                                                    x = plane4.getxcor();
+                                                    y = plane4.getycor();
+                                                    cursorPlane = plane4;
+                                                } else if (!plane1.isAtHome()){
+                                                    x = plane1.getxcor();
+                                                    y = plane1.getycor();
+                                                    cursorPlane = plane1;
+                                                } else if (!plane2.isAtHome()){
+                                                    x = plane2.getxcor();
+                                                    y = plane2.getycor();
+                                                    cursorPlane = plane2;
+                                                }
+                                            } else if (cursorPlane == plane4){
+                                                if (!plane1.isAtHome()){
+                                                    x = plane1.getxcor();
+                                                    y = plane1.getycor();
+                                                    cursorPlane = plane1;
+                                                } else if (!plane2.isAtHome()){
+                                                    x = plane2.getxcor();
+                                                    y = plane2.getycor();
+                                                    cursorPlane = plane2;
+                                                } else if (!plane3.isAtHome()){
+                                                    x = plane3.getxcor();
+                                                    y = plane3.getycor();
+                                                    cursorPlane = plane3;
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    //happens regardless of whether in editorMode or not
                                     terminal.moveCursor(x,y);
                                     terminal.applyBackgroundColor(Terminal.Color.MAGENTA);
-                                    //terminal.putCharacter('P');
+                                    terminal.putCharacter('P');
                                     terminal.applyBackgroundColor(Terminal.Color.DEFAULT);
                                     terminal.moveCursor(x,y); //moves back to position the cursor is over
                                 }
@@ -549,48 +716,44 @@ public class TerminalClass {
 
                     //will happen regardless of what roll is achieved; aka the game moves on despite getting odd or even
                     if (planeTurn.equals("red")){ //once you have selected, then switch plane turns
-                        redPlanesOnLaunchingTile = numPlanesOnLaunchingTile; //stores redPlanesOnLaunchingTile
-                        numPlanesOnLaunchingTile = greenPlanesOnLaunchingTile; //switches over to greenPlanesOnLaunchingTile
+                        launchingTile = greenLaunchingTile; //switches over to greenLaunchingTile
+                        planeStart = greenStart;
                         planeTurn = "green";
                         plane1 = green1;
                         plane2 = green2;
                         plane3 = green3;
                         plane4 = green4;
                     } else if (planeTurn.equals("green")){
-                        greenPlanesOnLaunchingTile = numPlanesOnLaunchingTile;
-                        numPlanesOnLaunchingTile = bluePlanesOnLaunchingTile;
+                        launchingTile = blueLaunchingTile;
+                        planeStart =  blueStart;
                         planeTurn = "blue";
                         plane1 = blue1;
                         plane2 = blue2;
                         plane3 = blue3;
                         plane4 = blue4;
                     } else if (planeTurn.equals("blue")){
-                        bluePlanesOnLaunchingTile = numPlanesOnLaunchingTile;
-                        numPlanesOnLaunchingTile = yellowPlanesOnLaunchingTile;
+                        launchingTile = yellowLaunchingTile;
+                        planeStart = yellowStart;
                         planeTurn = "yellow";
                         plane1 = yellow1;
                         plane2 = yellow2;
                         plane3 = yellow3;
                         plane4 = yellow4;
                     } else if (planeTurn.equals("yellow")){
-                        yellowPlanesOnLaunchingTile = numPlanesOnLaunchingTile;
-                        numPlanesOnLaunchingTile = redPlanesOnLaunchingTile;
+                        launchingTile = redLaunchingTile;
+                        planeStart = redStart;
                         planeTurn = "red";
                         plane1 = red1;
                         plane2 = red2;
                         plane3 = red3;
                         plane4 = red4;
                     }
-                    //putString(0,32,terminal,"                                  ");
-                    //putString(0,32,terminal,planeTurn + "'s Turn!");
+                    putString(0,32,terminal,"                                  ");
+                    putString(0,32,terminal,planeTurn + "'s Turn!");
 
                 }
 
 			}
-
-			putTextFromFile(2,1,terminal, "AeroplaneChessBoard.txt");
-      */
-
 		}
-  }
+    }
 }

@@ -10,3 +10,38 @@ DEVELOPMENT LOG
 1/7, Victor: added a way to select which plane to take off the hangar (in a primitive, simplified form); EDIT: generalized it so accounts if not all planes are in the hangar
 1/8, Michael: got colors to import from a .txt file corresponding to the board
 1/8, Victor: added the turn counter, colorized planes. !!need to figure out numPlanesOnLaunchingTiles && fix where planes aren't properly selected after at least one has left the hangar
+
+1/9, Victor: made Plane.move() method return an int, for how many planes are on the tile that the plane has moved to... will utilize this to reduce redudant code in updateLaunchTiles() in TerminalClass...
+Also fixed updateLaunchTiles()
+fixed some bugs
+BUG 1:----- discovered new bugs... when there is an even roll & at least one plane out of hangar, there can be a character placed at bottom right corner of the same color of the planeTurn for some reason (62,62)???;
+also another bug arises cuz we havent implemented the tile system yet (when we have numPlaneCounterOnTile < 0 and the number counting system shouldnt ever go < 0)
+BUG 2:----- also need to implement numberPlane counting system for BOARD tiles (dont need to tell about the color of the planes there bc opposite color planes destroy each other so assumed all tiles with > 1 plane have their planes of the same color)
+BUG 3:----- also when there are two planes stacked on top of each other, you can't subtract one from the pile, the whole character has to disappear when moving... can be remedied by not "erasingPlaneLocation" when the tile's planesHere > 1
+
+1/10, Victor: figure out createTextTerminal or createTerminal, cuz createTextTerminal works when u ssh into a diff comp, which is gonna be done at the demo, but createTextTerminal also doesnt let me edit @ home on windows... ISSUE WHERE WE REPORT A NULLPOINTEREXCEPTION WILL BE FIXED ONCE WE HAVE A TILE SYSTEM
+SOLVED BUG3, but found a new bug where moving a plane doesn't subtract from previous pile?? lol. WAIT THIS IS SOLVED IF A TILE SYSTEM IS IMPLEMENTED
+
+1/11, Victor: fixed a rendering bug of selecting planes and fixed BUG1
+
+
+
+BUGS TO FIX: ------------------------------------------
+bug2 
+updateTileNumber aren't working properly (numPlanes is fine, but display isn't)(removing number from laucnhing tile and for some reason taking away 'P' when passing over other planes on board)
+TO DO: ----------------------------------------------
+createTextTerminal instead of createTerminal
+numberTiles
+when three 6's are rolled in a roll, retract every step?? kinda complicated tho cuz u need a memory storer...
+endTiles
+Settings & Pausing
+Menu so its not boring
+plane attacks
+short haul shortcuts and long haul shortcuts
+cleanup code (like we can have launchingTiles be part of the text map)
+remove the T's and g's and G's etc
+
+CONTROLS:
+hit Space to interact (and to roll a die)
+hit Tab to tab between planes to select
+hit E while in editorMode (except for Tab or Enter) to exit editorMode
