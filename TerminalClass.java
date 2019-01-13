@@ -251,10 +251,10 @@ public static void putFileIntoTerminal(String filename, char[][] charArray, Term
           charArray[y][x] = line.charAt(x); //charArray goes row,col while standard coord grid goes x,y
           t.moveCursor(x,y);
           back = Terminal.Color.DEFAULT; //if not a 1,2,3, or 4, background color is the default color
-          if(linecolor.charAt(x)=='1') back = Terminal.Color.RED;
-          if(linecolor.charAt(x)=='2') back = Terminal.Color.YELLOW;
-          if(linecolor.charAt(x)=='3') back = Terminal.Color.BLUE;
-          if(linecolor.charAt(x)=='4') back = Terminal.Color.GREEN;
+          if(linecolor.charAt(x)=='0') back = Terminal.Color.RED;
+          if(linecolor.charAt(x)=='1') back = Terminal.Color.YELLOW;
+          if(linecolor.charAt(x)=='2') back = Terminal.Color.BLUE;
+          if(linecolor.charAt(x)=='3') back = Terminal.Color.GREEN;
           t.applyBackgroundColor(back);
           t.putCharacter(line.charAt(x));
         }
