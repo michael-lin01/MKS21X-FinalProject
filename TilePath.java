@@ -44,6 +44,7 @@ public class TilePath{
       size++;
     }
     else{
+      n.setPrevTile(end);
       end.setNextTile(n);
       end = n;
       size++;
@@ -59,6 +60,7 @@ public class TilePath{
     }
     else{
       //if not empty, change the end value to be the new node
+      n.setPrevTile(end);
       end.setNextTile(n);
       end = n;
     }

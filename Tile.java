@@ -5,6 +5,7 @@ public class Tile{
   private int numPlanes;
   private String name;
   private Tile nextTile;
+  private Tile prevTile;
   private int xcor;
   private int ycor;
 
@@ -27,6 +28,9 @@ public class Tile{
   }
   public void setNextTile(Tile next){
     nextTile = next;
+  }
+  public void setPrevTile(Tile prev){
+    prevTile = prev;
   }
   public void setPlaneHere(boolean b){
     planeHere = b;
@@ -62,6 +66,10 @@ public class Tile{
 
   public Tile getNextTile(){
     return nextTile;
+  }
+
+  public Tile getPrevTile(){
+    return prevTile;
   }
 
   public String toString(){

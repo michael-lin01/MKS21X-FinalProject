@@ -23,15 +23,15 @@ BUG 3:----- also when there are two planes stacked on top of each other, you can
 SOLVED BUG3, but found a new bug where moving a plane doesn't subtract from previous pile?? lol. WAIT THIS IS SOLVED IF A TILE SYSTEM IS IMPLEMENTED
 
 1/11, Victor: fixed a rendering bug of selecting planes and fixed BUG1
+1/12, Victor: we finished the basic movePlane (basic as in didn't implement short haul or long haul shortcuts or endTiles and the visual for numPlanes on tiles and destroying planes)
 
 
 
 BUGS TO FIX: ------------------------------------------
-bug2 
-updateTileNumber aren't working properly (numPlanes is fine, but display isn't)(removing number from laucnhing tile and for some reason taking away 'P' when passing over other planes on board)
+when you land on a shortcut the recursive sequence goes on forever
 TO DO: ----------------------------------------------
 createTextTerminal instead of createTerminal
-numberTiles
+nicerNumberTiles
 when three 6's are rolled in a roll, retract every step?? kinda complicated tho cuz u need a memory storer...
 endTiles
 Settings & Pausing
@@ -40,6 +40,7 @@ plane attacks
 short haul shortcuts and long haul shortcuts
 cleanup code (like we can have launchingTiles be part of the text map)
 remove the T's and g's and G's etc
+unicode characters for plane?
 
 CONTROLS:
 hit Space to interact (and to roll a die)
