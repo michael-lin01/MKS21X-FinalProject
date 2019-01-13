@@ -222,6 +222,20 @@ public class TerminalClass {
         System.exit(1);
       }
     }
+    
+    public static void colorTiles(){
+      Tile current = redStart;
+      int counter = 0;
+      do{
+        if(counter%4==0) current.setColor("red");
+        if(counter%4==1) current.setColor("yellow");
+        if(counter%4==2) current.setColor("blue");
+        if(counter%4==3) current.setColor("green");
+        System.out.println(current+" color: "+current.getColor());
+        counter++;
+        current=current.getNextTile();
+      } while(current!=redStart);
+    }
 
     //preCondition: must be rectangular array with size > 0, and charArray must fit the file text size perfectly
     public static void putFileIntoTerminal(String filename, char[][] charArray, Terminal t){
@@ -369,6 +383,7 @@ public class TerminalClass {
         int y = 0;
         putFileIntoTerminal("AeroplaneChessBoard.txt",board,terminal);
         mapTiles();
+        colorTiles();
         Tile planeStart = redStart;
         Tile launchingTile = redLaunchingTile; //default
         
@@ -440,7 +455,7 @@ public class TerminalClass {
                     //if the player is unfortunate enough to roll an odd number when none of their planes are on board yet...
                     int dieRoll = rollDie(numDieSides, terminal, planeTurn);
 
-                    ArrayList<Plane> planes = new ArrayList();
+                    ArrayList<Plane> planes = new ArrayList<Plane>();
                     int editorPlaneNumber = 0;
                     if (args.length > 0){
                         if (args[0].equals("editorMode")) editorMode = true;
