@@ -618,31 +618,34 @@ public class TerminalClass {
                                 }
 
 
+                                
+
                                 if (key.getCharacter() == ' '){ //once we have selected a plane
                                     //System.out.println("planeTurn: "+planeTurn);
                                     if (args.length > 0){
-                                        editorMode = true;
-                                        dieRoll = 0;
-                                        while (editorMode){
-                                            key = terminal.readInput();
-                                            if (key != null){
-                                                System.out.println("In deciding dice roll mode. Press 'i' to increment numbers on dieRoll. Press 'e' to get out");
-                                                if (key.getCharacter() == 'i'){
-                                                    if (dieRoll == 6){
-                                                        dieRoll = 1;
-                                                    } else {
-                                                        dieRoll++;
+                                        if (args[0].equals("dieRollManipulate") || args[0].equals("dieRollManipulate")){
+                                            editorMode = true;
+                                            while (editorMode){
+                                                key = terminal.readInput();
+                                                if (key != null){
+                                                    System.out.println("In deciding dice roll mode. Press Tab to increment numbers on dieRoll. Press spacebar to move the plane");
+                                                    if (key.getKind() == Key.Kind.Tab){
+                                                        if (dieRoll == 6){
+                                                            dieRoll = 1;
+                                                        } else {
+                                                            dieRoll++;
+                                                        }
+                                                        putString(20,32,terminal,"Roll: "+dieRoll);
                                                     }
-                                                    putString(20,32,terminal,"Roll: "+dieRoll);
-                                                }
-                                                if (key.getCharacter() == 'e'){
-                                                    editorMode = false;
-                                                    System.out.println("Exiting deciding dice mode. Press spacebar to place planes again.");
+                                                    if (key.getCharacter() == ' '){
+                                                        editorMode = false;
+                                                        System.out.println("Exiting deciding dice mode. Press spacebar to place planes again.");
+                                                    }
                                                 }
                                             }
                                         }
                                     }
-                                    //happens regardless of editorMode or not
+                                    //happens regardless of editorMode or dieRollManipulate or neither
                                     if (cursorPlane.getTileReference().getNumPlanes() < 2){
                                         erasePlaneLocation(terminal, cursorPlane, board);
                                         cursorPlane.getTileReference().setPlaneHere(false);
@@ -651,6 +654,7 @@ public class TerminalClass {
                                       updateTileNumber(terminal, planeTurn, board, cursorPlane.move(launchingTile));
                                       updatePlaneLocation(terminal, cursorPlane, board); 
                                     } else {
+                                        System.out.println(dieRoll);
                                         for (int n = 1; n <= dieRoll; n++){
                                             boolean animating = true;
                                             long milliStart = System.currentTimeMillis();
@@ -681,23 +685,36 @@ public class TerminalClass {
                                                     //}
                                                     //occurs regardless of what tile the plane is on
                                                     updatePlaneLocation(terminal, cursorPlane, board);
-                                                    if (cursorPlane.getTileReference().isPlaneHere()){ //if it encounters an enemy plane
-
-                                                    }
                                                     animating = false;
                                                 }
                                             }
                                         }
+                                        //this code runs at the end of a plane's complete movement (when it has moved through all tiles indicated by its dice roll)
+                                        // long haul shortcuts
+                                        if ((planeTurn.equals("red")&& cursorPlane.getxcor()==21 && cursorPlane.getycor()==8)
+                                            ||(planeTurn.equals("yellow")&& cursorPlane.getxcor()==48 && cursorPlane.getycor()==8)
+                                            ||(planeTurn.equals("blue")&& cursorPlane.getxcor()==45 && cursorPlane.getycor()==21)
+                                            ||(planeTurn.equals("green")&& cursorPlane.getxcor()==18 && cursorPlane.getycor()==21)){
+                                            erasePlaneLocation(terminal, cursorPlane, board);
+                                            for(int i = 0; i < 12; i++){
+                                                cursorPlane.move(cursorPlane.getTileReference().getNextTile()); //skips a quarter of the board
+                                            }
+                                            updateTileNumber(terminal, planeTurn, board, cursorPlane.getTileReference());
+                                            updatePlaneLocation(terminal, cursorPlane, board);
+                                        }
                                     }
+
+                                    //after the plane has finished moving
                                     selecting = false;
                                 }
 
                                 editorPlaneNumber = 0;
+                                //System.out.println(key);
 
                                 if (key.getKind() == Key.Kind.Tab){ //selecting through planes
                                     terminal.applyBackgroundColor(Terminal.Color.DEFAULT); //to get rid of the background from old select slot
                                     terminal.putCharacter('P');
-                                    if (args.length > 0){ //if in editorMode
+                                    if (args.length > 0 && args[0].equals("editorMode")){ //if in editorMode
                                         System.out.println("In selecting planes mode. Press spacebar when you want to move planes.");
                                         cursorPlane = planes.get(editorPlaneNumber);
                                         if (editorPlaneNumber == planes.size() - 1){
@@ -707,6 +724,7 @@ public class TerminalClass {
                                         }
                                         x = cursorPlane.getxcor();
                                         y = cursorPlane.getycor();
+                
                                     } else {
                                         if (dieRoll % 2 == 0){
                                             if (cursorPlane == plane1){
@@ -787,7 +805,6 @@ public class TerminalClass {
                                             }
                                         }
                                     }
-
                                     //happens regardless of whether in editorMode or not
                                     terminal.moveCursor(x,y);
                                     terminal.applyBackgroundColor(Terminal.Color.MAGENTA);
@@ -795,10 +812,12 @@ public class TerminalClass {
                                     terminal.applyBackgroundColor(Terminal.Color.DEFAULT);
                                     terminal.moveCursor(x,y); //moves back to position the cursor is over
                                 }
+
+                                //if want to put a new key input, put here
+
                             }
                         }
                     }
-                }
 
 
                 //will happen regardless of what roll is achieved; aka the game moves on despite getting odd or even
@@ -837,7 +856,7 @@ public class TerminalClass {
                 }
                 putString(0,32,terminal,"                                  ");
                 putString(0,32,terminal,planeTurn + "'s Turn!");
-
+                }
 			}
 		}
     }

@@ -98,15 +98,6 @@ public class Plane{
       tileReference.addPlanes(1);
       tileReference.setPlaneHere(true);
       return tileReference;
-
-    } 
-    //shortcuts
-    else if ((color.equals("red")&& xcor==21 &&ycor==8)||(color.equals("yellow")&&xcor==48 &&ycor==8)||
-            (color.equals("blue")&&xcor==45 &&ycor==21)||(color.equals("green")&&xcor==18 &&ycor==21)){
-            for(int i = 0; i < 12; i++){
-               move(tileReference.getNextTile()); //recursive
-            }
-            return tileReference;
     } else if (!isAtHome) { //if not at home, it means you're at the launchingTile or already on the board
         tileReference.addPlanes(-1);
         tileReference = tile;
