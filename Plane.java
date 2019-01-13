@@ -11,8 +11,10 @@ public class Plane{
   private int xcor;
   private int ycor;
 
-  public Plane(String color){
+  public Plane(String color, int xcor, int ycor){
     this.color = color;
+    this.xcor = xcor;
+    this.ycor = ycor;
     if (color.equals("red")){
       R = 255;
       G = 0;
@@ -79,6 +81,10 @@ public class Plane{
 
   public Tile getTileReference(){
     return tileReference;
+  }
+
+  public void setTileReference(Tile tile){
+    tileReference = tile;
   }
 
   //method does two functions: moves the plane AND returns the tile that the plane has moved to

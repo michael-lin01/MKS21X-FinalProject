@@ -28,6 +28,7 @@ SOLVED BUG3, but found a new bug where moving a plane doesn't subtract from prev
 
 BUGS TO FIX: ------------------------------------------
 bug2 
+updateTileNumber aren't working properly (numPlanes is fine, but display isn't)(removing number from laucnhing tile and for some reason taking away 'P' when passing over other planes on board)
 TO DO: ----------------------------------------------
 createTextTerminal instead of createTerminal
 numberTiles
@@ -37,3 +38,10 @@ Settings & Pausing
 Menu so its not boring
 plane attacks
 short haul shortcuts and long haul shortcuts
+cleanup code (like we can have launchingTiles be part of the text map)
+remove the T's and g's and G's etc
+
+CONTROLS:
+hit Space to interact (and to roll a die)
+hit Tab to tab between planes to select
+hit E while in editorMode (except for Tab or Enter) to exit editorMode
