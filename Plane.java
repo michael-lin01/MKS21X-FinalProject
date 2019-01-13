@@ -67,8 +67,132 @@ public class Plane{
     ycor = y;
   }
 
-  public void setAtHome(boolean bool){
-    isAtHome = bool;
+  //returns true if plane has successfully been set at home
+  //returns false if no spots available at home
+  public boolean setAtHome(char[][] charArray){
+    tileReference.removePlane(this);
+    if (color.equals("red")){
+      if (charArray[26-1][5-1] == ' '){
+        xcor = 5-1;
+        ycor = 26-1;
+        tileReference = new Tile(-1, -1, "filler");
+        isAtHome = true;
+        charArray[25][4] = 'P';
+        return true;
+      } else if (charArray[26-1][13-1] == ' '){
+        xcor = 13-1;
+        ycor = 26-1;
+        tileReference = new Tile(-1, -1, "filler");
+        isAtHome = true;
+        charArray[25][12] = 'P';
+        return true;
+      } else if (charArray[29-1][5-1] == ' '){
+        xcor = 5-1;
+        ycor = 29-1;
+        tileReference = new Tile(-1, -1, "filler");
+        isAtHome = true;
+        charArray[28][4] = 'P';
+        return true;
+      } else if (charArray[29-1][13-1] == ' '){
+        xcor = 13-1;
+        ycor = 29-1;
+        tileReference = new Tile(-1, -1, "filler");
+        isAtHome = true;
+        charArray[28][12] = 'P';
+        return true;
+      }
+    } else if (color.equals("green")){
+      if (charArray[25][54] == ' '){
+        xcor = 54;
+        ycor = 25;
+        tileReference = new Tile(-1, -1, "filler");
+        isAtHome = true;
+        charArray[25][54] = 'P';
+        return true;
+      } else if (charArray[25][62] == ' '){
+        xcor = 62;
+        ycor = 25;
+        charArray[25][62] = 'P';
+        tileReference = new Tile(-1, -1, "filler");
+        isAtHome = true;
+        return true;
+      } else if (charArray[28][54] == ' '){
+        xcor = 54;
+        ycor = 28;
+        charArray[28][54] = 'P';
+        tileReference = new Tile(-1, -1, "filler");
+        isAtHome = true;
+        return true;
+      } else if (charArray[28][62] == ' '){
+        xcor = 62;
+        ycor = 28;
+        charArray[28][62] = 'P';
+        tileReference = new Tile(-1, -1, "filler");
+        isAtHome = true;
+        return true;
+      }
+    } else if (color.equals("blue")){
+      if (charArray[2][54] == ' '){
+        xcor = 54;
+        ycor = 2;
+        charArray[2][54] = 'P';
+        tileReference = new Tile(-1, -1, "filler");
+        isAtHome = true;
+        return true;
+      } else if (charArray[2][62] == ' '){
+        xcor = 62;
+        ycor = 2;
+        charArray[2][62] = 'P';
+        tileReference = new Tile(-1, -1, "filler");
+        isAtHome = true;
+        return true;
+      } else if (charArray[5][54] == ' '){
+        xcor = 54;
+        ycor = 5;
+        charArray[5][54] = 'P';
+        tileReference = new Tile(-1, -1, "filler");
+        isAtHome = true;
+        return true;
+      } else if (charArray[5][62] == ' '){
+        xcor = 62;
+        ycor = 5;
+        charArray[5][62] = 'P';
+        tileReference = new Tile(-1, -1, "filler");
+        isAtHome = true;
+        return true;
+      }
+    } else if (color.equals("yellow")){
+      if (charArray[2][4] == ' '){
+        xcor = 4;
+        ycor = 2;
+        charArray[2][4] = 'P';
+        tileReference = new Tile(-1, -1, "filler");
+        isAtHome = true;
+        return true;
+      } else if (charArray[2][12] == ' '){
+        xcor = 12;
+        ycor = 2;
+        charArray[2][12] = 'P';
+        tileReference = new Tile(-1, -1, "filler");
+        isAtHome = true;
+        return true;
+      } else if (charArray[5][4] == ' '){
+        xcor = 4;
+        ycor = 5;
+        charArray[5][4] = 'P';
+        tileReference = new Tile(-1, -1, "filler");
+        isAtHome = true;
+        return true;
+      } else if (charArray[5][12] == ' '){
+        xcor = 12;
+        ycor = 5;
+        charArray[5][12] = 'P';
+        tileReference = new Tile(-1, -1, "filler");
+        isAtHome = true;
+        return true;
+      }
+    }
+    return false;
   }
 
   public boolean isAtHome(){
@@ -95,19 +219,21 @@ public class Plane{
       tileReference = tile;
       xcor = tileReference.getxcor();
       ycor = tileReference.getycor();
-      tileReference.addPlanes(1);
-      tileReference.setPlaneHere(true);
+      tileReference.addPlane(this);
       return tileReference;
     } else if (!isAtHome) { //if not at home, it means you're at the launchingTile or already on the board
-        tileReference.addPlanes(-1);
+        tileReference.removePlane(this);
         tileReference = tile;
         xcor = tileReference.getxcor();
         ycor = tileReference.getycor();
-        tileReference.setPlaneHere(true);
-        tileReference.addPlanes(1);
+        tileReference.addPlane(this);
         return tileReference;
     }
 
     return tileReference; //here just to compile?
+  }
+
+  public String toString(){
+    return color;
   }
 }

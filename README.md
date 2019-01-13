@@ -41,6 +41,7 @@ short haul shortcuts and long haul shortcuts
 cleanup code (like we can have launchingTiles be part of the text map)
 remove the T's and g's and G's etc
 unicode characters for plane?
+add map to display how shortcuts interacting with destroying planes
 
 CONTROLS:
 hit Space to interact (and to roll a die)

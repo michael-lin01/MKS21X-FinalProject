@@ -1,8 +1,9 @@
+import java.util.ArrayList;
+
 public class Tile{
 
   private String color;
-  private boolean planeHere;
-  private int numPlanes;
+  private ArrayList<Plane> planesHere;
   private String name;
   private Tile nextTile;
   private Tile prevTile;
@@ -12,15 +13,17 @@ public class Tile{
   public Tile(int xcor, int ycor){
     this.xcor = xcor;
     this.ycor = ycor;
-    planeHere = false;
-    numPlanes=0;
+    planesHere = new ArrayList();
   }
   public Tile(int xcor, int ycor, String color){
     this.xcor = xcor;
     this.ycor = ycor;
     this.color = color;
-    planeHere = false;
-    numPlanes = 0;
+    planesHere = new ArrayList();
+  }
+
+  public ArrayList planesHere(){
+    return planesHere;
   }
 
   public String name(){
@@ -32,12 +35,13 @@ public class Tile{
   public void setPrevTile(Tile prev){
     prevTile = prev;
   }
-  public void setPlaneHere(boolean b){
-    planeHere = b;
+
+  public void addPlane(Plane plane){
+    planesHere.add(plane);
   }
 
-  public void addPlanes(int n){
-    numPlanes += n;
+  public boolean removePlane(Plane plane){
+    return planesHere.remove(plane);
   }
 
   public String getColor(){
@@ -45,7 +49,16 @@ public class Tile{
   }
 
   public boolean isPlaneHere(){
-    return planeHere;
+    return (planesHere.size() > 0);
+  }
+
+  public boolean containsAnyInList(ArrayList a){
+    for (int n = 0; n < a.size(); n++){
+      if (planesHere.contains(a.get(n))){
+        return true;
+      }
+    }
+    return false;
   }
 
   public String tileName(){
@@ -53,7 +66,7 @@ public class Tile{
   }
 
   public int getNumPlanes(){
-    return numPlanes;
+    return planesHere.size();
   }
 
   public int getxcor(){

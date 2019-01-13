@@ -41,6 +41,8 @@ public class TerminalClass {
   private static TilePath blueEndLinkedList = new TilePath();
 
   private static TilePath Tiles = new TilePath();
+  private static int shortcutChain = 0;
+  private static String planeTurn = "red";
 
     //prints out a 2d array for debugging purposes
     public static String toString(char[][] charArray){
@@ -330,7 +332,6 @@ public class TerminalClass {
         int newNum = tile.getNumPlanes() + numChange;
         charArray[ycor][xcor] = (char)newNum;
         t.moveCursor(xcor,ycor);
-        System.out.println("number of planes on current tile: "+newNum);
         if (newNum > 1){
             t.putCharacter((char)(tile.getNumPlanes()+48));
             //+48 is bc ints are -48 when converting to chars
@@ -347,7 +348,98 @@ public class TerminalClass {
         int dieRoll = Math.abs(r.nextInt() % numDieSides) + 1;
         putString(20, 32, t, "Roll: "+ dieRoll);
         return dieRoll;
-	}
+    }
+    
+    //if shorthaul shortcut fails due to being busy attacking an enemy plane, shortcut chain resets to 0
+    public static Tile shortHaulShortcut(Terminal t, Plane plane, char[][] charArray, ArrayList a){
+        Tile tile = plane.getTileReference();
+        if (tile.containsAnyInList(a)){ //if you find an enemy plane, you cannot take the shortcut
+            returnToHangar(t, tile.planesHere(), charArray);; //return enemy planes to hangar
+            System.out.println("num planes on tile should now be 1: "+tile.getNumPlanes());
+            shortcutChain = 0;
+            return tile;
+        } else {
+            //shortcut chain represents the # of shortcuts you have taken in one turn
+            //if this is your first or second shortcut (represented by shortcutChain < 2), then take the shorthaul shortcut
+            if (shortcutChain < 2){
+                erasePlaneLocation(t, plane, charArray);
+                updateTileNumber(t, planeTurn, charArray, tile, -1);
+                for (int n = 0; n < 4; n++){
+                    plane.move(plane.getTileReference().getNextTile());
+                }
+                updatePlaneLocation(t, plane, charArray);
+                updateTileNumber(t, planeTurn, charArray, plane.getTileReference());
+                shortcutChain++;
+                if ((planeTurn.equals("red")&& plane.getxcor()==21 && plane.getycor()==8)
+                    ||(planeTurn.equals("yellow")&& plane.getxcor()==48 && plane.getycor()==8)
+                    ||(planeTurn.equals("blue")&& plane.getxcor()==45 && plane.getycor()==21)
+                    ||(planeTurn.equals("green")&& plane.getxcor()==18 && plane.getycor()==21)){
+                        boolean waiting = true;
+                        long waitingStartMillis = System.currentTimeMillis();
+                        while (waiting){
+                            long waitingEndMillis = System.currentTimeMillis();
+                            long waitingDiffMillis = waitingEndMillis - waitingStartMillis;
+                            if (waitingDiffMillis / 1000.0 >= 0.5){
+                                waiting = false;
+                            }
+                        }
+                        longHaulShortcut(t,plane,charArray,a);
+                    }
+                return plane.getTileReference();
+            } else {
+                shortcutChain = 0;
+                return tile;
+            }
+        }
+    }
+
+    //at the end of the day, any long haul shortcuts lead to shortcutChain being reset to 0
+    public static Tile longHaulShortcut(Terminal t, Plane plane, char[][] charArray, ArrayList a){
+        Tile tile = plane.getTileReference();
+        if (tile.containsAnyInList(a)){ //if you find an enemy plane, you cannot take the shortcut
+            returnToHangar(t, tile.planesHere(), charArray);
+            System.out.println("num planes on tile should now be 1: "+tile.getNumPlanes());
+            shortcutChain = 0;
+            return tile;
+        } else {
+            if (shortcutChain < 2){
+                erasePlaneLocation(t, plane, charArray);
+                updateTileNumber(t, planeTurn, charArray, tile, -1);
+                for (int n = 0; n < 12; n++){
+                    plane.move(plane.getTileReference().getNextTile());
+                }
+                updatePlaneLocation(t, plane, charArray);
+                updateTileNumber(t, planeTurn, charArray, plane.getTileReference());
+                shortcutChain++;
+                boolean waiting = true;
+                long waitingStartMillis = System.currentTimeMillis();
+                while (waiting){
+                    long waitingEndMillis = System.currentTimeMillis();
+                    long waitingDiffMillis = waitingEndMillis - waitingStartMillis;
+                    if (waitingDiffMillis / 1000.0 >= 0.5){
+                        waiting = false;
+                    }
+                }
+                shortHaulShortcut(t, plane, charArray, a);
+                return plane.getTileReference();
+            } else {
+                shortcutChain = 0;
+                return tile;
+            }
+        }
+    }
+
+    public static void returnToHangar(Terminal t, ArrayList<Plane> planesOnTile, char[][] charArray){
+        for (int n = 0; n < planesOnTile.size(); n++){
+            erasePlaneLocation(t, planesOnTile.get(n), charArray);
+            planesOnTile.get(n).setAtHome(charArray);
+            updatePlaneLocation(t, planesOnTile.get(n), charArray);
+        }
+    }
+
+
+
+
 
 	public static void main(String[] args) {
 
@@ -411,14 +503,17 @@ public class TerminalClass {
         Plane yellow4 = new Plane("yellow",13-1,6-1);
         updatePlaneLocation(terminal, yellow4, board);
 
-
-        String planeTurn = "red"; //default planeTurn (aka the first color plane that will move)
         Plane plane1 = red1;
         Plane plane2 = red2;
         Plane plane3 = red3;
         Plane plane4 = red4;
         Plane cursorPlane = plane1;
         putString(0,32,terminal,"red's Turn!");
+        ArrayList otherPlanes = new ArrayList();
+        //otherPlanes.add(green1); otherPlanes.add(green2); otherPlanes.add(green3); otherPlanes.add(green4);
+        //otherPlanes.add(blue1); otherPlanes.add(blue2); otherPlanes.add(blue3); otherPlanes.add(blue4);
+        //otherPlanes.add(red1); otherPlanes.add(red2); otherPlanes.add(red3); otherPlanes.add(red4);
+        //otherPlanes.add(yellow1); otherPlanes.add(yellow2); otherPlanes.add(yellow3); otherPlanes.add(yellow4);
         boolean selecting = true;
       
 		while(running){
@@ -586,11 +681,10 @@ public class TerminalClass {
                                                 System.out.println("tile not found");
                                             }
                                             cursorPlane.setTileReference(tile);
-                                            tile.setPlaneHere(true);
-                                            tile.addPlanes(1);
+                                            tile.addPlane(cursorPlane);
                                             updateTileNumber(terminal, planeTurn, board, tile);
                                             editorPlaneNumber++;
-                                            cursorPlane.setAtHome(false);
+                                            cursorPlane.move(tile);
                                             if (planeTurn.equals("red")){
                                                 terminal.applyForegroundColor(Terminal.Color.RED);
                                             } else if (planeTurn.equals("green")){
@@ -648,20 +742,18 @@ public class TerminalClass {
                                     //happens regardless of editorMode or dieRollManipulate or neither
                                     if (cursorPlane.getTileReference().getNumPlanes() < 2){
                                         erasePlaneLocation(terminal, cursorPlane, board);
-                                        cursorPlane.getTileReference().setPlaneHere(false);
+                                        cursorPlane.getTileReference().removePlane(cursorPlane);
                                     }
                                     if (cursorPlane.isAtHome()){
                                       updateTileNumber(terminal, planeTurn, board, cursorPlane.move(launchingTile));
                                       updatePlaneLocation(terminal, cursorPlane, board); 
                                     } else {
-                                        System.out.println(dieRoll);
                                         for (int n = 1; n <= dieRoll; n++){
                                             boolean animating = true;
                                             long milliStart = System.currentTimeMillis();
                                             while (animating){
                                                 long milliEnd = System.currentTimeMillis();
                                                 long milliDiff = milliEnd - milliStart;
-                                                //if (milliDiff % 100 == 0) System.out.println(milliDiff);
                                                 if (milliDiff / 1000.0 >= 0.5){
                                                     //just to remove the highlights
                                                     terminal.applyBackgroundColor(Terminal.Color.DEFAULT);
@@ -670,7 +762,7 @@ public class TerminalClass {
                                                     terminal.putCharacter('P');
                                                     if (cursorPlane.getTileReference().getNumPlanes() < 2){
                                                         erasePlaneLocation(terminal, cursorPlane, board);
-                                                        cursorPlane.getTileReference().setPlaneHere(false);
+                                                        cursorPlane.getTileReference().removePlane(cursorPlane);
                                                     }
                                                     if (cursorPlane.getTileReference() == launchingTile){ //if plane is on launchingTile;
                                                         //sets tile plane is leaving from to have numPlanes on it -1;
@@ -690,18 +782,23 @@ public class TerminalClass {
                                             }
                                         }
                                         //this code runs at the end of a plane's complete movement (when it has moved through all tiles indicated by its dice roll)
-                                        // long haul shortcuts
+                                        
+                                        //long haul shortcuts 
                                         if ((planeTurn.equals("red")&& cursorPlane.getxcor()==21 && cursorPlane.getycor()==8)
                                             ||(planeTurn.equals("yellow")&& cursorPlane.getxcor()==48 && cursorPlane.getycor()==8)
                                             ||(planeTurn.equals("blue")&& cursorPlane.getxcor()==45 && cursorPlane.getycor()==21)
                                             ||(planeTurn.equals("green")&& cursorPlane.getxcor()==18 && cursorPlane.getycor()==21)){
-                                            erasePlaneLocation(terminal, cursorPlane, board);
-                                            for(int i = 0; i < 12; i++){
-                                                cursorPlane.move(cursorPlane.getTileReference().getNextTile()); //skips a quarter of the board
+                                                //this little method already takes care of erasePlaneLocation, updateTileNumber, and updatePlaneLocation
+                                                longHaulShortcut(terminal, cursorPlane, board, otherPlanes);
                                             }
-                                            updateTileNumber(terminal, planeTurn, board, cursorPlane.getTileReference());
-                                            updatePlaneLocation(terminal, cursorPlane, board);
-                                        }
+                                        else if ((planeTurn.equals("red") && cursorPlane.getTileReference().getColor().equals("red"))
+                                            || (planeTurn.equals("blue") && cursorPlane.getTileReference().getColor().equals("blue"))
+                                            || (planeTurn.equals("green") && cursorPlane.getTileReference().getColor().equals("green"))
+                                            || (planeTurn.equals("yellow") && cursorPlane.getTileReference().getColor().equals("yellow"))){
+                                                //this little method already takes care of erasePlaneLocation, updateTileNumber, and updatePlaneLocation
+                                                shortHaulShortcut(terminal, cursorPlane, board, otherPlanes);
+                                            }
+                                        
                                     }
 
                                     //after the plane has finished moving
@@ -814,6 +911,12 @@ public class TerminalClass {
                                 }
 
                                 //if want to put a new key input, put here
+                                if (key.getCharacter() == 't'){
+                                    //purely for testing purposes
+                                    ArrayList test = new ArrayList();
+                                    test.add(green1);
+                                    returnToHangar(terminal, test, board);
+                                }
 
                             }
                         }
@@ -821,6 +924,8 @@ public class TerminalClass {
 
 
                 //will happen regardless of what roll is achieved; aka the game moves on despite getting odd or even
+                //will add the planes whose turn is over to the category of "otherPlanes"
+                otherPlanes.add(plane1); otherPlanes.add(plane2); otherPlanes.add(plane3); otherPlanes.add(plane4);
                 if (planeTurn.equals("red")){ //once you have selected, then switch plane turns
                     launchingTile = greenLaunchingTile; //switches over to greenLaunchingTile
                     planeStart = greenStart;
@@ -854,8 +959,11 @@ public class TerminalClass {
                     plane3 = red3;
                     plane4 = red4;
                 }
+                //the planes with same color as planeTurn are now not part of "otherPlanes"
+                otherPlanes.remove(plane1); otherPlanes.remove(plane2); otherPlanes.remove(plane3); otherPlanes.remove(plane4);
                 putString(0,32,terminal,"                                  ");
                 putString(0,32,terminal,planeTurn + "'s Turn!");
+
                 }
 			}
 		}
