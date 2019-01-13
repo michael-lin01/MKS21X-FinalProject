@@ -64,16 +64,16 @@ public class TerminalClass {
   
   public static void putString(int r, int c,Terminal t, String s, String colors){
     t.moveCursor(r,c);
-    //Terminal.Color back;
+    Terminal.Color back;
     for(int i = 0; i < s.length();i++){
-      /*
+      
       back = Terminal.Color.DEFAULT; //if not a 1,2,3, or 4, background color is the default color
       if(colors.charAt(i)=='1') back = Terminal.Color.RED;
       if(colors.charAt(i)=='2') back = Terminal.Color.YELLOW;
-      if(colors.charAt(i)=='3') back = Terminal.Color.GREEN;
-      if(colors.charAt(i)=='4') back = Terminal.Color.BLUE;
+      if(colors.charAt(i)=='3') back = Terminal.Color.BLUE;
+      if(colors.charAt(i)=='4') back = Terminal.Color.GREEN;
       t.applyBackgroundColor(back);
-      */
+      
       t.putCharacter(s.charAt(i));
     }
   }
@@ -89,8 +89,8 @@ public class TerminalClass {
       int lineCounter = c;
       while (in.hasNext()){
         String line = in.nextLine();
-        //String linecolor = colorsin.nextLine();
-        putString(r,lineCounter, t, line);//, linecolor);
+        String linecolor = colorsin.nextLine();
+        putString(r,lineCounter, t, line, linecolor);
         for (int index = 0; index < line.length(); index++){
           char character = line.charAt(index);
           charArray[lineCounter][index] = character;
@@ -225,7 +225,7 @@ public class TerminalClass {
 
 public static void colorTiles(){
   Tile current = redStart;
-  int counter = 0;
+  int counter = 3;
   do{
     if(counter%4==0) current.setColor("red");
     if(counter%4==1) current.setColor("yellow");
@@ -241,12 +241,21 @@ public static void putFileIntoTerminal(String filename, char[][] charArray, Term
   try {
     File f = new File(filename);
     Scanner in = new Scanner(f);
-    //TilePath l = new TilePath();
+    Terminal.Color back;
+    File colors = new File("AeroplaneChessBoardColors.txt");
+    Scanner colorsin = new Scanner(colors);
       for (int y = 0; y < charArray.length; y++){
         String line = in.nextLine();
+        String linecolor = colorsin.nextLine();
         for (int x = 0; x < line.length(); x++){
           charArray[y][x] = line.charAt(x); //charArray goes row,col while standard coord grid goes x,y
           t.moveCursor(x,y);
+          back = Terminal.Color.DEFAULT; //if not a 1,2,3, or 4, background color is the default color
+          if(linecolor.charAt(x)=='1') back = Terminal.Color.RED;
+          if(linecolor.charAt(x)=='2') back = Terminal.Color.YELLOW;
+          if(linecolor.charAt(x)=='3') back = Terminal.Color.BLUE;
+          if(linecolor.charAt(x)=='4') back = Terminal.Color.GREEN;
+          t.applyBackgroundColor(back);
           t.putCharacter(line.charAt(x));
         }
       }
@@ -363,10 +372,10 @@ public static int rollDie(int numDieSides, Terminal t, String planeTurn){
 
 public static void main(String[] args) {
   
-  Terminal terminal = TerminalFacade.createTerminal();
+  Terminal terminal = TerminalFacade.createSwingTerminal(68,36);
+  TerminalSize terminalSize = terminal.getTerminalSize();
   terminal.enterPrivateMode();
   
-  TerminalSize terminalSize = new TerminalSize(31,67); //terminal.getTerminalSize();
   terminal.setCursorVisible(false);
   
   boolean running = true;
@@ -464,7 +473,7 @@ public static void main(String[] args) {
         (plane1.isAtHome() && plane2.isAtHome() &&
         plane3.isAtHome() && plane4.isAtHome()) && !editorMode){
           boolean isMessagingTime = true;
-          putString(40,32,terminal,"Sorry, but you rolled an odd number!");
+          putString(0,34,terminal,"Sorry, but you rolled an odd number!");
           long timerStartMillis = System.currentTimeMillis();
           while (isMessagingTime){
             long timerEndMillis = System.currentTimeMillis();
