@@ -96,6 +96,7 @@ public class Plane{
       xcor = tileReference.getxcor();
       ycor = tileReference.getycor();
       tileReference.addPlanes(1);
+      tileReference.setPlaneHere(true);
       return tileReference;
 
     } else if (!isAtHome) { //if not at home, it means you're at the launchingTile or already on the board
@@ -103,6 +104,7 @@ public class Plane{
         tileReference = tile;
         xcor = tileReference.getxcor();
         ycor = tileReference.getycor();
+        tileReference.setPlaneHere(true);
         return tileReference;
     }
     //not necessarily 1, but 1 tile
