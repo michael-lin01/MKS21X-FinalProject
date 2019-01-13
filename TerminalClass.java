@@ -41,6 +41,8 @@ public class TerminalClass {
   private static TilePath blueEndLinkedList = new TilePath();
   
   private static TilePath Tiles = new TilePath();
+  private static int shortcutChain = 0;
+  private static String planeTurn = "red";
   
   //prints out a 2d array for debugging purposes
   public static String toString(char[][] charArray){
