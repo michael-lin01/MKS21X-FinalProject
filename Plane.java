@@ -105,7 +105,14 @@ public class Plane{
         ycor = tileReference.getycor();
         return tileReference;
     }
-    //not necessarily 1, but 1 tile
+    //shortcuts
+    if ((color.equals("red")&&xcor=21 &&ycor=8)||(color.equals("yellow")&&xcor=48 &&ycor=8)||
+         (color.equals("blue")&&xcor=45 &&ycor=21)||(color.equals("green")&&xcor=18 &&ycor=21)){
+      for(int i = 0; i < 12; i++){
+        move(tileReference.getNextTile());
+      }
+    }
+
     return tileReference; //here just to compile?
   }
 }
