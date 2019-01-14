@@ -386,7 +386,7 @@ public static int rollDie(int numDieSides, Terminal t, String planeTurn){
 public static Tile shortHaulShortcut(Terminal t, Plane plane, char[][] charArray, ArrayList<Plane> a, String planeTurn){
     Tile tile = plane.getTileReference();
     if (tile.containsAnyInList(a)){ //if you find an enemy plane, you cannot take the shortcut
-        returnToHangar(t, tile.planesHere(), charArray);; //return enemy planes to hangar
+        returnToHangar(t, tile.planesHere(), charArray, planeTurn);; //return enemy planes to hangar
         System.out.println("num planes on tile should now be 1: "+tile.getNumPlanes());
         shortcutChain = 0;
         return tile;
@@ -431,7 +431,7 @@ public static Tile shortHaulShortcut(Terminal t, Plane plane, char[][] charArray
 public static Tile longHaulShortcut(Terminal t, Plane plane, char[][] charArray, ArrayList<Plane> a, String planeTurn){
     Tile tile = plane.getTileReference();
     if (tile.containsAnyInList(a)){ //if you find an enemy plane, you cannot take the shortcut
-        returnToHangar(t, tile.planesHere(), charArray);
+        returnToHangar(t, tile.planesHere(), charArray, planeTurn);
         System.out.println("num planes on tile should now be 1: "+tile.getNumPlanes());
         shortcutChain = 0;
         return tile;
@@ -464,18 +464,21 @@ public static Tile longHaulShortcut(Terminal t, Plane plane, char[][] charArray,
     }
 }
 
-public static void returnToHangar(Terminal t, ArrayList<Plane> planesOnTile, char[][] charArray){
+public static void returnToHangar(Terminal t, ArrayList<Plane> planesOnTile, char[][] charArray, String planeTurn){
     for (int n = 0; n < planesOnTile.size(); n++){
-        erasePlaneLocation(t, planesOnTile.get(n), charArray);
-        planesOnTile.get(n).setAtHome(charArray);
-        updatePlaneLocation(t, planesOnTile.get(n), charArray);
+        Plane indexPlane = planesOnTile.get(n);
+        if (indexPlane.color() != planeTurn){ //save the plane that is destroying the others
+            erasePlaneLocation(t, indexPlane, charArray);
+            planesOnTile.get(n).setAtHome(charArray);
+            updatePlaneLocation(t, indexPlane, charArray);
+        }
     }
 }
 
 
 public static void main(String[] args) {
   
-  Terminal terminal = TerminalFacade.createSwingTerminal();
+  Terminal terminal = TerminalFacade.createTextTerminal();
   terminal.enterPrivateMode();
   
   terminal.setCursorVisible(false);
@@ -859,6 +862,12 @@ public static void main(String[] args) {
                                                 //this little method already takes care of erasePlaneLocation, updateTileNumber, and updatePlaneLocation
                                                 shortHaulShortcut(terminal, cursorPlane, board, otherPlanes, planeTurn);
                                             }
+                                        else { //if you DON't land on a shortcut, then u gotta check if you landed on an enemy plane
+                                            if (cursorPlane.getTileReference().containsAnyInList(otherPlanes)){
+                                                returnToHangar(terminal, cursorPlane.getTileReference().planesHere(), board, planeTurn);; //return enemy planes to hangar
+                                                System.out.println("num planes on tile should now be 1: "+cursorPlane.getTileReference().getNumPlanes());
+                                            }
+                                        }
                                         
                                     }
 
