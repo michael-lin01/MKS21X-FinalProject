@@ -43,6 +43,10 @@ public class TerminalClass {
   private static TilePath Tiles = new TilePath();
   private static int shortcutChain = 0;
   private static String planeTurn = "red";
+  private static boolean waiting;
+  private static long waitingStartMillis;
+  private static long waitingEndMillis;
+  private static long waitingDiffMillis;
 
     //prints out a 2d array for debugging purposes
     public static String toString(char[][] charArray){
@@ -320,7 +324,7 @@ public static void updateTileNumber(Terminal t, String planeTurn, char[][] charA
   }
   charArray[ycor][xcor] = (char)tile.getNumPlanes();
   t.moveCursor(xcor,ycor);
-  System.out.println("number of planes on current tile: "+tile.getNumPlanes());
+  //System.out.println("number of planes on current tile: "+tile.getNumPlanes());
   if (tile.getNumPlanes() > 1){
     t.putCharacter((char)(tile.getNumPlanes()+48));
     //+48 is bc ints are -48 when converting to chars
@@ -353,7 +357,7 @@ public static void updateTileNumber(Terminal t, String planeTurn, char[][] charA
   int newNum = tile.getNumPlanes() + numChange;
   charArray[ycor][xcor] = (char)newNum;
   t.moveCursor(xcor,ycor);
-  System.out.println("number of planes on current tile: "+newNum);
+  //System.out.println("number of planes on current tile: "+tile.getNumPlanes());
   if (newNum > 1){
     t.putCharacter((char)(tile.getNumPlanes()+48));
     //+48 is bc ints are -48 when converting to chars
@@ -384,6 +388,15 @@ public static Tile shortHaulShortcut(Terminal t, Plane plane, char[][] charArray
         //shortcut chain represents the # of shortcuts you have taken in one turn
         //if this is your first or second shortcut (represented by shortcutChain < 2), then take the shorthaul shortcut
         if (shortcutChain < 2){
+            waiting = true;
+            waitingStartMillis = System.currentTimeMillis();
+            while (waiting){
+                waitingEndMillis = System.currentTimeMillis();
+                waitingDiffMillis = waitingEndMillis - waitingStartMillis;
+                if (waitingDiffMillis / 1000.0 >= 0.5){
+                    waiting = false;
+                }
+            }
             erasePlaneLocation(t, plane, charArray);
             updateTileNumber(t, planeTurn, charArray, tile, -1);
             for (int n = 0; n < 4; n++){
@@ -392,15 +405,16 @@ public static Tile shortHaulShortcut(Terminal t, Plane plane, char[][] charArray
             updatePlaneLocation(t, plane, charArray);
             updateTileNumber(t, planeTurn, charArray, plane.getTileReference());
             shortcutChain++;
+            System.out.println("planeTurn: "+planeTurn + "xcor: "+plane.getxcor() + "ycor: "+plane.getycor());
             if ((planeTurn.equals("red")&& plane.getxcor()==21 && plane.getycor()==8)
                 ||(planeTurn.equals("yellow")&& plane.getxcor()==48 && plane.getycor()==8)
                 ||(planeTurn.equals("blue")&& plane.getxcor()==45 && plane.getycor()==21)
                 ||(planeTurn.equals("green")&& plane.getxcor()==18 && plane.getycor()==21)){
-                    boolean waiting = true;
-                    long waitingStartMillis = System.currentTimeMillis();
+                    waiting = true;
+                    waitingStartMillis = System.currentTimeMillis();
                     while (waiting){
-                        long waitingEndMillis = System.currentTimeMillis();
-                        long waitingDiffMillis = waitingEndMillis - waitingStartMillis;
+                        waitingEndMillis = System.currentTimeMillis();
+                        waitingDiffMillis = waitingEndMillis - waitingStartMillis;
                         if (waitingDiffMillis / 1000.0 >= 0.5){
                             waiting = false;
                         }
@@ -425,6 +439,15 @@ public static Tile longHaulShortcut(Terminal t, Plane plane, char[][] charArray,
         return tile;
     } else {
         if (shortcutChain < 2){
+            waiting = true;
+            waitingStartMillis = System.currentTimeMillis();
+            while (waiting){
+                waitingEndMillis = System.currentTimeMillis();
+                waitingDiffMillis = waitingEndMillis - waitingStartMillis;
+                if (waitingDiffMillis / 1000.0 >= 0.5){
+                    waiting = false;
+                }
+            }
             erasePlaneLocation(t, plane, charArray);
             updateTileNumber(t, planeTurn, charArray, tile, -1);
             for (int n = 0; n < 12; n++){
@@ -433,11 +456,11 @@ public static Tile longHaulShortcut(Terminal t, Plane plane, char[][] charArray,
             updatePlaneLocation(t, plane, charArray);
             updateTileNumber(t, planeTurn, charArray, plane.getTileReference());
             shortcutChain++;
-            boolean waiting = true;
-            long waitingStartMillis = System.currentTimeMillis();
+            waiting = true;
+            waitingStartMillis = System.currentTimeMillis();
             while (waiting){
-                long waitingEndMillis = System.currentTimeMillis();
-                long waitingDiffMillis = waitingEndMillis - waitingStartMillis;
+                waitingEndMillis = System.currentTimeMillis();
+                waitingDiffMillis = waitingEndMillis - waitingStartMillis;
                 if (waitingDiffMillis / 1000.0 >= 0.5){
                     waiting = false;
                 }
@@ -575,7 +598,7 @@ public static void main(String[] args) {
               isMessagingTime = false;
             }
           }
-          putString(40,32,terminal,"                                    ");
+          putString(0,34,terminal,"                                    ");
           selecting = false;
         } //---------------------
         

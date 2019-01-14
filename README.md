@@ -51,3 +51,7 @@ hit E while in editorMode (except for Tab or Enter) to exit editorMode
 DEV NOTES:
 editorMode added (but its real crappy)
 so i added dieRollManipulate mode instead so you play through game normally but only change is u can control which die roll you get by pressing backspace. java -cp lanterna.jar;. TerminalClass.java dieRollManipulate
+
+
+redstart aint acting like a green shortcut??? test this
+redlonghaul aint working??
