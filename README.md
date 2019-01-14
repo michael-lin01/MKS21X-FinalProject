@@ -42,6 +42,7 @@ cleanup code (like we can have launchingTiles be part of the text map)
 remove the T's and g's and G's etc
 unicode characters for plane?
 add map to display how shortcuts interacting with destroying planes
+add animating for planes climbing the ladder rungs when doing long haul shortcuts
 
 CONTROLS:
 hit Space to interact (and to roll a die)
@@ -53,5 +54,13 @@ editorMode added (but its real crappy)
 so i added dieRollManipulate mode instead so you play through game normally but only change is u can control which die roll you get by pressing backspace. java -cp lanterna.jar;. TerminalClass.java dieRollManipulate
 
 
-redstart aint acting like a green shortcut??? test this
-redlonghaul aint working??
+passing over planes have to make sure other plane keeps color
+test killing enemy planes... regularly (ie no shortcut testing)(one plane and then two planes killed) fuk
+                            then two plane when landing on short shortcut (should get interrupted)
+                            then two plane when landing AFTER short shortcut (should kill planes but not interrupted)
+                            then two plane when landing on long shortcut (should get interrupted)
+                            then two plane when landing AFTER long shortcut (should kill planes but not interrupted)
+                            then two plane when landing AFTER short shortcut which means landing ON long shortcut (should follow through 1st and then interrupted @ second)
+                            then two plane when landing AFTER short shortcut AFTER long shortcut (should follow thorugh both and destroy @ end)
+                            then two plane when landing AFTER long shortcut which means landing ON short shortcut (should follow through 1st and then interrupted @ second)
+                            then two plane when landing AFTER long shortcut AFTER short shortcut (should follow through both and destroy @ end)
