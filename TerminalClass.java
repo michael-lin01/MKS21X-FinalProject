@@ -247,6 +247,7 @@ public static void putFileIntoTerminal(String filename, char[][] charArray, Term
     File f = new File(filename);
     Scanner in = new Scanner(f);
     Terminal.Color back;
+    Terminal.Color front;
     File colors = new File("AeroplaneChessBoardColors.txt");
     Scanner colorsin = new Scanner(colors);
       for (int y = 0; y < charArray.length; y++){
@@ -256,11 +257,17 @@ public static void putFileIntoTerminal(String filename, char[][] charArray, Term
           charArray[y][x] = line.charAt(x); //charArray goes row,col while standard coord grid goes x,y
           t.moveCursor(x,y);
           back = Terminal.Color.DEFAULT; //if not a 1,2,3, or 4, background color is the default color
+          front = Terminal.Color.DEFAULT; //if not a 5,6,7,8, foreground color is default
           if(linecolor.charAt(x)=='0') back = Terminal.Color.RED;
           if(linecolor.charAt(x)=='1') back = Terminal.Color.YELLOW;
           if(linecolor.charAt(x)=='2') back = Terminal.Color.BLUE;
           if(linecolor.charAt(x)=='3') back = Terminal.Color.GREEN;
           t.applyBackgroundColor(back);
+          if (linecolor.charAt(x)=='5') front = Terminal.Color.RED;
+          if (linecolor.charAt(x)=='6') front = Terminal.Color.YELLOW;
+          if (linecolor.charAt(x)=='7') front = Terminal.Color.BLUE;
+          if (linecolor.charAt(x)=='8') front = Terminal.Color.GREEN;
+          t.applyForegroundColor(front);
           t.putCharacter(line.charAt(x));
         }
       }
@@ -468,7 +475,7 @@ public static void returnToHangar(Terminal t, ArrayList<Plane> planesOnTile, cha
 
 public static void main(String[] args) {
   
-  Terminal terminal = TerminalFacade.createTextTerminal();
+  Terminal terminal = TerminalFacade.createSwingTerminal();
   terminal.enterPrivateMode();
   
   terminal.setCursorVisible(false);
