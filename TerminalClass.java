@@ -377,7 +377,7 @@ public static int rollDie(int numDieSides, Terminal t, String planeTurn){
 }
 
 //if shorthaul shortcut fails due to being busy attacking an enemy plane, shortcut chain resets to 0
-public static Tile shortHaulShortcut(Terminal t, Plane plane, char[][] charArray, ArrayList a){
+public static Tile shortHaulShortcut(Terminal t, Plane plane, char[][] charArray, ArrayList<Plane> a){
     Tile tile = plane.getTileReference();
     if (tile.containsAnyInList(a)){ //if you find an enemy plane, you cannot take the shortcut
         returnToHangar(t, tile.planesHere(), charArray);; //return enemy planes to hangar
@@ -430,7 +430,7 @@ public static Tile shortHaulShortcut(Terminal t, Plane plane, char[][] charArray
 }
 
 //at the end of the day, any long haul shortcuts lead to shortcutChain being reset to 0
-public static Tile longHaulShortcut(Terminal t, Plane plane, char[][] charArray, ArrayList a){
+public static Tile longHaulShortcut(Terminal t, Plane plane, char[][] charArray, ArrayList<Plane> a){
     Tile tile = plane.getTileReference();
     if (tile.containsAnyInList(a)){ //if you find an enemy plane, you cannot take the shortcut
         returnToHangar(t, tile.planesHere(), charArray);
@@ -556,7 +556,7 @@ public static void main(String[] args) {
   putString(0,32,terminal,"red's Turn!");
   boolean selecting = true;
 
-  ArrayList<Plane> otherPlanes = new ArrayList();
+  ArrayList<Plane> otherPlanes = new ArrayList<Plane>();
   
   while(running){
     
