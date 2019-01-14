@@ -13,16 +13,16 @@ public class Tile{
   public Tile(int xcor, int ycor){
     this.xcor = xcor;
     this.ycor = ycor;
-    planesHere = new ArrayList();
+    planesHere = new ArrayList<Plane>();
   }
   public Tile(int xcor, int ycor, String color){
     this.xcor = xcor;
     this.ycor = ycor;
     this.color = color;
-    planesHere = new ArrayList();
+    planesHere = new ArrayList<Plane>();
   }
 
-  public ArrayList planesHere(){
+  public ArrayList<Plane> planesHere(){
     return planesHere;
   }
 
@@ -56,7 +56,7 @@ public class Tile{
     return (planesHere.size() > 0);
   }
 
-  public boolean containsAnyInList(ArrayList a){
+  public boolean containsAnyInList(ArrayList<Plane> a){
     for (int n = 0; n < a.size(); n++){
       if (planesHere.contains(a.get(n))){
         return true;

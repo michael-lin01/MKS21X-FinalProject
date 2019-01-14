@@ -468,8 +468,7 @@ public static void returnToHangar(Terminal t, ArrayList<Plane> planesOnTile, cha
 
 public static void main(String[] args) {
   
-  Terminal terminal = TerminalFacade.createSwingTerminal(68,36);
-  TerminalSize terminalSize = terminal.getTerminalSize();
+  Terminal terminal = TerminalFacade.createTextTerminal();
   terminal.enterPrivateMode();
   
   terminal.setCursorVisible(false);

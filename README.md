@@ -28,7 +28,7 @@ SOLVED BUG3, but found a new bug where moving a plane doesn't subtract from prev
 
 
 BUGS TO FIX: ------------------------------------------
-when you land on a shortcut the recursive sequence goes on forever
+planes cant kill each other???
 TO DO: ----------------------------------------------
 createTextTerminal instead of createTerminal
 nicerNumberTiles
@@ -54,7 +54,6 @@ editorMode added (but its real crappy)
 so i added dieRollManipulate mode instead so you play through game normally but only change is u can control which die roll you get by pressing backspace. java -cp lanterna.jar;. TerminalClass.java dieRollManipulate
 
 
-passing over planes have to make sure other plane keeps color
 test killing enemy planes... regularly (ie no shortcut testing)(one plane and then two planes killed) fuk
                             then two plane when landing on short shortcut (should get interrupted)
                             then two plane when landing AFTER short shortcut (should kill planes but not interrupted)
