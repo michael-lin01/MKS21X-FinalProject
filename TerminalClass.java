@@ -373,7 +373,7 @@ public static Tile shortHaulShortcut(Terminal t, Plane plane, char[][] charArray
     if (tile.containsAnyInList(a)){ //if you find an enemy plane, you cannot take the shortcut
         returnToHangar(t, tile.planesHere(), charArray, planeTurn);; //return enemy planes to hangar
         updateTileNumber(t, planeTurn, charArray, plane.getTileReference());
-        System.out.println("num planes on tile should now be 1: "+tile.getNumPlanes());
+        //System.out.println("num planes on tile should now be 1: "+tile.getNumPlanes());
         shortcutChain = 0;
         return tile;
     } else {
@@ -452,13 +452,16 @@ public static Tile longHaulShortcut(Terminal t, Plane plane, char[][] charArray,
 }
 
 public static void returnToHangar(Terminal t, ArrayList<Plane> planesOnTile, char[][] charArray, String planeTurn){
-    for (int n = 0; n < planesOnTile.size(); n++){
-        Plane indexPlane = planesOnTile.get(n);
+    int counter = 0;
+    while (planesOnTile.size() > 1){ //when there's twos+ planes
+        Plane indexPlane = planesOnTile.get(counter);
         if (indexPlane.color() != planeTurn){ //save the plane that is destroying the others
             erasePlaneLocation(t, indexPlane, charArray);
-            planesOnTile.get(n).setAtHome(charArray);
+            planesOnTile.get(counter).setAtHome(charArray);
             updatePlaneLocation(t, indexPlane, charArray);
+            counter--;
         }
+        counter++;
     }
 }
 
@@ -554,7 +557,34 @@ public static void main(String[] args) {
 
       if (key.getCharacter() == ' '){ //this rolls a die
         //if the player is unfortunate enough to roll an odd number when none of their planes are on board yet...
-        int dieRoll = rollDie(numDieSides, terminal, planeTurn);
+        int dieRoll;
+        dieRoll = 1;
+        if (args.length > 0){
+            if (args[0].equals("dieRollManipulate")){
+                editorMode = true;
+                while (editorMode){
+                    key = terminal.readInput();
+                    if (key != null){
+                        //System.out.println("In deciding dice roll mode. Press Tab to increment numbers on dieRoll. Press spacebar to move the plane");
+                        if (key.getKind() == Key.Kind.Tab){
+                            if (dieRoll == 6){
+                                dieRoll = 1;
+                            } else {
+                                dieRoll++;
+                            }
+                            putString(20,32,terminal,"Roll: "+dieRoll);
+                        }
+                        if (key.getCharacter() == ' '){
+                            editorMode = false;
+                            //System.out.println("Exiting deciding dice mode. Press spacebar to place planes again.");
+                        }
+                    }
+                }
+            }
+
+        } else {
+          dieRoll = rollDie(numDieSides, terminal, planeTurn);
+        }
 
         ArrayList<Plane> planes = new ArrayList<Plane>();
         int editorPlaneNumber = 0;
@@ -741,29 +771,6 @@ public static void main(String[] args) {
 
 
                                 if (key.getCharacter() == ' '){ //once we have selected a plane
-                                    if (args.length > 0){
-                                        if (args[0].equals("dieRollManipulate") || args[0].equals("dieRollManipulate")){
-                                            editorMode = true;
-                                            while (editorMode){
-                                                key = terminal.readInput();
-                                                if (key != null){
-                                                    //System.out.println("In deciding dice roll mode. Press Tab to increment numbers on dieRoll. Press spacebar to move the plane");
-                                                    if (key.getKind() == Key.Kind.Tab){
-                                                        if (dieRoll == 6){
-                                                            dieRoll = 1;
-                                                        } else {
-                                                            dieRoll++;
-                                                        }
-                                                        putString(20,32,terminal,"Roll: "+dieRoll);
-                                                    }
-                                                    if (key.getCharacter() == ' '){
-                                                        editorMode = false;
-                                                        //System.out.println("Exiting deciding dice mode. Press spacebar to place planes again.");
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
                                     //happens regardless of editorMode or dieRollManipulate or neither
                                     if (cursorPlane.getTileReference().getNumPlanes() < 2){ //if leaving froma tile with only 1 plane
                                         erasePlaneLocation(terminal, cursorPlane, board);
