@@ -346,7 +346,7 @@ public static void updateTileNumber(Terminal t, String planeTurn, char[][] charA
     xcor --; //REMOVE LATER, JUST FOR TESTING PURPOSES. WHEN WE HAVE A TILE FOR STORING THE DISPLAY OF NUMBERS, USE numTile as a parameter
   }
   int newNum = tile.getNumPlanes() + numChange;
-  System.out.println("newNum: "+newNum);
+  //System.out.println("newNum: "+newNum);
   charArray[ycor][xcor] = (char)newNum;
   t.moveCursor(xcor,ycor);
   //System.out.println("number of planes on current tile: "+tile.getNumPlanes());
@@ -372,10 +372,9 @@ public static int rollDie(int numDieSides, Terminal t, String planeTurn){
 public static Tile shortHaulShortcut(Terminal t, Plane plane, char[][] charArray, ArrayList<Plane> a, String planeTurn){
     Tile tile = plane.getTileReference();
     if (tile.containsAnyInList(a)){ //if you find an enemy plane, you cannot take the shortcut
-        returnToHangar(t, tile.planesHere(), charArray, planeTurn);; //return enemy planes to hangar
+        returnToHangar(t, tile.planesHere(), charArray, planeTurn); //return enemy planes to hangar
         updateTileNumber(t, planeTurn, charArray, plane.getTileReference());
         updatePlaneLocation(t, plane, charArray);
-        //System.out.println("num planes on tile should now be 1: "+tile.getNumPlanes());
         shortcutChain = 0;
         return tile;
     } else {
@@ -396,17 +395,23 @@ public static Tile shortHaulShortcut(Terminal t, Plane plane, char[][] charArray
             for (int n = 0; n < 4; n++){
                 plane.move(plane.getTileReference().getNextTile());
             }
-            updatePlaneLocation(t, plane, charArray);
-            updateTileNumber(t, planeTurn, charArray, plane.getTileReference());
             shortcutChain++;
-            //System.out.println("shortcutChain: "+shortcutChain+ " planeTurn: "+planeTurn + " xcor: "+plane.getxcor() + " ycor: "+plane.getycor());
-            if ((planeTurn.equals("red")&& plane.getxcor()==21 && plane.getycor()==8) //not red cuz planeTurn hasn't updated yet so we have to use the previous planeTurn...
+            tile = plane.getTileReference();
+            if (tile.containsAnyInList(a)){ //if there's an enemy at the destination of the shortcut
+              returnToHangar(t, tile.planesHere(), charArray, planeTurn); //return enemy planes to hangar
+              updateTileNumber(t, planeTurn, charArray, plane.getTileReference());
+              updatePlaneLocation(t, plane, charArray);
+              shortcutChain = 0;
+            } //if there is no enemyPlane at the destination of shortcut && ur destination is a long haul shortcut, then ur able to take the long haul shortcut
+            else if ((planeTurn.equals("red")&& plane.getxcor()==21 && plane.getycor()==8) //not red cuz planeTurn hasn't updated yet so we have to use the previous planeTurn...
                 ||(planeTurn.equals("yellow")&& plane.getxcor()==48 && plane.getycor()==8) //not yellow cuz same reason as above
                 ||(planeTurn.equals("blue")&& plane.getxcor()==45 && plane.getycor()==21) //not blue cuz same reason as above
                 ||(planeTurn.equals("green")&& plane.getxcor()==18 && plane.getycor()==21)){ //not green cuz same reason as above
                     longHaulShortcut(t,plane,charArray,a, planeTurn);
                 }
-                shortcutChain = 0;
+            shortcutChain = 0;
+            updatePlaneLocation(t, plane, charArray);
+            updateTileNumber(t, planeTurn, charArray, plane.getTileReference());
             return plane.getTileReference();
         } else {
             shortcutChain = 0;
@@ -466,6 +471,7 @@ public static void returnToHangar(Terminal t, ArrayList<Plane> planesOnTile, cha
         }
         counter++;
     }
+    updateTileNumber(t, planeTurn, charArray, planesOnTile.get(0).getTileReference());
 }
 
 
@@ -561,7 +567,8 @@ public static void main(String[] args) {
       if (key.getCharacter() == ' '){ //this rolls a die
         //if the player is unfortunate enough to roll an odd number when none of their planes are on board yet...
         int dieRoll;
-        dieRoll = 0;
+        dieRoll = 1;
+        putString(20,32,terminal,"Roll: "+dieRoll);
         if (args.length > 0){
             if (args[0].equals("dieRollManipulate")){
                 editorMode = true;
@@ -843,7 +850,7 @@ public static void main(String[] args) {
                                             ||(planeTurn.equals("green")&& cursorPlane.getxcor()==18 && cursorPlane.getycor()==21)){
                                                 //this little method already takes care of erasePlaneLocation, updateTileNumber, and updatePlaneLocation
                                                 longHaulShortcut(terminal, cursorPlane, board, otherPlanes, planeTurn);
-                                            }
+                                            } //short haul shortcuts
                                         else if ((planeTurn.equals("red") && cursorPlane.getTileReference().getColor().equals("red"))
                                             || (planeTurn.equals("blue") && cursorPlane.getTileReference().getColor().equals("blue"))
                                             || (planeTurn.equals("green") && cursorPlane.getTileReference().getColor().equals("green"))
@@ -853,9 +860,11 @@ public static void main(String[] args) {
                                             }
                                         else { //if you DON't land on a shortcut, then u gotta check if you landed on an enemy plane
                                             if (cursorPlane.getTileReference().containsAnyInList(otherPlanes)){
-                                                returnToHangar(terminal, cursorPlane.getTileReference().planesHere(), board, planeTurn);; //return enemy planes to hangar
-                                                System.out.println("num planes on tile should now be 1: "+cursorPlane.getTileReference().getNumPlanes());
+                                                returnToHangar(terminal, cursorPlane.getTileReference().planesHere(), board, planeTurn); //return enemy planes to hangar
+                                                //System.out.println("num planes on tile should now be 1: "+cursorPlane.getTileReference().getNumPlanes());
                                             }
+                                            updatePlaneLocation(terminal, cursorPlane, board);
+                                            updateTileNumber(terminal, planeTurn, board, cursorPlane.getTileReference());
                                         }
 
                                     }

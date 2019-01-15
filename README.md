@@ -44,8 +44,7 @@ SOLVED BUG3, but found a new bug where moving a plane doesn't subtract from prev
 ------------------------------------------------------------------------------------------------
 
 BUGS TO FIX: ====================================
-updateTileNumber for laucnhingTiles doesnt update when a plane leaves from stack of 3+
-more plane destroying glitches (I tested and successfully confirmed it works for all scenarios EXCEPT the ones outlined at the bottom)
+
 TO DO: ==========================================
 make it a feature in code where if numPlanes on this tile > 1, then tabbing wont like uselessly tab in the same cursorposition
 endTiles and ending game (when all four planes of one color enter back terminal... idea of using brown color (implemented using RGB technique)
@@ -71,8 +70,3 @@ hit E while in editorMode (except for Tab or Enter) to exit editorMode
 DEV NOTES: =========================================================
 editorMode added (but its real crappy)
 so i added dieRollManipulate mode instead so you play through game normally but only change is u can control which die roll you get by pressing backspace. java -cp lanterna.jar;. TerminalClass.java dieRollManipulate
-
-PDESTROY PLANE GLITCHES =====================================================
-- FAILED to destroy a stack of planes of 2 or more
-- FAILED to short shortcut triggers -> plane at end & this tile isn't a long haul tile -> plane should be destroyed (no interruptions in here)
-- FAILED to long shortcut triggers -> short shortcut triggers -> plane at end -> plane should be destroyed (no interruptions in here)
