@@ -38,15 +38,16 @@ SOLVED BUG3, but found a new bug where moving a plane doesn't subtract from prev
 1/11, Victor: fixed a rendering bug of selecting planes and fixed BUG1
 1/12, Victor: we finished the basic movePlane (basic as in didn't implement short haul or long haul shortcuts or endTiles and the visual for numPlanes on tiles and destroying planes)
 1/13, Victor: we did a crapton, the commit messages better explain what we did
-1/14, Victor: trying to fix visual glitch of planes killing each other
+1/14, Victor: fixed visual glitch when planes killing each other and we can now kill plane stacks of 3+
+
 
 ------------------------------------------------------------------------------------------------
 
 BUGS TO FIX: ====================================
-WHEN PLANES KILL EACH OTHER THEIR TILENUMBER visual GLITCHES TO +1 but they still kill each other4
-underlying glitch of planes not being able to kill stacks of planes 2 or greater
+updateTileNumber for laucnhingTiles doesnt update when a plane leaves from stack of 3+
 more plane destroying glitches (I tested and successfully confirmed it works for all scenarios EXCEPT the ones outlined at the bottom)
 TO DO: ==========================================
+make it a feature in code where if numPlanes on this tile > 1, then tabbing wont like uselessly tab in the same cursorposition
 endTiles and ending game (when all four planes of one color enter back terminal... idea of using brown color (implemented using RGB technique)
 to indicate what planes are @ home after reaching end... then have a victory message that says who won ... maybe even allow a 2nd and 3rd and 4th place system)
 createTextTerminal instead of createTerminal

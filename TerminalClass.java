@@ -346,11 +346,12 @@ public static void updateTileNumber(Terminal t, String planeTurn, char[][] charA
     xcor --; //REMOVE LATER, JUST FOR TESTING PURPOSES. WHEN WE HAVE A TILE FOR STORING THE DISPLAY OF NUMBERS, USE numTile as a parameter
   }
   int newNum = tile.getNumPlanes() + numChange;
+  System.out.println("newNum: "+newNum);
   charArray[ycor][xcor] = (char)newNum;
   t.moveCursor(xcor,ycor);
   //System.out.println("number of planes on current tile: "+tile.getNumPlanes());
   if (newNum > 1){
-    t.putCharacter((char)(tile.getNumPlanes()+48));
+    t.putCharacter((char)(newNum+48));
     //+48 is bc ints are -48 when converting to chars
   } else {
     t.putCharacter(' ');
@@ -373,6 +374,7 @@ public static Tile shortHaulShortcut(Terminal t, Plane plane, char[][] charArray
     if (tile.containsAnyInList(a)){ //if you find an enemy plane, you cannot take the shortcut
         returnToHangar(t, tile.planesHere(), charArray, planeTurn);; //return enemy planes to hangar
         updateTileNumber(t, planeTurn, charArray, plane.getTileReference());
+        updatePlaneLocation(t, plane, charArray);
         //System.out.println("num planes on tile should now be 1: "+tile.getNumPlanes());
         shortcutChain = 0;
         return tile;
@@ -419,7 +421,8 @@ public static Tile longHaulShortcut(Terminal t, Plane plane, char[][] charArray,
     if (tile.containsAnyInList(a)){ //if you find an enemy plane, you cannot take the shortcut
         returnToHangar(t, tile.planesHere(), charArray, planeTurn);
         updateTileNumber(t, planeTurn, charArray, plane.getTileReference());
-        System.out.println("num planes on tile should now be 1: "+tile.getNumPlanes());
+        updatePlaneLocation(t, plane, charArray);
+        //System.out.println("num planes on tile should now be 1: "+tile.getNumPlanes());
         shortcutChain = 0;
         return tile;
     } else {
@@ -468,7 +471,7 @@ public static void returnToHangar(Terminal t, ArrayList<Plane> planesOnTile, cha
 
 public static void main(String[] args) {
 
-  Terminal terminal = TerminalFacade.createTextTerminal();
+  Terminal terminal = TerminalFacade.createTerminal();
   terminal.enterPrivateMode();
 
   terminal.setCursorVisible(false);
@@ -558,7 +561,7 @@ public static void main(String[] args) {
       if (key.getCharacter() == ' '){ //this rolls a die
         //if the player is unfortunate enough to roll an odd number when none of their planes are on board yet...
         int dieRoll;
-        dieRoll = 1;
+        dieRoll = 0;
         if (args.length > 0){
             if (args[0].equals("dieRollManipulate")){
                 editorMode = true;
