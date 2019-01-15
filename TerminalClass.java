@@ -889,24 +889,73 @@ public static void main(String[] args) {
                                         x = cursorPlane.getxcor();
                                         y = cursorPlane.getycor();
 
-                                    } else {
+                                    } 
+                                    else { //non editor mode
                                         if (dieRoll % 2 == 0){
                                             if (cursorPlane == plane1){
+                                              if (cursorPlane.getTileReference() != plane2.getTileReference()){
                                                 x = plane2.getxcor();
                                                 y = plane2.getycor();
                                                 cursorPlane = plane2;
+                                              } else {
+                                                if (cursorPlane.getTileReference() != plane3.getTileReference()){
+                                                  x = plane3.getxcor();
+                                                  y = plane3.getycor();
+                                                  cursorPlane = plane3;
+                                                } else {
+                                                  x = plane4.getxcor();
+                                                  y = plane4.getycor();
+                                                  cursorPlane = plane4;
+                                                }
+                                              }
                                             } else if (cursorPlane == plane2){
+                                              if (cursorPlane.getTileReference() != plane3.getTileReference()){
                                                 x = plane3.getxcor();
                                                 y = plane3.getycor();
                                                 cursorPlane = plane3;
+                                              } else {
+                                                if (cursorPlane.getTileReference() != plane4.getTileReference()){
+                                                  x = plane4.getxcor();
+                                                  y = plane4.getycor();
+                                                  cursorPlane = plane4;
+                                                } else {
+                                                  x = plane1.getxcor();
+                                                  y = plane1.getycor();
+                                                  cursorPlane = plane1;
+                                                }
+                                              }
                                             } else if (cursorPlane == plane3){
+                                              if (cursorPlane.getTileReference() != plane4.getTileReference()){
                                                 x = plane4.getxcor();
                                                 y = plane4.getycor();
                                                 cursorPlane = plane4;
+                                              } else {
+                                                if (cursorPlane.getTileReference() != plane1.getTileReference()){
+                                                  x = plane1.getxcor();
+                                                  y = plane1.getycor();
+                                                  cursorPlane = plane1;
+                                                } else {
+                                                  x = plane2.getxcor();
+                                                  y = plane2.getycor();
+                                                  cursorPlane = plane2;
+                                                }
+                                              }
                                             } else if (cursorPlane == plane4){
+                                              if (cursorPlane.getTileReference() != plane1.getTileReference()){
                                                 x = plane1.getxcor();
                                                 y = plane1.getycor();
                                                 cursorPlane = plane1;
+                                              } else {
+                                                if (cursorPlane.getTileReference() != plane2.getTileReference()){
+                                                  x = plane2.getxcor();
+                                                  y = plane2.getycor();
+                                                  cursorPlane = plane2;
+                                                } else {
+                                                  x = plane3.getxcor();
+                                                  y = plane3.getycor();
+                                                  cursorPlane = plane3;
+                                                }
+                                              }
                                             }
                                         }
                                         if (dieRoll % 2 == 1){

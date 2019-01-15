@@ -3,6 +3,7 @@
 GAME DESCRIPTION ==============================================================
 
 READ OVER AND EDIT BEFORE FINAL FINAL COMMIT
+CREATETEXTTERMINAL INSTEAD OF CREATE TERMINAL
 
 Description:
     So this game is called Aeroplane Chess, and it is a popular Chinese board game. How it works is that there are up to a maximum of four
@@ -38,7 +39,7 @@ SOLVED BUG3, but found a new bug where moving a plane doesn't subtract from prev
 1/11, Victor: fixed a rendering bug of selecting planes and fixed BUG1
 1/12, Victor: we finished the basic movePlane (basic as in didn't implement short haul or long haul shortcuts or endTiles and the visual for numPlanes on tiles and destroying planes)
 1/13, Victor: we did a crapton, the commit messages better explain what we did
-1/14, Victor: fixed visual glitch when planes killing each other and we can now kill plane stacks of 3+
+1/14, Victor: fixed visual glitches when planes killing each other and we can now kill plane stacks of 3+
 
 
 ------------------------------------------------------------------------------------------------
