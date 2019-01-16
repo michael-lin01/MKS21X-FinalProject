@@ -3,13 +3,14 @@
 GAME DESCRIPTION ==============================================================
 
 READ OVER AND EDIT BEFORE FINAL FINAL COMMIT
+CREATETEXTTERMINAL INSTEAD OF CREATE TERMINAL
 
-Description: 
-    So this game is called Aeroplane Chess, and it is a popular Chinese board game. How it works is that there are up to a maximum of four 
+Description:
+    So this game is called Aeroplane Chess, and it is a popular Chinese board game. How it works is that there are up to a maximum of four
 players. However as of right now, we did not implement a feature where you can select how many players you want, so it is set at four pernamently for now. Each of the four corners of the board represents a different player and their respective color (as indicated by the colors of the letter 'P'). Each 'P' represents a separate plane, with each player having a total of four planes. The corners are called "hangars", because planes are at home when they are in hangars. To get a plane out of a hangar, you need to roll a die, and that die must give an even number, otherwise your turn is skipped. If one gets an even number, then they choose which plane in the hangar to go to what we call the "launchingTile" which is basically a tile where the plane is located before officially trekking onto the circular-ish board. These launchingTiles are indicated by the lowercase letters r,g,b,and y, where r is red, g is green, b is blue, and y is yellow. The uppercase R,G,B,and Y are what we refer to as planeStarts because those are the first tiles on the actual board that the plane will touch upon entering the board. 'T' represents a tile on the board. Once on the board, the number of tiles you travel depends on your dieRoll. Planes move clockwise around the board. Planes have to make a whole revolution around the track in order to go to the tiles in the middle. Once in the middle, you travel towards the exact four tiles in the center and once you reach one of those, the plane that has reached the middle will be recorded as “finished”. All four planes of a a player's color must be finished in order for that player to win. Planes can be stacked on top of others with the same color, but they move as separate entities even when stacked (that means if there are two planes of color red on one tile, rolling a 6 will only move one of the planes on the stack). This rule is a deviation we have made from a traditional rule of Aeroplane Chess. However, if a plane lands on a tile who houses plane(s) of an opposite color, it destroys that/those other plane(s) and sends the enemy plane(s) back to its/their hangar. There are also shortcuts located on the board: short haul shortcuts (which allow the plane, upon finishing moving from its normal dieRoll, to skip four tiles upon landing on these) and long haul shortcuts (which allows the plane, upon finishing moving from its normal dieRoll, to skip a quarter of the board, as indicated by the “ladder rungs of equal signs”). Planes can only take shortcuts whose tiles have the same color as them. Short haul and long haul shortcuts can stack. This means that if you land on a short haul shortcut that takes you to a long haul shortcut, both shortcuts will activate, and the same applies if you land on a long haul shortcut that takes you to a short haul shortcut. However when a plane lands on another a shortcut tile that houses an enemy plane, the shortcut will not activate because the plane is “occupied” destroying the enemy.
 
-Rules: (some changes we made to wiki’s rules) 
-no stacked movement rule, no 6 giving extra die roll (yet?), even numbers get planes out of hangars not specifically 5s or 6s, no exact roll (cuz we don’t got time to code that specific lol), no killing planes on end tiles when zipping through a shortcut (for now). 
+Rules: (some changes we made to wiki’s rules)
+no stacked movement rule, no 6 giving extra die roll (yet?), even numbers get planes out of hangars not specifically 5s or 6s, no exact roll (cuz we don’t got time to code that specific lol), no killing planes on end tiles when zipping through a shortcut (for now).
 
 -------------------------------------------------------------------------------
 
@@ -37,15 +38,16 @@ SOLVED BUG3, but found a new bug where moving a plane doesn't subtract from prev
 
 1/11, Victor: fixed a rendering bug of selecting planes and fixed BUG1
 1/12, Victor: we finished the basic movePlane (basic as in didn't implement short haul or long haul shortcuts or endTiles and the visual for numPlanes on tiles and destroying planes)
-1/13. Victor: we did a crapton, the commit messages better explain what we did
+1/13, Victor: we did a crapton, the commit messages better explain what we did
+1/14, Victor: fixed visual glitches when planes killing each other and we can now kill plane stacks of 3+
+
 
 ------------------------------------------------------------------------------------------------
 
 BUGS TO FIX: ====================================
-WHEN PLANES KILL EACH OTHER THEIR TILENUMBER GLITCHES TO +1 but they still kill each other4
-underlying glitch of planes not being able to kill stacks of planes 2 or greater
-more plane destroying glitches (I tested and successfully confirmed it works for all scenarios EXCEPT the ones outlined at the bottom)
+
 TO DO: ==========================================
+make it a feature in code where if numPlanes on this tile > 1, then tabbing wont like uselessly tab in the same cursorposition
 endTiles and ending game (when all four planes of one color enter back terminal... idea of using brown color (implemented using RGB technique)
 to indicate what planes are @ home after reaching end... then have a victory message that says who won ... maybe even allow a 2nd and 3rd and 4th place system)
 createTextTerminal instead of createTerminal
@@ -69,8 +71,3 @@ hit E while in editorMode (except for Tab or Enter) to exit editorMode
 DEV NOTES: =========================================================
 editorMode added (but its real crappy)
 so i added dieRollManipulate mode instead so you play through game normally but only change is u can control which die roll you get by pressing backspace. java -cp lanterna.jar;. TerminalClass.java dieRollManipulate
-
-PDESTROY PLANE GLITCHES =====================================================
-- FAILED to destroy a stack of planes of 2 or more
-- FAILED to short shortcut triggers -> plane at end & this tile isn't a long haul tile -> plane should be destroyed (no interruptions in here)
-- FAILED to long shortcut triggers -> short shortcut triggers -> plane at end -> plane should be destroyed (no interruptions in here)

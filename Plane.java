@@ -75,6 +75,7 @@ public class Plane{
       if (charArray[26-1][5-1] == ' '){
         xcor = 5-1;
         ycor = 26-1;
+        tileReference.removePlane(this);
         tileReference = new Tile(-1, -1, "filler");
         isAtHome = true;
         charArray[25][4] = 'P';
@@ -82,6 +83,7 @@ public class Plane{
       } else if (charArray[26-1][13-1] == ' '){
         xcor = 13-1;
         ycor = 26-1;
+        tileReference.removePlane(this);
         tileReference = new Tile(-1, -1, "filler");
         isAtHome = true;
         charArray[25][12] = 'P';
@@ -89,6 +91,7 @@ public class Plane{
       } else if (charArray[29-1][5-1] == ' '){
         xcor = 5-1;
         ycor = 29-1;
+        tileReference.removePlane(this);
         tileReference = new Tile(-1, -1, "filler");
         isAtHome = true;
         charArray[28][4] = 'P';
@@ -96,6 +99,7 @@ public class Plane{
       } else if (charArray[29-1][13-1] == ' '){
         xcor = 13-1;
         ycor = 29-1;
+        tileReference.removePlane(this);
         tileReference = new Tile(-1, -1, "filler");
         isAtHome = true;
         charArray[28][12] = 'P';
@@ -105,6 +109,7 @@ public class Plane{
       if (charArray[25][54] == ' '){
         xcor = 54;
         ycor = 25;
+        tileReference.removePlane(this);
         tileReference = new Tile(-1, -1, "filler");
         isAtHome = true;
         charArray[25][54] = 'P';
@@ -112,6 +117,7 @@ public class Plane{
       } else if (charArray[25][62] == ' '){
         xcor = 62;
         ycor = 25;
+        tileReference.removePlane(this);
         charArray[25][62] = 'P';
         tileReference = new Tile(-1, -1, "filler");
         isAtHome = true;
@@ -120,6 +126,7 @@ public class Plane{
         xcor = 54;
         ycor = 28;
         charArray[28][54] = 'P';
+        tileReference.removePlane(this);
         tileReference = new Tile(-1, -1, "filler");
         isAtHome = true;
         return true;
@@ -127,6 +134,7 @@ public class Plane{
         xcor = 62;
         ycor = 28;
         charArray[28][62] = 'P';
+        tileReference.removePlane(this);
         tileReference = new Tile(-1, -1, "filler");
         isAtHome = true;
         return true;
@@ -136,12 +144,14 @@ public class Plane{
         xcor = 54;
         ycor = 2;
         charArray[2][54] = 'P';
+        tileReference.removePlane(this);
         tileReference = new Tile(-1, -1, "filler");
         isAtHome = true;
         return true;
       } else if (charArray[2][62] == ' '){
         xcor = 62;
         ycor = 2;
+        tileReference.removePlane(this);
         charArray[2][62] = 'P';
         tileReference = new Tile(-1, -1, "filler");
         isAtHome = true;
@@ -150,6 +160,7 @@ public class Plane{
         xcor = 54;
         ycor = 5;
         charArray[5][54] = 'P';
+        tileReference.removePlane(this);
         tileReference = new Tile(-1, -1, "filler");
         isAtHome = true;
         return true;
@@ -157,6 +168,7 @@ public class Plane{
         xcor = 62;
         ycor = 5;
         charArray[5][62] = 'P';
+        tileReference.removePlane(this);
         tileReference = new Tile(-1, -1, "filler");
         isAtHome = true;
         return true;
@@ -166,6 +178,7 @@ public class Plane{
         xcor = 4;
         ycor = 2;
         charArray[2][4] = 'P';
+        tileReference.removePlane(this);
         tileReference = new Tile(-1, -1, "filler");
         isAtHome = true;
         return true;
@@ -173,6 +186,7 @@ public class Plane{
         xcor = 12;
         ycor = 2;
         charArray[2][12] = 'P';
+        tileReference.removePlane(this);
         tileReference = new Tile(-1, -1, "filler");
         isAtHome = true;
         return true;
@@ -180,6 +194,7 @@ public class Plane{
         xcor = 4;
         ycor = 5;
         charArray[5][4] = 'P';
+        tileReference.removePlane(this);
         tileReference = new Tile(-1, -1, "filler");
         isAtHome = true;
         return true;
@@ -187,6 +202,7 @@ public class Plane{
         xcor = 12;
         ycor = 5;
         charArray[5][12] = 'P';
+        tileReference.removePlane(this);
         tileReference = new Tile(-1, -1, "filler");
         isAtHome = true;
         return true;
