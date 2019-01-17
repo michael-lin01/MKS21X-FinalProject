@@ -473,7 +473,7 @@ public static void returnToHangar(Terminal t, ArrayList<Plane> planesOnTile, cha
 
 public static void main(String[] args) {
 
-  Terminal terminal = TerminalFacade.createTerminal();
+  Terminal terminal = TerminalFacade.createTextTerminal();
   terminal.enterPrivateMode();
 
   terminal.setCursorVisible(false);
@@ -840,7 +840,21 @@ public static void main(String[] args) {
                                                         }
                                                         //sets tile plane is leaving from to have numPlanes on it -1;
                                                         updateTileNumber(terminal, planeTurn, board, cursorPlane.getTileReference(), -1);
-                                                        updateTileNumber(terminal, planeTurn, board, cursorPlane.move(cursorPlane.getTileReference().getNextTile()));
+                                                        if(cursorPlane.getxcor()==33 && cursorPlane.getycor() ==28 && cursorPlane.color().equals("red")){
+                                                          updateTileNumber(terminal, planeTurn, board, cursorPlane.move(cursorPlane.move(redEndLinkedList.start())));
+                                                        }
+                                                        if(cursorPlane.getxcor()==5 && cursorPlane.getycor() ==15 && cursorPlane.color().equals("yellow")){
+                                                          updateTileNumber(terminal, planeTurn, board, cursorPlane.move(cursorPlane.move(yellowEndLinkedList.start())));
+                                                        }
+                                                        if(cursorPlane.getxcor()==33 && cursorPlane.getycor() ==2 && cursorPlane.color().equals("blue")){
+                                                          updateTileNumber(terminal, planeTurn, board, cursorPlane.move(cursorPlane.move(blueEndLinkedList.start())));
+                                                        }
+                                                        if(cursorPlane.getxcor()==62 && cursorPlane.getycor() ==15 && cursorPlane.color().equals("green")){
+                                                          updateTileNumber(terminal, planeTurn, board, cursorPlane.move(cursorPlane.move(greenEndLinkedList.start())));
+                                                        } else {
+                                                          updateTileNumber(terminal, planeTurn, board, cursorPlane.move(cursorPlane.getTileReference().getNextTile()));
+                                                        }
+
                                                     } //else {
                                                         //this section will be for if the plane is on an endTile
                                                     //}
@@ -898,7 +912,7 @@ public static void main(String[] args) {
                                         x = cursorPlane.getxcor();
                                         y = cursorPlane.getycor();
 
-                                    } 
+                                    }
                                     else { //non editor mode
                                         if (dieRoll % 2 == 0){
                                             if (cursorPlane == plane1){
