@@ -842,7 +842,9 @@ public static void main(String[] args) {
                                                         }
                                                         if(cursorPlane.getxcor()==62 && cursorPlane.getycor() ==15 && cursorPlane.color().equals("green")){
                                                           updateTileNumber(terminal, planeTurn, board, cursorPlane.move(cursorPlane.move(greenEndLinkedList.start())));
-                                                        } else {
+                                                        }
+                                                        cursorPlane.setFinished(true);
+                                                        else {
                                                           updateTileNumber(terminal, planeTurn, board, cursorPlane.move(cursorPlane.getTileReference().getNextTile()));
                                                         }
 
