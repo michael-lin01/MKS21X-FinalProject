@@ -597,6 +597,11 @@ public static void main(String[] args) {
                             editorMode = false;
                             //System.out.println("Exiting deciding dice mode. Press spacebar to place planes again.");
                         }
+                        if (key.getKind() == Key.Kind.Escape) {
+
+                          terminal.exitPrivateMode();
+                          System.exit(0);
+                        }
                     }
                 }
             }
@@ -775,6 +780,11 @@ public static void main(String[] args) {
                                         if (key.getCharacter() == 'e'){
                                             editorMode = false;
                                             //System.out.println("Exiting placing planes mode. Press Tab to select planes or spacebar to move planes.");
+                                        }
+                                        if (key.getKind() == Key.Kind.Escape) {
+
+                                          terminal.exitPrivateMode();
+                                          System.exit(0);
                                         }
                                     }
                                 }
