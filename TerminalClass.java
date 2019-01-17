@@ -31,10 +31,6 @@ public class TerminalClass {
   private static Tile greenLaunchingTile;
   private static Tile yellowLaunchingTile;
   private static Tile blueLaunchingTile;
-  private static Tile redEnd;
-  private static Tile greenEnd;
-  private static Tile yellowEnd;
-  private static Tile blueEnd;
   private static TilePath redEndLinkedList = new TilePath();
   private static TilePath greenEndLinkedList = new TilePath();
   private static TilePath yellowEndLinkedList = new TilePath();
@@ -483,6 +479,18 @@ public static void main(String[] args) {
   terminal.setCursorVisible(false);
 
   boolean running = true;
+  Key key;
+
+  while (running && args.length < 1){
+    key = terminal.readInput();
+    putString(15,20,terminal,"Welcome to Aeroplane Chess!");
+    putString(18, 20, terminal, "Press spacebar to start the game.");
+    if (key != null){
+      if (key.getCharacter() == ' '){
+        running = false;
+      }
+    }
+  }
 
   long tStart = System.currentTimeMillis();
   long lastSecond = 0;
@@ -545,13 +553,14 @@ public static void main(String[] args) {
   Plane plane4 = red4;
   Plane cursorPlane = plane1;
   putString(0,32,terminal,"red's Turn!");
+  running = true;
   boolean selecting = true;
 
   ArrayList<Plane> otherPlanes = new ArrayList<Plane>();
 
   while(running){
 
-    Key key = terminal.readInput();
+    key = terminal.readInput();
 
     if (key != null)
     {
