@@ -10,6 +10,7 @@ public class Plane{
   private boolean hasReachedEnd;
   private int xcor;
   private int ycor;
+  private boolean finished;
 
   public Plane(String color, int xcor, int ycor){
     this.color = color;
@@ -247,6 +248,13 @@ public class Plane{
     }
 
     return tileReference; //here just to compile?
+  }
+
+  public void setFinished(boolean b){
+    finished = b;
+  }
+  public boolean isfinished(){
+    return finished;
   }
 
   public String toString(){

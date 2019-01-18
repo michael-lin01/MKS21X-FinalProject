@@ -1,5 +1,21 @@
 # MKS21X-FinalProject
 
+INSTRUCTIONS (README!!!!!!!!!!!!!)=============================================
+To begin the game...
+- Resize the terminal to be at least 68 x 36 size (as in 68 across and 36 down) so the visuals will work correctly.
+- The command line to begin the game from the terminal is 'java -cp lanterna.jar:. TerminalClass'
+- If you want to go into "dieRollManipulate" mode, a mode that is used to debug but also if you want to 
+control the die rolls you receive, then do 'java -cp lanterna.jar:. TerminalClass dieRollManipulate' in the terminal instead. 
+
+- Press Space to roll the dice.
+    -If in dieRollManipulate mode, you have to Press Tab immediately after this to increment the number 
+     of the die roll (goes from 1 to 6).
+    -Then press Space again to finalize that die roll. You will then be allowed to swap between planes allowed by that die roll.
+    -If not in dieRollManipulate, Tab will not increment die rolls.
+- Press Tab to swap between the planes you are allowed to select that turn. Press Space to select that plane to move.
+- Press Space again to roll the dice.
+- Press Escape to exit the game (WARNING: Games cannot be saved).
+
 GAME DESCRIPTION ==============================================================
 
 READ OVER AND EDIT BEFORE FINAL FINAL COMMIT
@@ -42,6 +58,7 @@ SOLVED BUG3, but found a new bug where moving a plane doesn't subtract from prev
 1/14, Victor: fixed visual glitches when planes killing each other 
 1/15, Victor: we can now kill plane stacks of 3+, and made tabbing between planes better
 1/16, Victor: starting main menu
+1/17, Victor: fixing bugs relating to endTiles
 
 
 ------------------------------------------------------------------------------------------------
@@ -49,11 +66,13 @@ SOLVED BUG3, but found a new bug where moving a plane doesn't subtract from prev
 BUGS TO FIX: ====================================
 
 TO DO: ==========================================
-delete redEnd and blueEnd, etc
+remove s.o.pln's
+color end tiles. or just color the entire board in general
+delete editorMode
+select # of players u want on the main menu (no AI feature)
 endTiles and ending game (when all four planes of one color enter back terminal... idea of using brown color (implemented using RGB technique)
 to indicate what planes are @ home after reaching end... then have a victory message that says who won ... maybe even allow a 2nd and 3rd and 4th place system)
 createTextTerminal instead of createTerminal
-select # of players u want on the main menu (no AI feature)
 nicerNumberTiles
 when three 6's are rolled in a roll, retract every step?? kinda complicated tho cuz u need a memory storer...
 Settings & Pausing

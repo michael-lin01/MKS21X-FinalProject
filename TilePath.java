@@ -10,7 +10,7 @@ public class TilePath{
     return size;
   }
 
-  private Tile getTile(int n){
+  public Tile getTile(int n){
     Tile current = start;
     for (int i = 0; i < n; i++){
       current = current.getNextTile();

@@ -885,8 +885,14 @@ public static void main(String[] args) {
                                                         }
                                                         else if(cursorPlane.getxcor()==62 && cursorPlane.getycor() ==15 && cursorPlane.color().equals("green")){
                                                           updateTileNumber(terminal, planeTurn, board, cursorPlane.move(greenEndLinkedList.start()));
-                                                        } else {
+                                                        }
+                                                        else {
                                                           updateTileNumber(terminal, planeTurn, board, cursorPlane.move(cursorPlane.getTileReference().getNextTile()));
+                                                        }
+                                                        //happens regardless of else statements
+                                                        if (true){ //the if case here should be if the cursorPlane has reached the end of the linked lists (can use linkedlist.get(end) or use xcor == coord)
+                                                          cursorPlane.setFinished(true);
+                                                          //return plane to hangar with brown background color with putCharacter(' ') at an available hangar spot (if need help with the available hangar spot logic, ask Victor)
                                                         }
 
                                                     }
