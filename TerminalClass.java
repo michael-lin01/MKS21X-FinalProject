@@ -124,29 +124,29 @@ public class TerminalClass {
           else if (c=='E'){ //if the tile is an endTile
             if (y == 4){ //if the endTile is on the blue branch
               int counter = 1;
-              for (int n = y; n < 13; n+=2){
-                blueEndLinkedList.add(new EndTile(x,n,"blue",counter));
+              for (int n = 4; n < 15; n+=2){
+                blueEndLinkedList.add(new EndTile(x,n,"end",counter));
                 counter++;
               }
             }
             if (y == 26){ //if the endTile is on the red branch
               int counter = 1;
-              for (int n = y; n > 17; n-=2){
-                redEndLinkedList.add(new EndTile(x,n,"red",counter));
+              for (int n = 26; n > 15; n-=2){
+                redEndLinkedList.add(new EndTile(x,n,"end",counter));
                 counter++;
               }
             }
             if (x == 10){ //if the endTile is on the yellow branch
               int counter = 1;
-              for (int n = x; n < 28; n+=4){
-                redEndLinkedList.add(new EndTile(n,y,"yellow",counter));
+              for (int n = 10; n < 31; n+=4){
+                yellowEndLinkedList.add(new EndTile(n,y,"end",counter));
                 counter++;
               }
             }
             if (x == 56){ //if the endTile is on the green branch
               int counter = 1;
-              for (int n = x; n > 39; n-=4){
-                redEndLinkedList.add(new EndTile(n,y,"green",counter));
+              for (int n = 56; n > 35; n-=4){
+                greenEndLinkedList.add(new EndTile(n,y,"end",counter));
                 counter++;
               }
             }
@@ -374,6 +374,23 @@ public static Tile shortHaulShortcut(Terminal t, Plane plane, char[][] charArray
         shortcutChain = 0;
         return tile;
     } else {
+        //if plane is on corresponding end tile (this situation only arises for short haul shortcuts), do nothing
+        if(plane.getxcor()==33 && plane.getycor() ==28 && plane.color().equals("red")){
+          shortcutChain = 0;
+          return tile;
+        }
+        if(plane.getxcor()==5 && plane.getycor() ==15 && plane.color().equals("yellow")){
+          shortcutChain = 0;
+          return tile;
+        }
+        if(plane.getxcor()==33 && plane.getycor() ==2 && plane.color().equals("blue")){
+          shortcutChain = 0;
+          return tile;
+        }
+        if(plane.getxcor()==62 && plane.getycor() ==15 && plane.color().equals("green")){
+          shortcutChain = 0;
+          return tile;
+        }
         //shortcut chain represents the # of shortcuts you have taken in one turn
         //if this is your first or second shortcut (represented by shortcutChain < 2), then take the shorthaul shortcut
         if (shortcutChain < 2){
@@ -391,8 +408,10 @@ public static Tile shortHaulShortcut(Terminal t, Plane plane, char[][] charArray
             for (int n = 0; n < 4; n++){
                 plane.move(plane.getTileReference().getNextTile());
             }
-            shortcutChain++;
             tile = plane.getTileReference();
+            updatePlaneLocation(t, plane, charArray);
+            updateTileNumber(t, planeTurn, charArray, tile);
+            shortcutChain++;
             if (tile.containsAnyInList(a)){ //if there's an enemy at the destination of the shortcut
               returnToHangar(t, tile.planesHere(), charArray, planeTurn); //return enemy planes to hangar
               updateTileNumber(t, planeTurn, charArray, plane.getTileReference());
@@ -473,7 +492,7 @@ public static void returnToHangar(Terminal t, ArrayList<Plane> planesOnTile, cha
 
 public static void main(String[] args) {
 
-  Terminal terminal = TerminalFacade.createTextTerminal();
+  Terminal terminal = TerminalFacade.createTerminal();//TextTerminal();
   terminal.enterPrivateMode();
 
   terminal.setCursorVisible(false);
@@ -484,10 +503,15 @@ public static void main(String[] args) {
   while (running && args.length < 1){
     key = terminal.readInput();
     putString(15,20,terminal,"Welcome to Aeroplane Chess!");
-    putString(18, 20, terminal, "Press spacebar to start the game.");
+    putString(15,23, terminal, "Press spacebar to start the game.");
     if (key != null){
       if (key.getCharacter() == ' '){
         running = false;
+      }
+      if (key.getKind() == Key.Kind.Escape) {
+
+        terminal.exitPrivateMode();
+        System.exit(0);
       }
     }
   }
@@ -851,23 +875,21 @@ public static void main(String[] args) {
                                                         //sets tile plane is leaving from to have numPlanes on it -1;
                                                         updateTileNumber(terminal, planeTurn, board, cursorPlane.getTileReference(), -1);
                                                         if(cursorPlane.getxcor()==33 && cursorPlane.getycor() ==28 && cursorPlane.color().equals("red")){
-                                                          updateTileNumber(terminal, planeTurn, board, cursorPlane.move(cursorPlane.move(redEndLinkedList.start())));
+                                                          updateTileNumber(terminal, planeTurn, board, cursorPlane.move(redEndLinkedList.start()));
                                                         }
-                                                        if(cursorPlane.getxcor()==5 && cursorPlane.getycor() ==15 && cursorPlane.color().equals("yellow")){
-                                                          updateTileNumber(terminal, planeTurn, board, cursorPlane.move(cursorPlane.move(yellowEndLinkedList.start())));
+                                                        else if(cursorPlane.getxcor()==5 && cursorPlane.getycor() ==15 && cursorPlane.color().equals("yellow")){
+                                                          updateTileNumber(terminal, planeTurn, board, cursorPlane.move(yellowEndLinkedList.start()));
                                                         }
-                                                        if(cursorPlane.getxcor()==33 && cursorPlane.getycor() ==2 && cursorPlane.color().equals("blue")){
-                                                          updateTileNumber(terminal, planeTurn, board, cursorPlane.move(cursorPlane.move(blueEndLinkedList.start())));
+                                                        else if(cursorPlane.getxcor()==33 && cursorPlane.getycor() ==2 && cursorPlane.color().equals("blue")){
+                                                          updateTileNumber(terminal, planeTurn, board, cursorPlane.move(blueEndLinkedList.start()));
                                                         }
-                                                        if(cursorPlane.getxcor()==62 && cursorPlane.getycor() ==15 && cursorPlane.color().equals("green")){
-                                                          updateTileNumber(terminal, planeTurn, board, cursorPlane.move(cursorPlane.move(greenEndLinkedList.start())));
+                                                        else if(cursorPlane.getxcor()==62 && cursorPlane.getycor() ==15 && cursorPlane.color().equals("green")){
+                                                          updateTileNumber(terminal, planeTurn, board, cursorPlane.move(greenEndLinkedList.start()));
                                                         } else {
                                                           updateTileNumber(terminal, planeTurn, board, cursorPlane.move(cursorPlane.getTileReference().getNextTile()));
                                                         }
 
-                                                    } //else {
-                                                        //this section will be for if the plane is on an endTile
-                                                    //}
+                                                    }
                                                     //occurs regardless of what tile the plane is on
                                                     updatePlaneLocation(terminal, cursorPlane, board);
                                                     animating = false;
