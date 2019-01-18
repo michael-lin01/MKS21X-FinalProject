@@ -890,7 +890,10 @@ public static void main(String[] args) {
                                                           updateTileNumber(terminal, planeTurn, board, cursorPlane.move(cursorPlane.getTileReference().getNextTile()));
                                                         }
                                                         //happens regardless of else statements
-                                                        if (true){ //the if case here should be if the cursorPlane has reached the end of the linked lists (can use linkedlist.get(end) or use xcor == coord)
+                                                        if ((cursorPlane.color().equals("red")&&cursorPlane.getTileReference()==redEndLinkedList.end())||
+                                                            (cursorPlane.color().equals("yellow")&&cursorPlane.getTileReference()==yellowEndLinkedList.end())||
+                                                            (cursorPlane.color().equals("blue")&&cursorPlane.getTileReference()==blueEndLinkedList.end())||
+                                                            (cursorPlane.color().equals("green")&&cursorPlane.getTileReference()==greenEndLinkedList.end())) { //the if case here should be if the cursorPlane has reached the end of the linked lists (can use linkedlist.get(end) or use xcor == coord)
                                                           cursorPlane.setFinished(true);
                                                           //return plane to hangar with brown background color with putCharacter(' ') at an available hangar spot (if need help with the available hangar spot logic, ask Victor)
                                                         }
