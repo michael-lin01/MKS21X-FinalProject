@@ -62,7 +62,7 @@ SOLVED BUG3, but found a new bug where moving a plane doesn't subtract from prev
 1/16, Victor: starting main menu
 1/17, Victor: fixing bugs relating to endTiles
 1/17, Michael: changing the state of the plane after it reaches the end
-1/19, Michael: 
+1/19, Michael: basically finished end tiles, just have to change the issue when selecting a finished plane
 
 
 ------------------------------------------------------------------------------------------------
