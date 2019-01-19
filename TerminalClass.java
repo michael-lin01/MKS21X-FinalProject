@@ -574,6 +574,7 @@ public static void main(String[] args) {
     } else {
       key = null;
     }
+    String planeSymbol = "\U+1F6EA"; //🛪
     putString(15,20,terminal,"Welcome to Aeroplane Chess!");
     putString(15,23,terminal,"Press spacebar to start the game.");
     putString(15,26,terminal,"Please see the README.md for instructions and how to play this game.");
