@@ -489,9 +489,19 @@ public static void returnToHangar(Terminal t, ArrayList<Plane> planesOnTile, cha
     updateTileNumber(t, planeTurn, charArray, planesOnTile.get(0).getTileReference());
 }
 
-public static void finish(Terminal t, Plane p, char[][] charArray, String planeTurn){
+public static void finish(Terminal t, Plane p, char[][] charArray){
+  p.setFinished(true);
+  erasePlaneLocation(t,p, charArray);
   p.setAtHome(charArray);
-  
+  int planeX = p.getxcor();
+  int planeY = p.getycor();
+  charArray[planeY][planeX] = 'P';
+  t.moveCursor(planeX,planeY);
+  t.applyForegroundColor(p.R(), p.G(), p.B());
+  t.applyBackgroundColor(0,0,0);
+  t.putCharacter('P');
+  t.applyForegroundColor(Terminal.Color.DEFAULT);
+  t.applyBackgroundColor(Terminal.Color.DEFAULT);
 }
 
 
@@ -616,7 +626,8 @@ public static void main(String[] args) {
                         //System.out.println("In deciding dice roll mode. Press Tab to increment numbers on dieRoll. Press spacebar to move the plane");
                         if (key.getKind() == Key.Kind.Tab){
                             if (dieRoll == 6){
-                                dieRoll = 1;
+                                dieRoll++;
+                                //dieRoll = 1;
                             } else {
                                 dieRoll++;
                             }
@@ -900,13 +911,14 @@ public static void main(String[] args) {
                                                             (cursorPlane.color().equals("yellow")&&cursorPlane.getTileReference()==yellowEndLinkedList.end())||
                                                             (cursorPlane.color().equals("blue")&&cursorPlane.getTileReference()==blueEndLinkedList.end())||
                                                             (cursorPlane.color().equals("green")&&cursorPlane.getTileReference()==greenEndLinkedList.end())) { //the if case here should be if the cursorPlane has reached the end of the linked lists (can use linkedlist.get(end) or use xcor == coord)
-                                                          cursorPlane.setFinished(true);
+                                                          finish(terminal, cursorPlane, board);
+                                                          n=7;    //ends the movement
                                                           //return plane to hangar with brown background color with putCharacter(' ') at an available hangar spot (if need help with the available hangar spot logic, ask Victor)
                                                         }
 
                                                     }
                                                     //occurs regardless of what tile the plane is on
-                                                    updatePlaneLocation(terminal, cursorPlane, board);
+                                                    if(!(cursorPlane.isFinished())) updatePlaneLocation(terminal, cursorPlane, board);
                                                     animating = false;
                                                 }
                                             }
@@ -933,8 +945,10 @@ public static void main(String[] args) {
                                                 returnToHangar(terminal, cursorPlane.getTileReference().planesHere(), board, planeTurn); //return enemy planes to hangar
                                                 //System.out.println("num planes on tile should now be 1: "+cursorPlane.getTileReference().getNumPlanes());
                                             }
+                                            if(!(cursorPlane.isFinished())){
                                             updatePlaneLocation(terminal, cursorPlane, board);
                                             updateTileNumber(terminal, planeTurn, board, cursorPlane.getTileReference());
+                                            }
                                         }
 
                                     }

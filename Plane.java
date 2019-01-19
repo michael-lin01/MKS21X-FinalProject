@@ -253,7 +253,7 @@ public class Plane{
   public void setFinished(boolean b){
     finished = b;
   }
-  public boolean isfinished(){
+  public boolean isFinished(){
     return finished;
   }
 
