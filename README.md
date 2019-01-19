@@ -4,8 +4,8 @@ INSTRUCTIONS (README!!!!!!!!!!!!!)=============================================
 To begin the game...
 - Resize the terminal to be at least 68 x 36 size (as in 68 across and 36 down) so the visuals will work correctly.
 - The command line to begin the game from the terminal is 'java -cp lanterna.jar:. TerminalClass'
-- If you want to go into "dieRollManipulate" mode, a mode that is used to debug but also if you want to 
-control the die rolls you receive, then do 'java -cp lanterna.jar:. TerminalClass dieRollManipulate' in the terminal instead. 
+- If you want to go into "dieRollManipulate" mode, a mode that allows you to control the die rolls you receive, 
+  then do 'java -cp lanterna.jar:. TerminalClass dieRollManipulate' in the terminal instead. 
 
 - Press Space to roll the dice.
     -If in dieRollManipulate mode, you have to Press Tab immediately after this to increment the number 
@@ -16,14 +16,36 @@ control the die rolls you receive, then do 'java -cp lanterna.jar:. TerminalClas
 - Press Space again to roll the dice.
 - Press Escape to exit the game (WARNING: Games cannot be saved).
 
+PLEASE.
+DO.
+NOT.
+BUTTON.
+MASH.
+It doesn't break the game, but the game takes button mashing the spacebar as a valid input even though it shouldn't.
+
 GAME DESCRIPTION ==============================================================
 
-READ OVER AND EDIT BEFORE FINAL FINAL COMMIT
-CREATETEXTTERMINAL INSTEAD OF CREATE TERMINAL
-
 Description:
-    So this game is called Aeroplane Chess, and it is a popular Chinese board game. How it works is that there are up to a maximum of four
-players. However as of right now, we did not implement a feature where you can select how many players you want, so it is set at four pernamently for now. Each of the four corners of the board represents a different player and their respective color (as indicated by the colors of the letter 'P'). Each 'P' represents a separate plane, with each player having a total of four planes. The corners are called "hangars", because planes are at home when they are in hangars. To get a plane out of a hangar, you need to roll a die, and that die must give an even number, otherwise your turn is skipped. If one gets an even number, then they choose which plane in the hangar to go to what we call the "launchingTile" which is basically a tile where the plane is located before officially trekking onto the circular-ish board. These launchingTiles are indicated by the lowercase letters r,g,b,and y, where r is red, g is green, b is blue, and y is yellow. The uppercase R,G,B,and Y are what we refer to as planeStarts because those are the first tiles on the actual board that the plane will touch upon entering the board. 'T' represents a tile on the board. Once on the board, the number of tiles you travel depends on your dieRoll. Planes move clockwise around the board. Planes have to make a whole revolution around the track in order to go to the tiles in the middle. Once in the middle, you travel towards the exact four tiles in the center and once you reach one of those, the plane that has reached the middle will be recorded as “finished”. All four planes of a a player's color must be finished in order for that player to win. Planes can be stacked on top of others with the same color, but they move as separate entities even when stacked (that means if there are two planes of color red on one tile, rolling a 6 will only move one of the planes on the stack). This rule is a deviation we have made from a traditional rule of Aeroplane Chess. However, if a plane lands on a tile who houses plane(s) of an opposite color, it destroys that/those other plane(s) and sends the enemy plane(s) back to its/their hangar. There are also shortcuts located on the board: short haul shortcuts (which allow the plane, upon finishing moving from its normal dieRoll, to skip four tiles upon landing on these) and long haul shortcuts (which allows the plane, upon finishing moving from its normal dieRoll, to skip a quarter of the board, as indicated by the “ladder rungs of equal signs”). Planes can only take shortcuts whose tiles have the same color as them. Short haul and long haul shortcuts can stack. This means that if you land on a short haul shortcut that takes you to a long haul shortcut, both shortcuts will activate, and the same applies if you land on a long haul shortcut that takes you to a short haul shortcut. However when a plane lands on another a shortcut tile that houses an enemy plane, the shortcut will not activate because the plane is “occupied” destroying the enemy.
+- So this game is called Aeroplane Chess, and it is a popular Chinese board game. 
+- How it works is that there are up to a maximum of four players. However as of right now, we did not implement a feature where you can select how many players you want, so it is set at four pernamently for now. 
+- Each of the four corners of the board represents a different player and their respective color (as indicated by the colors of the letter 'P'.
+- Each 'P' represents a separate plane, with each player having a total of four planes. 
+- The corners are called "hangars", because planes are at home when they are in hangars. 
+- To get a plane out of a hangar, you need to roll a die, and that die must give an even number, otherwise your turn is skipped. 
+- If one gets an even number, then they choose which plane in the hangar to go to what we call the "launchingTile" which is basically a tile where the plane is located before officially trekking onto the circular-ish board. 
+- These launchingTiles are indicated by the lowercase letters r,g,b,and y, where r is red, g is green, b is blue, and y is yellow. 
+- The uppercase R,G,B,and Y are what we refer to as planeStarts because those are the first tiles on the actual board that the plane will touch upon entering the board. 
+- 'T' represents a tile on the board. Once on the board, the number of tiles you travel depends on your dieRoll. 
+- Planes move clockwise around the board. Planes have to make a whole revolution around the track in order to go to the tiles in the middle.
+- Once in the middle, you travel towards the exact four tiles in the center and once you reach one of those, the plane that has reached the middle will be recorded as “finished”. 
+- Once the plane is finished, then it goes back to the hangar and is marked as finished by a black background color.
+- All four planes of a a player's color must be finished in order for that player to win.
+- Planes can be stacked on top of others with the same color, but they move as separate entities even when stacked (that means if there are two planes of color red on one tile, rolling a 6 will only move one of the planes on the stack). This rule is a deviation we have made from a traditional rule of Aeroplane Chess.
+- If a plane lands on a tile who houses plane(s) of an opposite color, it destroys that/those other plane(s) and sends the enemy plane(s) back to its/their hangar. 
+- There are also shortcuts located on the board: short haul shortcuts (which allow the plane, upon finishing moving from its normal dieRoll, to skip four tiles upon landing on these) and long haul shortcuts (which allows the plane, upon finishing moving from its normal dieRoll, to skip a quarter of the board, as indicated by the “ladder rungs of equal signs”).
+- Planes can only take shortcuts whose tiles have the same color as them.
+- Short haul and long haul shortcuts can stack. This means that if you land on a short haul shortcut that takes you to a long haul shortcut, both shortcuts will activate, and the same applies if you land on a long haul shortcut that takes you to a short haul shortcut.
+- However when a plane lands on another a shortcut tile that houses an enemy plane, the shortcut will not activate because the plane is “occupied” destroying the enemy.
 
 Rules: (some changes we made to wiki’s rules)
 no stacked movement rule, no 6 giving extra die roll (yet?), even numbers get planes out of hangars not specifically 5s or 6s, no exact roll (cuz we don’t got time to code that specific lol), no killing planes on end tiles when zipping through a shortcut (for now).
@@ -66,9 +88,8 @@ SOLVED BUG3, but found a new bug where moving a plane doesn't subtract from prev
 BUGS TO FIX: ====================================
 
 TO DO: ==========================================
-remove s.o.pln's
-color end tiles. or just color the entire board in general
-delete editorMode
+update game description
+update instructions for using run.sh and stuff
 select # of players u want on the main menu (no AI feature)
 endTiles and ending game (when all four planes of one color enter back terminal... idea of using brown color (implemented using RGB technique)
 to indicate what planes are @ home after reaching end... then have a victory message that says who won ... maybe even allow a 2nd and 3rd and 4th place system)
