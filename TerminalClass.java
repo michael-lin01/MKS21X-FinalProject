@@ -107,7 +107,7 @@ public class TerminalClass {
 
   public static void mapTiles(){
     try {
-      File f = new File("AeroplaneChessBoard.txt");
+      File f = new File("AeroplaneChessBoardColors.txt");
       Scanner in = new Scanner(f);
       TilePath l = new TilePath();
       for (int y = 0; y < 31; y++){
@@ -489,10 +489,15 @@ public static void returnToHangar(Terminal t, ArrayList<Plane> planesOnTile, cha
     updateTileNumber(t, planeTurn, charArray, planesOnTile.get(0).getTileReference());
 }
 
+public static void finish(Terminal t, Plane p, char[][] charArray, String planeTurn){
+  p.setAtHome(charArray);
+  
+}
+
 
 public static void main(String[] args) {
 
-  Terminal terminal = TerminalFacade.createTerminal();//TextTerminal();
+  Terminal terminal = TerminalFacade.createSwingTerminal(70,36);//TextTerminal();
   terminal.enterPrivateMode();
 
   terminal.setCursorVisible(false);
@@ -874,6 +879,7 @@ public static void main(String[] args) {
                                                         }
                                                         //sets tile plane is leaving from to have numPlanes on it -1;
                                                         updateTileNumber(terminal, planeTurn, board, cursorPlane.getTileReference(), -1);
+                                                        //puts the plane on the end tiles 
                                                         if(cursorPlane.getxcor()==33 && cursorPlane.getycor() ==28 && cursorPlane.color().equals("red")){
                                                           updateTileNumber(terminal, planeTurn, board, cursorPlane.move(redEndLinkedList.start()));
                                                         }
