@@ -252,8 +252,10 @@ public class Plane{
 
   public void setFinished(boolean b){
     finished = b;
+    isAtHome = b;
   }
-  public boolean isfinished(){
+  
+  public boolean isFinished(){
     return finished;
   }
 
