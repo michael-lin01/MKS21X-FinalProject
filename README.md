@@ -93,6 +93,8 @@ SOLVED BUG3, but found a new bug where moving a plane doesn't subtract from prev
 BUGS TO FIX: ====================================
 
 TO DO: ==========================================
+do not update tilenumber when reaching the center tile, debug by testing blue or green
++ when 3 players done, end the game automatically by clearing screen
 fix dieRollManipulate so that u cant go to 900 die rolls lmao
 update game description
 update instructions for using run.sh and stuff

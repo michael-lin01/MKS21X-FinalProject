@@ -531,6 +531,7 @@ public class TerminalClass {
     int numDieSides = 6; //default # of sides for our die
     int x = 0; //default cursor position at (x,y)
     int y = 0;
+    ArrayList<String> leaderboard = new ArrayList<String>();
     
     
     
@@ -586,19 +587,98 @@ public class TerminalClass {
     if (args.length < 1){
       String planeSymbol = "\u1F6EA"; //🛪
       putString(15,20,terminal, planeSymbol+"   Welcome to Aeroplane Chess!   " + planeSymbol);
-      putString(15,23,terminal,"Press spacebar to start the game.");
+      terminal.applyBackgroundColor(Terminal.Color.MAGENTA);
+      String currentString = "Begin Game";
+      putString(5,23,terminal,currentString);
+      terminal.applyBackgroundColor(Terminal.Color.DEFAULT);
+      putString(20,23,terminal,"Navegate around the options with Tab. Press Enter to select the option.");
       putString(15,26,terminal,"Please see the README.md for instructions and how to play this game.");
+      putString(15,29,terminal,"Settings");
+      boolean isOnSettings = false;
       while (running){
         key = terminal.readInput();
         if (key != null){
-          if (key.getCharacter() == ' '){
-            running = false;
+          if (key.getKind() == Key.Kind.Tab){
+            if (currentString.equals("Begin Game")){
+              putString(5,23, terminal, "Begin Game");
+              currentString = "Settings";
+              terminal.applyBackgroundColor(Terminal.Color.MAGENTA);
+              putString(15,29,terminal,"Settings");
+            } 
+            else if (currentString.equals("Settings")){
+              putString(15,29, terminal, currentString);
+              terminal.applyBackgroundColor(Terminal.Color.MAGENTA);
+              currentString = "Begin Game";
+              putString(5,23,terminal,"Begin Game");
+            } 
+            
+            //these are for the settings menu
+            else if (currentString.equals("Exit Settings")){
+              putString(15,21,terminal,"Exit Settings");
+              terminal.applyBackgroundColor(Terminal.Color.MAGENTA);
+              currentString = "Max Die Roll Possible: ";
+              putString(15,23,terminal,"Max Die Roll Possible: "+numDieSides);
+            }
+            else if (currentString.equals("Max Die Roll Possible: ")){
+              putString(15,23,terminal,"Max Die Roll Possible: " + numDieSides);
+              terminal.applyBackgroundColor(Terminal.Color.MAGENTA);
+              currentString = "Exit Settings";
+              putString(15,21,terminal,"Exit Settings");
+            }
+            terminal.applyBackgroundColor(Terminal.Color.DEFAULT);
           }
-          if (key.getKind() == Key.Kind.Escape) {
+
+          if (key.getKind() == Key.Kind.Enter){
+            if (currentString.equals("Begin Game")){
+              running = false;
+              terminal.clearScreen();
+            }
+            else if (currentString.equals("Settings")){
+              terminal.clearScreen();
+              putString(15, 20, terminal, "Settings");
+              isOnSettings = true;
+              currentString = "Exit Settings";
+              terminal.applyBackgroundColor(Terminal.Color.MAGENTA);
+              putString(15, 21, terminal, "Exit Settings");
+              terminal.applyBackgroundColor(Terminal.Color.DEFAULT);
+              putString(15, 23, terminal, "Max Die Roll Possible: "+numDieSides);
+              putString(15, 26, terminal, "Press Up Arrow Key when Tabbed on DieRoll Setting to increment the max die roll. Limit is 12");
+              putString(15, 27, terminal, "Press Down Arrow Key when Tabbed on dieRoll Setting to decrement the max die roll. Limit is 6");
+            }
+            else if (currentString.equals("Exit Settings")){
+              terminal.clearScreen();
+              putString(15,20,terminal, planeSymbol+"   Welcome to Aeroplane Chess!   " + planeSymbol);
+              terminal.applyBackgroundColor(Terminal.Color.MAGENTA);
+              currentString = "Begin Game";
+              putString(5,23,terminal,currentString);
+              terminal.applyBackgroundColor(Terminal.Color.DEFAULT);
+              putString(20,23,terminal,"Navegate around the options with Tab. Press Enter to select the option.");
+              putString(15,26,terminal,"Please see the README.md for instructions and how to play this game.");
+              putString(15,29,terminal,"Settings");
+              isOnSettings = false;
+            }
+          }
+
+          if (key.getKind() == Key.Kind.ArrowUp && currentString.equals("Max Die Roll Possible: ")){
+            if (numDieSides < 12){
+              numDieSides++;
+              putString(15+23,23,terminal,""+numDieSides);
+            }
+          }
+
+          if (key.getKind() == Key.Kind.ArrowDown && currentString.equals("Max Die Roll Possible: ")){
+            if (numDieSides > 6){
+              numDieSides--;
+              putString(15+23,23,terminal,""+numDieSides+" ");
+            }
+          }
+
+          if (key.getKind() == Key.Kind.Escape){
             
             terminal.exitPrivateMode();
             System.exit(0);
           }
+
         }
       }
     }
@@ -617,14 +697,93 @@ public class TerminalClass {
       endMillis = System.currentTimeMillis();
       diffMillis = endMillis - startMillis;
       key = terminal.readInput();
+
+      if (leaderboard.size() >= 3){
+        terminal.clearScreen();
+        String lastPlace = "";
+        if (!leaderboard.contains("red")){
+          lastPlace = "red";
+        }
+        if (!leaderboard.contains("green")){
+          lastPlace = "green";
+        }
+        if (!leaderboard.contains("blue")){
+          lastPlace = "blue";
+        }
+        if (!leaderboard.contains("yellow")){
+          lastPlace = "yellow";
+        }
+        //INSERT CODE FOR WINNING THE GAME
+        boolean isEndScreen = true;
+        while (isEndScreen){
+          key = terminal.readInput();
+          if (key != null){
+            if (key.getKind() == Key.Kind.Escape){
+              terminal.exitPrivateMode();
+              System.exit(0);
+            }
+          }
+        }
+      }
+      //swaps planeturns if that player has won
+      else if (plane1.isFinished() && plane2.isFinished() && plane3.isFinished() && plane4.isFinished()){
+        if (!leaderboard.contains(planeTurn)){
+          leaderboard.add(planeTurn);
+        }
+        //will add the planes whose turn is over to the category of "otherPlanes"
+        otherPlanes.add(plane1); otherPlanes.add(plane2); otherPlanes.add(plane3); otherPlanes.add(plane4);
+        if (planeTurn.equals("red")){ //once you have selected, then switch plane turns
+          launchingTile = greenLaunchingTile; //switches over to greenLaunchingTile
+          planeStart = greenStart;
+          planeTurn = "green";
+          plane1 = green1;
+          plane2 = green2;
+          plane3 = green3;
+          plane4 = green4;
+        } else if (planeTurn.equals("green")){
+          launchingTile = blueLaunchingTile;
+          planeStart =  blueStart;
+          planeTurn = "blue";
+          plane1 = blue1;
+          plane2 = blue2;
+          plane3 = blue3;
+          plane4 = blue4;
+        } else if (planeTurn.equals("blue")){
+          launchingTile = yellowLaunchingTile;
+          planeStart = yellowStart;
+          planeTurn = "yellow";
+          plane1 = yellow1;
+          plane2 = yellow2;
+          plane3 = yellow3;
+          plane4 = yellow4;
+        } else if (planeTurn.equals("yellow")){
+          launchingTile = redLaunchingTile;
+          planeStart = redStart;
+          planeTurn = "red";
+          plane1 = red1;
+          plane2 = red2;
+          plane3 = red3;
+          plane4 = red4;
+        }
+        //the planes with same color as planeTurn are now not part of "otherPlanes"
+        otherPlanes.remove(plane1); otherPlanes.remove(plane2); otherPlanes.remove(plane3); otherPlanes.remove(plane4);
+        putString(0,32,terminal,"                                  ");
+        putString(0,32,terminal,planeTurn + "'s Turn!");
+      }
       
       if (key != null)
       {
         
         if (key.getKind() == Key.Kind.Escape) {
-          
           terminal.exitPrivateMode();
           System.exit(0);
+        }
+
+        //for debugging purposes only
+        if (key.getCharacter() == 'f'){
+          for (int n = 0; n < planes.size() - 4; n++){
+            finish(terminal, planes.get(n), board);
+          }
         }
         
         if (key.getCharacter() == ' '){ //this rolls a die
@@ -639,9 +798,8 @@ public class TerminalClass {
                 if (key != null){
                   //System.out.println("In deciding dice roll mode. Press Tab to increment numbers on dieRoll. Press spacebar to move the plane");
                   if (key.getKind() == Key.Kind.Tab){
-                    if (dieRoll == 6){
-                      //dieRoll = 1; //remove the "//" later
-                      dieRoll++;
+                    if (dieRoll == numDieSides){
+                      dieRoll = 1;
                     } else {
                       dieRoll++;
                     }
@@ -720,10 +878,26 @@ public class TerminalClass {
                 x = plane4.getxcor();
                 y = plane4.getycor();
                 cursorPlane = plane4;
-              } else if (!plane1.isFinished()){ //if none of them are home and plane1 isn't finished, default to plane1
-                x = plane1.getxcor();
-                y = plane1.getycor();
-                cursorPlane = plane1;
+              } else { //if none of them are home
+                if (!plane1.isFinished()){
+                  x = plane1.getxcor();
+                  y = plane1.getycor();
+                  cursorPlane = plane1;
+                } else if (!plane2.isFinished()){
+                  x = plane2.getxcor();
+                  y = plane2.getycor();
+                  cursorPlane = plane2;
+                } else if (!plane3.isFinished()){
+                  x = plane3.getxcor();
+                  y = plane3.getycor();
+                  cursorPlane = plane3;
+                } else if (!plane4.isFinished()){
+                  x = plane4.getxcor();
+                  y = plane4.getycor();
+                  cursorPlane = plane4;
+                } else { //if all planes are finished
+                  
+                }
               }
             }
           
@@ -767,69 +941,74 @@ public class TerminalClass {
                       endMillis = System.currentTimeMillis();
                       diffMillis = endMillis - startMillis;
                       if (diffMillis / 1000.0 >= 0.5){
-                        terminal.applyBackgroundColor(Terminal.Color.DEFAULT); //just to remove the highlights
-                        terminal.applyForegroundColor(cursorPlane.R(),cursorPlane.G(),cursorPlane.B());
-                        terminal.moveCursor(cursorPlane.getxcor(),cursorPlane.getycor());
-                        terminal.putCharacter('P');
-                        terminal.moveCursor(cursorPlane.getxcor(),cursorPlane.getycor());
-                        if (cursorPlane.getTileReference().getNumPlanes() < 2){ //if only one plane on previous tile
-                          erasePlaneLocation(terminal, cursorPlane, board);
-                          cursorPlane.getTileReference().removePlane(cursorPlane);
-                        } else { //if other planes on previous tile
-                          if (!colorOfPlaneOnNextTile.equals(" ")){ //this serves as memory of the plane color on previous tile
-                            Plane colorDummy = new Plane(colorOfPlaneOnNextTile,-1,-1);
-                            terminal.applyForegroundColor(colorDummy.R(),colorDummy.G(),colorDummy.B());
-                            terminal.putCharacter('P');
-                            terminal.applyForegroundColor(Terminal.Color.DEFAULT);
-                          }
-                        }
-                        if (cursorPlane.getTileReference() == launchingTile){ //if plane is on launchingTile;
-                          if (planeStart.planesHere().size() > 0){
-                            colorOfPlaneOnNextTile = planeStart.planesHere().get(0).toString();
-                          } else {
-                            colorOfPlaneOnNextTile = " ";
-                          }
-                          //sets tile plane is leaving from to have numPlanes on it -1;
-                          updateTileNumber(terminal, planeTurn, board, cursorPlane.getTileReference(), -1);
-                          updateTileNumber(terminal, planeTurn, board, cursorPlane.move(planeStart));
-                        } else { //if plane is already on the board
-                          if (cursorPlane.getTileReference().getNextTile().planesHere().size() > 0){
-                            colorOfPlaneOnNextTile = cursorPlane.getTileReference().getNextTile().planesHere().get(0).toString();
-                          } else {
-                            colorOfPlaneOnNextTile = " ";
-                          }
-                          //sets tile plane is leaving from to have numPlanes on it -1;
-                          updateTileNumber(terminal, planeTurn, board, cursorPlane.getTileReference(), -1);
-                          //puts the plane on the end tiles 
-                          if(cursorPlane.getxcor()==33 && cursorPlane.getycor() ==28 && cursorPlane.color().equals("red")){
-                            updateTileNumber(terminal, planeTurn, board, cursorPlane.move(redEndLinkedList.start()));
-                          }
-                          else if(cursorPlane.getxcor()==5 && cursorPlane.getycor() ==15 && cursorPlane.color().equals("yellow")){
-                            updateTileNumber(terminal, planeTurn, board, cursorPlane.move(yellowEndLinkedList.start()));
-                          }
-                          else if(cursorPlane.getxcor()==33 && cursorPlane.getycor() ==2 && cursorPlane.color().equals("blue")){
-                            updateTileNumber(terminal, planeTurn, board, cursorPlane.move(blueEndLinkedList.start()));
-                          }
-                          else if(cursorPlane.getxcor()==62 && cursorPlane.getycor() ==15 && cursorPlane.color().equals("green")){
-                            updateTileNumber(terminal, planeTurn, board, cursorPlane.move(greenEndLinkedList.start()));
-                          }
-                          else {
-                            updateTileNumber(terminal, planeTurn, board, cursorPlane.move(cursorPlane.getTileReference().getNextTile()));
-                          }
-                          //happens regardless of else statements
-                          if ((cursorPlane.color().equals("red")&&cursorPlane.getTileReference()==redEndLinkedList.end())||
-                          (cursorPlane.color().equals("yellow")&&cursorPlane.getTileReference()==yellowEndLinkedList.end())||
-                          (cursorPlane.color().equals("blue")&&cursorPlane.getTileReference()==blueEndLinkedList.end())||
-                          (cursorPlane.color().equals("green")&&cursorPlane.getTileReference()==greenEndLinkedList.end())) {
-                            finish(terminal, cursorPlane, board);
-                            n = dieRoll + 1; //ends the movement
-                            //returns plane to hangar as "finished"
-                          }
-                        }
-                        //occurs regardless of what tile the plane is on
-                        if(!(cursorPlane.isFinished())) updatePlaneLocation(terminal, cursorPlane, board);
                         animating = false;
                       }
+                    }
+                    if ((cursorPlane.color().equals("red")&&cursorPlane.getTileReference()==redEndLinkedList.end())||
+                    (cursorPlane.color().equals("yellow")&&cursorPlane.getTileReference()==yellowEndLinkedList.end())||
+                    (cursorPlane.color().equals("blue")&&cursorPlane.getTileReference()==blueEndLinkedList.end())||
+                    (cursorPlane.color().equals("green")&&cursorPlane.getTileReference()==greenEndLinkedList.end())) {
+                      finish(terminal, cursorPlane, board);
+                      n = dieRoll + 1; //ends the movement
+                      //returns plane to hangar as "finished"
+                    }
+                    else {
+                      terminal.applyBackgroundColor(Terminal.Color.DEFAULT); //just to remove the highlights
+                      terminal.applyForegroundColor(cursorPlane.R(),cursorPlane.G(),cursorPlane.B());
+                      terminal.moveCursor(cursorPlane.getxcor(),cursorPlane.getycor());
+                      terminal.putCharacter('P');
+                      terminal.moveCursor(cursorPlane.getxcor(),cursorPlane.getycor());
+                      if (cursorPlane.getTileReference().getNumPlanes() < 2){ //if only one plane on previous tile
+                        erasePlaneLocation(terminal, cursorPlane, board);
+                        cursorPlane.getTileReference().removePlane(cursorPlane);
+                      }
+                      else { //if other planes on previous tile
+                        if (!colorOfPlaneOnNextTile.equals(" ")){ //this serves as memory of the plane color on previous tile
+                          Plane colorDummy = new Plane(colorOfPlaneOnNextTile,-1,-1);
+                          terminal.applyForegroundColor(colorDummy.R(),colorDummy.G(),colorDummy.B());
+                          terminal.putCharacter('P');
+                          terminal.applyForegroundColor(Terminal.Color.DEFAULT);
+                        }
+                      }
+                      if (cursorPlane.getTileReference() == launchingTile){ //if plane is on launchingTile;
+                        if (planeStart.planesHere().size() > 0){
+                          colorOfPlaneOnNextTile = planeStart.planesHere().get(0).toString();
+                        } else {
+                          colorOfPlaneOnNextTile = " ";
+                        }
+                        //sets tile plane is leaving from to have numPlanes on it -1;
+                        updateTileNumber(terminal, planeTurn, board, cursorPlane.getTileReference(), -1);
+                        updateTileNumber(terminal, planeTurn, board, cursorPlane.move(planeStart));
+                      }
+                      else { //if plane is already on the board
+                        Tile tile = cursorPlane.getTileReference();
+                        if (tile.getNextTile().planesHere().size() > 0){
+                          colorOfPlaneOnNextTile = tile.getNextTile().planesHere().get(0).toString();
+                        } else {
+                          colorOfPlaneOnNextTile = " ";
+                        }
+                        //sets tile plane is leaving from to have numPlanes on it -1;
+                        updateTileNumber(terminal, planeTurn, board, tile, -1);
+                        //puts the plane on the end tiles 
+                        if(cursorPlane.getxcor()==33 && cursorPlane.getycor() ==28 && cursorPlane.color().equals("red")){
+                          updateTileNumber(terminal, planeTurn, board, cursorPlane.move(redEndLinkedList.start()));
+                        }
+                        else if(cursorPlane.getxcor()==5 && cursorPlane.getycor() ==15 && cursorPlane.color().equals("yellow")){
+                        updateTileNumber(terminal, planeTurn, board, cursorPlane.move(yellowEndLinkedList.start()));
+                        }
+                        else if(cursorPlane.getxcor()==33 && cursorPlane.getycor() ==2 && cursorPlane.color().equals("blue")){
+                          updateTileNumber(terminal, planeTurn, board, cursorPlane.move(blueEndLinkedList.start()));
+                        }
+                        else if(cursorPlane.getxcor()==62 && cursorPlane.getycor() ==15 && cursorPlane.color().equals("green")){
+                          updateTileNumber(terminal, planeTurn, board, cursorPlane.move(greenEndLinkedList.start()));
+                        }
+                        else {
+                          updateTileNumber(terminal, planeTurn, board, cursorPlane.move(tile.getNextTile()));
+                        }
+                      }
+        
+                      //occurs regardless of what tile the plane is on
+                      if(!(cursorPlane.isFinished())) updatePlaneLocation(terminal, cursorPlane, board);
                     }
                   }
                   //this code runs at the end of a plane's complete movement (when it has moved through all tiles indicated by its dice roll)
