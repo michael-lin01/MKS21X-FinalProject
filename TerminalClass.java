@@ -62,6 +62,7 @@ public class TerminalClass {
     }
   }
   
+  //this putString is specific for our use in mapping colors to our tiles
   public static void putString(int r, int c,Terminal t, String s, String colors){
     t.moveCursor(r,c);
     Terminal.Color back;
@@ -104,6 +105,7 @@ public class TerminalClass {
     }
   }
   
+  //we generate all the tiles on the board from a text file that has certain keys corresponding to certain tiles
   public static void mapTiles(){
     try {
       File f = new File("AeroplaneChessBoardColors.txt");
@@ -150,6 +152,7 @@ public class TerminalClass {
               }
             }
           }
+          //these are the keys for a "planeStart" tile
           else if(c=='T'||c=='R'||c=='Y'||c=='B'||c=='G'){
             if(c=='R') redStart = new Tile(x,y,"red");
             if(c=='Y') yellowStart = new Tile(x,y,"yellow");
@@ -208,6 +211,7 @@ public class TerminalClass {
     }
   }
   
+  //sets the color instance variable of each tile after we generate the tiles
   public static void colorTiles(){
     Tile current = redStart;
     int counter = 3;
@@ -294,19 +298,19 @@ public class TerminalClass {
     t.applyBackgroundColor(Terminal.Color.DEFAULT);
     if (planeTurn == "red"){
       t.applyForegroundColor(Terminal.Color.RED);
-      xcor --; //REMOVE LATER, JUST FOR TESTING PURPOSES. WHEN WE HAVE A TILE FOR STORING THE DISPLAY OF NUMBERS, USE numTile as a parameter
+      xcor --;
     }
     else if (planeTurn == "green"){
       t.applyForegroundColor(Terminal.Color.GREEN);
-      xcor --; //REMOVE LATER, JUST FOR TESTING PURPOSES. WHEN WE HAVE A TILE FOR STORING THE DISPLAY OF NUMBERS, USE numTile as a parameter
+      xcor --;
     }
     else if (planeTurn == "blue"){
       t.applyForegroundColor(Terminal.Color.BLUE);
-      xcor --; //REMOVE LATER, JUST FOR TESTING PURPOSES. WHEN WE HAVE A TILE FOR STORING THE DISPLAY OF NUMBERS, USE numTile as a parameter
+      xcor --; 
     }
     else if (planeTurn == "yellow"){
       t.applyForegroundColor(Terminal.Color.YELLOW);
-      xcor --; //REMOVE LATER, JUST FOR TESTING PURPOSES. WHEN WE HAVE A TILE FOR STORING THE DISPLAY OF NUMBERS, USE numTile as a parameter
+      xcor --;
     }
     charArray[ycor][xcor] = (char)tile.getNumPlanes();
     t.moveCursor(xcor,ycor);
@@ -320,25 +324,26 @@ public class TerminalClass {
     t.applyForegroundColor(Terminal.Color.DEFAULT);
   }
   
+  //this updateTileNumber is made so that when a plane leaves a tile, the tile that is left behind has its tileNumber updated as well
   public static void updateTileNumber(Terminal t, String planeTurn, char[][] charArray, Tile tile, int numChange){
     int xcor = tile.getxcor();
     int ycor = tile.getycor();
     t.applyBackgroundColor(Terminal.Color.DEFAULT);
     if (planeTurn == "red"){
       t.applyForegroundColor(Terminal.Color.RED);
-      xcor --; //REMOVE LATER, JUST FOR TESTING PURPOSES. WHEN WE HAVE A TILE FOR STORING THE DISPLAY OF NUMBERS, USE numTile as a parameter
+      xcor --; 
     }
     else if (planeTurn == "green"){
       t.applyForegroundColor(Terminal.Color.GREEN);
-      xcor --; //REMOVE LATER, JUST FOR TESTING PURPOSES. WHEN WE HAVE A TILE FOR STORING THE DISPLAY OF NUMBERS, USE numTile as a parameter
+      xcor --;
     }
     else if (planeTurn == "blue"){
       t.applyForegroundColor(Terminal.Color.BLUE);
-      xcor --; //REMOVE LATER, JUST FOR TESTING PURPOSES. WHEN WE HAVE A TILE FOR STORING THE DISPLAY OF NUMBERS, USE numTile as a parameter
+      xcor --;
     }
     else if (planeTurn == "yellow"){
       t.applyForegroundColor(Terminal.Color.YELLOW);
-      xcor --; //REMOVE LATER, JUST FOR TESTING PURPOSES. WHEN WE HAVE A TILE FOR STORING THE DISPLAY OF NUMBERS, USE numTile as a parameter
+      xcor --;
     }
     int newNum = tile.getNumPlanes() + numChange;
     //System.out.println("newNum: "+newNum);
@@ -472,9 +477,10 @@ public class TerminalClass {
     }
   }
 
+  //the method to return planes to the hangar, used either when the plane is destroyed or when it is finished
   public static void returnToHangar(Terminal t, ArrayList<Plane> planesOnTile, char[][] charArray, String planeTurn){
     int counter = 0;
-    while (planesOnTile.size() > 1){ //when there's twos+ planes
+    while (planesOnTile.size() > 1){ //when there's two+ planes
     Plane indexPlane = planesOnTile.get(counter);
     if (indexPlane.color() != planeTurn){ //save the plane that is destroying the others
       erasePlaneLocation(t, indexPlane, charArray);
@@ -487,12 +493,14 @@ public class TerminalClass {
   updateTileNumber(t, planeTurn, charArray, planesOnTile.get(0).getTileReference());
   }
 
+  //used to instantiate the plane locations on the board
   public static void instantiatePlaneLocations(Terminal terminal, ArrayList<Plane> planes, char[][] board){
     for (int n = 0; n < planes.size(); n++){
       updatePlaneLocation(terminal, planes.get(n), board);
     }
   }
 
+  //method used to do all necessary changes to terminal and plane instance variables to essentially make a plane "finished"
   public static void finish(Terminal t, Plane p, char[][] charArray){
     p.setFinished(true);
     erasePlaneLocation(t,p, charArray);
@@ -512,7 +520,7 @@ public class TerminalClass {
 
   public static void main(String[] args) {
     
-    Terminal terminal = TerminalFacade.createTerminal();
+    Terminal terminal = TerminalFacade.createTextTerminal();
     terminal.enterPrivateMode();
     
     terminal.setCursorVisible(false);
@@ -536,7 +544,7 @@ public class TerminalClass {
     
     
     
-    //instantiates all the planes, 1 is topleft, 2 is topright, 3 is bottomleft, 4 is bottomright
+    //instantiates all the planes, 1 is topleft plane, 2 is topright plane, 3 is bottomleft plane, 4 is bottomright plane in hangar
     Plane red1 = new Plane("red",5-1,26-1);
     Plane red2 = new Plane("red",13-1,26-1);
     Plane red3 = new Plane("red",5-1,29-1);
@@ -565,7 +573,6 @@ public class TerminalClass {
     Plane plane4 = red4;
     Plane cursorPlane = plane1;
     ArrayList<Plane> otherPlanes = new ArrayList<Plane>();
-    //could remove this as cleanup code?
     ArrayList<Plane> planes = new ArrayList<Plane>();
     planes.add(red1);
     planes.add(red2);
@@ -584,7 +591,7 @@ public class TerminalClass {
     planes.add(yellow3);
     planes.add(yellow4);
     
-    //main meny stuff -------------------------------
+    //main menu stuff -------------------------------
     putString(18,8,terminal, "    Welcome to Aeroplane Chess!   ");
     terminal.applyBackgroundColor(Terminal.Color.MAGENTA);
     String currentString = "Begin Game";
@@ -777,7 +784,7 @@ public class TerminalClass {
         putString(0,32,terminal,"                                  ");
         putString(0,32,terminal,planeTurn + "'s Turn!");
       }
-      //if all players except one has finished
+      //if all players except one have finished
       if (leaderboard.size() == 3){
         terminal.clearScreen();
         String lastPlace = "";
@@ -799,9 +806,9 @@ public class TerminalClass {
         int nonPlayers = 4 - numPlayers;
         int i = nonPlayers;
         for (; i < leaderboard.size() + 1; i++){ //leaderboard size is always 3
-          if (i != leaderboard.size()){ //if n == 3
+          if (i != leaderboard.size()){
             putString(29,y,terminal,""+ (i+1-nonPlayers) +". "+leaderboard.get(i));
-          } else {
+          } else { //if n == 3, this case is bc "lastPlace" isn't inside the leaderboard ArrayList
             putString(29,y,terminal,""+ (i+1-nonPlayers) + ". "+ lastPlace);
           }
           y+=2;
@@ -850,8 +857,7 @@ public class TerminalClass {
                   //System.out.println("In deciding dice roll mode. Press Tab to increment numbers on dieRoll. Press Enter to move the plane");
                   if (key.getKind() == Key.Kind.Tab){
                     if (dieRoll == numDieSides){
-                      //dieRoll = 1;
-                      dieRoll++;
+                      dieRoll = 1;
                     } else {
                       dieRoll++;
                     }
@@ -947,7 +953,7 @@ public class TerminalClass {
                   x = plane4.getxcor();
                   y = plane4.getycor();
                   cursorPlane = plane4;
-                } else { //if all planes are finished
+                } else { //if all planes are finished, then do nothing
                   
                 }
               }
@@ -1020,7 +1026,7 @@ public class TerminalClass {
                         cursorPlane.getTileReference().removePlane(cursorPlane);
                       }
                       else { //if other planes on previous tile
-                        if (!colorOfPlaneOnNextTile.equals(" ")){ //this serves as memory of the plane color on previous tile
+                        if (!colorOfPlaneOnNextTile.equals(" ")){ //the "colorOfPlaneOnNextTile" now serves as memory of the plane color on previous tile
                           Plane colorDummy = new Plane(colorOfPlaneOnNextTile,-1,-1);
                           terminal.applyForegroundColor(colorDummy.R(),colorDummy.G(),colorDummy.B());
                           terminal.putCharacter('P');
@@ -1029,6 +1035,9 @@ public class TerminalClass {
                       }
                       if (cursorPlane.getTileReference() == launchingTile){ //if plane is on launchingTile;
                         if (planeStart.planesHere().size() > 0){
+                          //The colorOfPlaneOnNextTile variable is made b/c if a plane is passing over, but not destroying, an enemy plane,
+                          //we need to store a memory of the enemy's plane so the enemy plane's color is replaced after our plane has finished
+                          //passing over. 
                           colorOfPlaneOnNextTile = planeStart.planesHere().get(0).toString();
                         } else {
                           colorOfPlaneOnNextTile = " ";
@@ -1100,8 +1109,9 @@ public class TerminalClass {
               selecting = false;
               }
               //can put a new key here
-              
-              if (key.getKind() == Key.Kind.Tab){ //selecting through planes
+
+              //Tab tabs through planes
+              if (key.getKind() == Key.Kind.Tab){
                 terminal.applyBackgroundColor(Terminal.Color.DEFAULT); //to get rid of the background from old select slot
                 terminal.putCharacter('P');
                 if (dieRoll % 2 == 0){
@@ -1245,8 +1255,9 @@ public class TerminalClass {
           }
         
         
-          //will happen regardless of what roll is achieved; aka the game moves on despite getting odd or even
-          //will add the planes whose turn is over to the category of "otherPlanes"
+          //Below code will happen regardless of what roll is achieved; aka the game moves on despite getting odd or even.
+          //Statement immediately below will add the planes whose turn is over to the category of "otherPlanes", 
+          //a variable used to store what planes are enemies of the planes with same color as the current planeTurn.
           otherPlanes.add(plane1); otherPlanes.add(plane2); otherPlanes.add(plane3); otherPlanes.add(plane4);
           if (planeTurn.equals("red")){ //once you have selected, then switch plane turns
             launchingTile = greenLaunchingTile; //switches over to greenLaunchingTile
@@ -1281,7 +1292,7 @@ public class TerminalClass {
             plane3 = red3;
             plane4 = red4;
           }
-          //the planes with same color as planeTurn are now not part of "otherPlanes"
+          //the planes with same color as planeTurn are now removed from part of "otherPlanes", since these planes aren't enemies of themselves
           otherPlanes.remove(plane1); otherPlanes.remove(plane2); otherPlanes.remove(plane3); otherPlanes.remove(plane4);
           putString(0,32,terminal,"                                  ");
           putString(0,32,terminal,planeTurn + "'s Turn!");

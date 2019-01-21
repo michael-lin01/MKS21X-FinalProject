@@ -3,6 +3,7 @@
 INSTRUCTIONS (README!!!!!!!!!!!!!)=============================================
 To begin the game...
 - Resize the terminal to be at least 67 x 35 size (as in 68 across and 35 down) so the visuals will work correctly.
+- To compile, type in 'javac -cp lanterna.jar:. TerminalClass.java'
 - The command line to begin the game from the terminal is 'java -cp lanterna.jar:. TerminalClass'
 - If you want to go into "dieRollManipulate" mode, a mode that allows you to control the die rolls you receive, 
   then do 'java -cp lanterna.jar:. TerminalClass dieRollManipulate' in the terminal instead. 
@@ -12,9 +13,10 @@ OR
 - Type in the terminal './run.sh'
 - To get the dieRollManipulate mode, type './dieRoll.sh'
 
+- Instructions for navegating around the main menu is already printed on the terminal when starting up the game.
 - Press Enter to roll the dice.
     -If in dieRollManipulate mode, you have to Press Tab immediately after this to increment the number 
-     of the die roll (goes from 1 to # of max die roll selected at main menu. This max die roll is defaulted to 6).
+     of the die roll (goes from 1 to # of max die roll selected at main menu. This max die roll is defaulted to 6 in the main menu).
     -Then press Enter again to finalize that die roll. You will then be allowed to swap between planes allowed by that die roll.
     -If not in dieRollManipulate, Tab will not increment die rolls.
 - Press Tab to swap between the planes you are allowed to select that turn. Press Enter to select that plane to move.
@@ -33,14 +35,13 @@ GAME DESCRIPTION ==============================================================
 
 Description:
 - So this game is called Aeroplane Chess, and it is a popular Chinese board game. 
-- How it works is that there are up to a maximum of four players. However as of right now, we did not implement a feature where you can select how many players you want, so it is set at four pernamently for now. 
+- How it works is that there are up to a maximum of four players. We implemented a feature where you can select the # of players you want (a max of 4 and a min of 2).
 - Each of the four corners of the board represents a different player and their respective color (as indicated by the colors of the letter 'P'.
 - Each 'P' represents a separate plane, with each player having a total of four planes. 
 - The corners are called "hangars", because planes are at home when they are in hangars. 
 - To get a plane out of a hangar, you need to roll a die, and that die must give an even number, otherwise your turn is skipped. 
 - If one gets an even number, then they choose which plane in the hangar to go to what we call the "launchingTile" which is basically a tile where the plane is located before officially trekking onto the circular-ish board. 
-- These launchingTiles are indicated by the lowercase letters r,g,b,and y, where r is red, g is green, b is blue, and y is yellow. 
-- The uppercase R,G,B,and Y are what we refer to as planeStarts because those are the first tiles on the actual board that the plane will touch upon entering the board. 
+- Once on the launchingTile, when it is your turn again, you must roll the die again to get that plane onto the board.
 - 'T' represents a tile on the board. Once on the board, the number of tiles you travel depends on your dieRoll. 
 - Planes move clockwise around the board. Planes have to make a whole revolution around the track in order to go to the tiles in the middle.
 - Once in the middle, you travel towards the exact four tiles in the center and once you reach one of those, the plane that has reached the middle will be recorded as “finished”. 
@@ -53,8 +54,13 @@ Description:
 - Short haul and long haul shortcuts can stack. This means that if you land on a short haul shortcut that takes you to a long haul shortcut, both shortcuts will activate, and the same applies if you land on a long haul shortcut that takes you to a short haul shortcut.
 - However when a plane lands on another a shortcut tile that houses an enemy plane, the shortcut will not activate because the plane is “occupied” destroying the enemy.
 
-Rules: (some changes we made to wiki’s rules)
-no stacked movement rule, no 6 giving extra die roll (yet?), even numbers get planes out of hangars not specifically 5s or 6s, no exact roll (cuz we don’t got time to code that specific lol), no killing planes on end tiles when zipping through a shortcut (for now).
+Some changes we made to Wikipedia page’s rules!
+- no stacked movement rule
+- rolling a 6 does NOT give an extra die roll
+- an even die roll gets planes out of the hangar (instead of specifically 5s or 6s)
+- no killing planes located on end tiles when zipping through a shortcut
+- a plane does not need an exact roll to go onto the center tile, it just needs to at least pass over the center tile (for ex, if there are 4 tiles between a plane and its center tile, then a die roll of 6 still allows that plane to be marked as "finished" at the end of its movement)
+We did not implement any of the "Optional Rules" in the Wikipedia page due to time constraints.
 
 -------------------------------------------------------------------------------
 
@@ -93,20 +99,14 @@ SOLVED BUG3, but found a new bug where moving a plane doesn't subtract from prev
 1/19, Michael: basically finished end tiles, just have to change the issue when selecting a finished plane
 1/19, Victor: ^ fixed that issue so user cannot select a fixed plane
 1/20, Michael: fixed the text in the start screen and leaderboard screen
+1/21, Victor: fixed every bug I have found and updated README
 
 
 ------------------------------------------------------------------------------------------------
 
 BUGS TO FIX: ====================================
-change dieRoll in dierollmanipulate back to normal
-theres a problem with ending the game lol (both with 4 players and with 2 players)
+NONE, BLESS to God
 TO DO: ==========================================
-+ when 3 players done, end the game automatically by clearing screen
-fix dieRollManipulate so that u cant go to 900 die rolls lmao
-update game description
-createTextTerminal instead of createTerminal
-Menu so its not boring
-cleanup code (like we can have launchingTiles be part of the text map)
 
 DEV NOTES: =========================================================
 so i added dieRollManipulate mode instead so you play through game normally but only change is u can control which die roll you get by pressing Tab. java -cp lanterna.jar;. TerminalClass.java dieRollManipulate
