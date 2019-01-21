@@ -6,9 +6,12 @@ To begin the game...
 - The command line to begin the game from the terminal is 'java -cp lanterna.jar:. TerminalClass'
 - If you want to go into "dieRollManipulate" mode, a mode that allows you to control the die rolls you receive, 
   then do 'java -cp lanterna.jar:. TerminalClass dieRollManipulate' in the terminal instead. 
+  
 OR
+
 - Type in the terminal './run.sh'
 - To get the dieRollManipulate mode, type './dieRoll.sh'
+
 
 - Press Space to roll the dice.
     -If in dieRollManipulate mode, you have to Press Tab immediately after this to increment the number 
