@@ -2,10 +2,13 @@
 
 INSTRUCTIONS (README!!!!!!!!!!!!!)=============================================
 To begin the game...
-- Resize the terminal to be at least 68 x 36 size (as in 68 across and 36 down) so the visuals will work correctly.
+- Resize the terminal to be at least 67 x 35 size (as in 68 across and 35 down) so the visuals will work correctly.
 - The command line to begin the game from the terminal is 'java -cp lanterna.jar:. TerminalClass'
 - If you want to go into "dieRollManipulate" mode, a mode that allows you to control the die rolls you receive, 
   then do 'java -cp lanterna.jar:. TerminalClass dieRollManipulate' in the terminal instead. 
+OR
+- Type in the terminal './run.sh'
+- To get the dieRollManipulate mode, type './dieRoll.sh'
 
 - Press Space to roll the dice.
     -If in dieRollManipulate mode, you have to Press Tab immediately after this to increment the number 
@@ -86,6 +89,7 @@ SOLVED BUG3, but found a new bug where moving a plane doesn't subtract from prev
 1/17, Michael: changing the state of the plane after it reaches the end
 1/19, Michael: basically finished end tiles, just have to change the issue when selecting a finished plane
 1/19, Victor: ^ fixed that issue so user cannot select a fixed plane
+1/20, Michael: fixed the text in the start screen and leaderboard screen
 
 
 ------------------------------------------------------------------------------------------------
