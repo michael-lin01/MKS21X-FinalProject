@@ -14,7 +14,7 @@ OR
 
 - Press Space to roll the dice.
     -If in dieRollManipulate mode, you have to Press Tab immediately after this to increment the number 
-     of the die roll (goes from 1 to 6).
+     of the die roll (goes from 1 to # of max die roll selected at main menu. This max die roll is defaulted to 6).
     -Then press Space again to finalize that die roll. You will then be allowed to swap between planes allowed by that die roll.
     -If not in dieRollManipulate, Tab will not increment die rolls.
 - Press Tab to swap between the planes you are allowed to select that turn. Press Space to select that plane to move.
@@ -119,11 +119,5 @@ unicode characters for plane?
 add map to display how shortcuts interacting with destroying planes
 add animating for planes climbing the ladder rungs when doing long haul shortcuts
 
-CONTROLS: =======================================================
-hit Space to interact (and to roll a die)
-hit Tab to tab between planes to select
-hit E while in editorMode (except for Tab or Enter) to exit editorMode
-
 DEV NOTES: =========================================================
-editorMode added (but its real crappy)
 so i added dieRollManipulate mode instead so you play through game normally but only change is u can control which die roll you get by pressing backspace. java -cp lanterna.jar;. TerminalClass.java dieRollManipulate

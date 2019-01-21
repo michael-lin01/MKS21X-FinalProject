@@ -643,7 +643,7 @@ public class TerminalClass {
               terminal.applyBackgroundColor(Terminal.Color.DEFAULT);
               putString(23, 15, terminal, "Max Die Roll Possible: "+numDieSides);
               putString(5, 26, terminal, "Press Up Arrow Key to increase the max die roll. Limit is 12");
-              putString(5, 27, terminal, "Press Down Arrow Keyto decrease the max die roll. Limit is 6");
+              putString(5, 27, terminal, "Press Down Arrow Key to decrease the max die roll. Limit is 6");
             }
             else if (currentString.equals("Exit Settings")){
               terminal.clearScreen();
