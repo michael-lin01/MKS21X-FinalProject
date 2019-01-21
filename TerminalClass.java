@@ -512,7 +512,7 @@ public class TerminalClass {
 
   public static void main(String[] args) {
     
-    Terminal terminal = TerminalFacade.createTextTerminal();//TextTerminal();
+    Terminal terminal = TerminalFacade.createTextTerminal();
     terminal.enterPrivateMode();
     
     terminal.setCursorVisible(false);
@@ -592,7 +592,7 @@ public class TerminalClass {
       terminal.applyBackgroundColor(Terminal.Color.DEFAULT);
       putString(17,23,terminal,"Navigate around the options with Tab.");
       putString(19,25,terminal,"Press Enter to select the option.");
-      putString(0,33,terminal,"Please see the README.md for instructions and how to play this game.");
+      putString(0,33,terminal,"Please see the README.md for instructions and how to play this game");
       putString(30,18,terminal,"Settings");
       boolean isOnSettings = false;
       while (running){
@@ -654,7 +654,7 @@ public class TerminalClass {
               terminal.applyBackgroundColor(Terminal.Color.DEFAULT);
               putString(17,23,terminal,"Navigate around the options with Tab.");
               putString(19,25,terminal,"Press Enter to select the option.");
-              putString(0,33,terminal,"Please see the README.md for instructions and how to play this game.");
+              putString(0,33,terminal,"Please see the README.md for instructions and how to play this game");
               putString(30,18,terminal,"Settings");
               isOnSettings = false;
             }
@@ -716,6 +716,11 @@ public class TerminalClass {
         }
         //INSERT CODE FOR WINNING THE GAME
         boolean isEndScreen = true;
+        putString(29,7,terminal,"Leaderboard");
+        putString(29,12,terminal,"1. "+leaderboard.get(0));
+        putString(29,14,terminal,"2. "+leaderboard.get(1));
+        putString(29,16,terminal,"3. "+leaderboard.get(2));
+        putString(29,18,terminal,"4. "+lastPlace);
         while (isEndScreen){
           key = terminal.readInput();
           if (key != null){
