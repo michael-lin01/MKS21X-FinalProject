@@ -10,7 +10,7 @@ To begin the game...
 OR
 
 - Type in the terminal './run.sh'
-- To get the dieRollManipulate mode, type './dieRoll.sh' <br />
+- To get the dieRollManipulate mode, type './dieRoll.sh'
 
 - Press Space to roll the dice.
     -If in dieRollManipulate mode, you have to Press Tab immediately after this to increment the number 
@@ -121,3 +121,4 @@ add animating for planes climbing the ladder rungs when doing long haul shortcut
 
 DEV NOTES: =========================================================
 so i added dieRollManipulate mode instead so you play through game normally but only change is u can control which die roll you get by pressing backspace. java -cp lanterna.jar;. TerminalClass.java dieRollManipulate
+when in dieRollManipulate mode, you can press 'f' to have all the planes finish to test the leaderboard at the end
