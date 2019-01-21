@@ -512,7 +512,7 @@ public class TerminalClass {
 
   public static void main(String[] args) {
     
-    Terminal terminal = TerminalFacade.createTextTerminal();
+    Terminal terminal = TerminalFacade.createTerminal();
     terminal.enterPrivateMode();
     
     terminal.setCursorVisible(false);
@@ -529,6 +529,7 @@ public class TerminalClass {
     
     char[][] board = new char[31][67]; //size of board
     int numDieSides = 6; //default # of sides for our die
+    int numPlayers = 4; //number of players the game will play with
     int x = 0; //default cursor position at (x,y)
     int y = 0;
     ArrayList<String> leaderboard = new ArrayList<String>();
@@ -583,114 +584,146 @@ public class TerminalClass {
     planes.add(yellow3);
     planes.add(yellow4);
     
-    
-    if (args.length < 1){
-      putString(18,8,terminal, "    Welcome to Aeroplane Chess!   ");
-      terminal.applyBackgroundColor(Terminal.Color.MAGENTA);
-      String currentString = "Begin Game";
-      putString(29,15,terminal,currentString);
-      terminal.applyBackgroundColor(Terminal.Color.DEFAULT);
-      putString(17,23,terminal,"Navigate around the options with Tab.");
-      putString(19,25,terminal,"Press Enter to select the option.");
-      putString(0,33,terminal,"Please see the README.md for instructions and how to play this game");
-      putString(30,18,terminal,"Settings");
-      boolean isOnSettings = false;
-      while (running){
-        key = terminal.readInput();
-        if (key != null){
-          if (key.getKind() == Key.Kind.Tab){
-            if (currentString.equals("Begin Game")){
-              putString(29,15, terminal, "Begin Game");
-              currentString = "Settings";
-              terminal.applyBackgroundColor(Terminal.Color.MAGENTA);
-              putString(30,18,terminal,"Settings");
-            } 
-            else if (currentString.equals("Settings")){
-              putString(30,18, terminal, currentString);
-              terminal.applyBackgroundColor(Terminal.Color.MAGENTA);
-              currentString = "Begin Game";
-              putString(29,15,terminal,"Begin Game");
-            } 
+    //main meny stuff -------------------------------
+    putString(18,8,terminal, "    Welcome to Aeroplane Chess!   ");
+    terminal.applyBackgroundColor(Terminal.Color.MAGENTA);
+    String currentString = "Begin Game";
+    putString(29,15,terminal,currentString);
+    terminal.applyBackgroundColor(Terminal.Color.DEFAULT);
+    putString(17,23,terminal,"Navigate around the options with Tab.");
+    putString(19,25,terminal,"Press Enter to select the option.");
+    putString(0,33,terminal,"Please see the README.md for instructions and how to play this game");
+    putString(30,18,terminal,"Settings");
+    boolean isOnSettings = false;
+    while (running){
+      key = terminal.readInput();
+      if (key != null){
+        if (key.getKind() == Key.Kind.Tab){
+          if (currentString.equals("Begin Game")){
+            putString(29,15, terminal, "Begin Game");
+            currentString = "Settings";
+            terminal.applyBackgroundColor(Terminal.Color.MAGENTA);
+            putString(30,18,terminal,"Settings");
+          } 
+          else if (currentString.equals("Settings")){
+            putString(30,18, terminal, currentString);
+            terminal.applyBackgroundColor(Terminal.Color.MAGENTA);
+            currentString = "Begin Game";
+            putString(29,15,terminal,"Begin Game");
+          } 
             
-            //these are for the settings menu
-            else if (currentString.equals("Exit Settings")){
-              putString(27,20,terminal,"Exit Settings");
-              terminal.applyBackgroundColor(Terminal.Color.MAGENTA);
-              currentString = "Max Die Roll Possible: ";
-              putString(23,15,terminal,"Max Die Roll Possible: "+numDieSides);
-            }
-            else if (currentString.equals("Max Die Roll Possible: ")){
-              putString(23,15,terminal,"Max Die Roll Possible: " + numDieSides);
-              terminal.applyBackgroundColor(Terminal.Color.MAGENTA);
-              currentString = "Exit Settings";
-              putString(27,20,terminal,"Exit Settings");
-            }
+          //these are for the settings menu
+          else if (currentString.equals("Exit Settings")){
+            putString(27,20,terminal,"Exit Settings");
+            terminal.applyBackgroundColor(Terminal.Color.MAGENTA);
+            currentString = "Max Die Roll Possible: ";
+            putString(23,15,terminal,"Max Die Roll Possible: "+numDieSides);
+          }
+          else if (currentString.equals("Max Die Roll Possible: ")){
+            putString(23,15,terminal,"Max Die Roll Possible: " + numDieSides);
+            terminal.applyBackgroundColor(Terminal.Color.MAGENTA);
+            currentString = "Number of Players: ";
+            putString(24, 17, terminal, "Number of Players: " + numPlayers);
+          } else if (currentString.equals("Number of Players: ")){
+            putString(24, 17, terminal, "Number of Players: " + numPlayers);
+            terminal.applyBackgroundColor(Terminal.Color.MAGENTA);
+            currentString = "Exit Settings";
+            putString(27,20,terminal,"Exit Settings");
+          }
+          terminal.applyBackgroundColor(Terminal.Color.DEFAULT);
+        }
+
+        if (key.getKind() == Key.Kind.Enter){
+          if (currentString.equals("Begin Game")){
+            running = false;
+            terminal.clearScreen();
+          }
+          else if (currentString.equals("Settings")){
+            terminal.clearScreen();
+            putString(30, 10, terminal, "Settings");
+            isOnSettings = true;
+            currentString = "Exit Settings";
+            terminal.applyBackgroundColor(Terminal.Color.MAGENTA);
+            putString(27, 20, terminal, "Exit Settings");
             terminal.applyBackgroundColor(Terminal.Color.DEFAULT);
+            putString(23, 15, terminal, "Max Die Roll Possible: "+numDieSides);
+            putString(24, 17, terminal, "Number of Players: "+numPlayers);
+            putString(5, 26, terminal, "Press Up Arrow Key to increase a quantity.");
+            putString(5, 27, terminal, "Press Down Arrow Key to decrease a quantity.");
           }
-
-          if (key.getKind() == Key.Kind.Enter){
-            if (currentString.equals("Begin Game")){
-              running = false;
-              terminal.clearScreen();
-            }
-            else if (currentString.equals("Settings")){
-              terminal.clearScreen();
-              putString(30, 10, terminal, "Settings");
-              isOnSettings = true;
-              currentString = "Exit Settings";
-              terminal.applyBackgroundColor(Terminal.Color.MAGENTA);
-              putString(27, 20, terminal, "Exit Settings");
-              terminal.applyBackgroundColor(Terminal.Color.DEFAULT);
-              putString(23, 15, terminal, "Max Die Roll Possible: "+numDieSides);
-              putString(5, 26, terminal, "Press Up Arrow Key to increase the max die roll. Limit is 12");
-              putString(5, 27, terminal, "Press Down Arrow Key to decrease the max die roll. Limit is 6");
-            }
-            else if (currentString.equals("Exit Settings")){
-              terminal.clearScreen();
-              putString(18,8,terminal, "    Welcome to Aeroplane Chess!   ");
-              terminal.applyBackgroundColor(Terminal.Color.MAGENTA);
-              currentString = "Begin Game";
-              putString(29,15,terminal,currentString);
-              terminal.applyBackgroundColor(Terminal.Color.DEFAULT);
-              putString(17,23,terminal,"Navigate around the options with Tab.");
-              putString(19,25,terminal,"Press Enter to select the option.");
-              putString(0,33,terminal,"Please see the README.md for instructions and how to play this game");
-              putString(30,18,terminal,"Settings");
-              isOnSettings = false;
-            }
+          else if (currentString.equals("Exit Settings")){
+            terminal.clearScreen();
+            putString(18,8,terminal, "    Welcome to Aeroplane Chess!   ");
+            terminal.applyBackgroundColor(Terminal.Color.MAGENTA);
+            currentString = "Begin Game";
+            putString(29,15,terminal,currentString);
+            terminal.applyBackgroundColor(Terminal.Color.DEFAULT);
+            putString(17,23,terminal,"Navigate around the options with Tab.");
+            putString(19,25,terminal,"Press Enter to select the option.");
+            putString(0,33,terminal,"Please see the README.md for instructions and how to play this game");
+            putString(30,18,terminal,"Settings");
+            isOnSettings = false;
           }
+        }
 
-          if (key.getKind() == Key.Kind.ArrowUp && currentString.equals("Max Die Roll Possible: ")){
+        if (key.getKind() == Key.Kind.ArrowUp){
+          if (currentString.equals("Max Die Roll Possible: ")){
             if (numDieSides < 12){
               numDieSides++;
               putString(23+23,15,terminal,""+numDieSides);
             }
+          } else if (currentString.equals("Number of Players: ")){
+            if (numPlayers < 4){
+              numPlayers++;
+              putString(24+19, 17, terminal, ""+numPlayers);
+            }
           }
+        }
 
-          if (key.getKind() == Key.Kind.ArrowDown && currentString.equals("Max Die Roll Possible: ")){
+        if (key.getKind() == Key.Kind.ArrowDown){
+          if (currentString.equals("Max Die Roll Possible: ")){
             if (numDieSides > 6){
               numDieSides--;
               putString(23+23,15,terminal,""+numDieSides+" ");
             }
+          } else if (currentString.equals("Number of Players: ")){
+            if (numPlayers > 2){
+              numPlayers--;
+              putString(24+19, 17, terminal, ""+numPlayers);
+            }
           }
-
-          if (key.getKind() == Key.Kind.Escape){
-            
-            terminal.exitPrivateMode();
-            System.exit(0);
-          }
-
         }
+
+        if (key.getKind() == Key.Kind.Escape){
+            
+          terminal.exitPrivateMode();
+          System.exit(0);
+        }
+
       }
-    }
+    } //end of main menu stuff -----------------------------
     
     //only happens after you got out of main menu
     putFileIntoTerminal("AeroplaneChessBoard.txt",board,terminal);
     mapTiles();
     colorTiles();
+    instantiatePlaneLocations(terminal, planes, board);
+    //decides number of players on board -------------
+    //non players are considered as "finished", so therefore the leaderboard if cases do not need to be modified based on numPlayers
+    if (numPlayers < 4){
+      finish(terminal, red1, board);
+      finish(terminal, red2, board);
+      finish(terminal, red3, board);
+      finish(terminal, red4, board);
+    }
+    if (numPlayers < 3){
+      finish(terminal, green1, board);
+      finish(terminal, green2, board);
+      finish(terminal, green3, board);
+      finish(terminal, green4, board);
+    } //end of deciding # of players on board -----------------------
     Tile planeStart = redStart;
     Tile launchingTile = redLaunchingTile; //default
-    instantiatePlaneLocations(terminal, planes, board); //could remove this as cleanup code?
     putString(0,32,terminal,"red's Turn!");
     running = true;
     
@@ -699,7 +732,7 @@ public class TerminalClass {
       diffMillis = endMillis - startMillis;
       key = terminal.readInput();
 
-      if (leaderboard.size() >= 3){
+      if (leaderboard.size() == 3){
         terminal.clearScreen();
         String lastPlace = "";
         if (!leaderboard.contains("red")){
@@ -717,10 +750,17 @@ public class TerminalClass {
         //INSERT CODE FOR WINNING THE GAME
         boolean isEndScreen = true;
         putString(29,7,terminal,"Leaderboard");
-        putString(29,12,terminal,"1. "+leaderboard.get(0));
-        putString(29,14,terminal,"2. "+leaderboard.get(1));
-        putString(29,16,terminal,"3. "+leaderboard.get(2));
-        putString(29,18,terminal,"4. "+lastPlace);
+        y = 12;
+        int nonPlayers = 4 - numPlayers;
+        int i = nonPlayers;
+        for (; i < leaderboard.size() + 1; i++){ //leaderboard size is always 3
+          if (i != leaderboard.size()){ //if n == 3
+            putString(29,y,terminal,""+ (i+1-nonPlayers) +". "+leaderboard.get(i));
+          } else {
+            putString(29,y,terminal,""+ (i+1-nonPlayers) + ". "+ lastPlace);
+          }
+          y+=2;
+        }
         while (isEndScreen){
           key = terminal.readInput();
           if (key != null){
@@ -731,7 +771,7 @@ public class TerminalClass {
           }
         }
       }
-      //swaps planeturns if that player has won
+      //swaps planeturns if that player has won and leaderboard size isn't 3
       else if (plane1.isFinished() && plane2.isFinished() && plane3.isFinished() && plane4.isFinished()){
         if (!leaderboard.contains(planeTurn)){
           leaderboard.add(planeTurn);
@@ -788,14 +828,16 @@ public class TerminalClass {
         //for debugging purposes only
         if (args.length>0&&args[0].equals("dieRollManipulate")){
           if (key.getCharacter() == 'f'){
-            for (int n = 0; n < planes.size() - 4; n++){
-              finish(terminal, planes.get(n), board);
+            for (int n = 0; n < planes.size(); n++){
+              if (!planes.get(n).isFinished()){
+                finish(terminal, planes.get(n), board);
+              }
             }
           }
         }
       
         
-        if (key.getCharacter() == ' '){ //this rolls a die
+        if (key.getKind() == Key.Kind.Enter){ //this rolls a die
           //if the player is unfortunate enough to roll an odd number when none of their planes are on board yet...
           int dieRoll = 1;//just to initialize dieRoll
           if (args.length > 0){
@@ -805,16 +847,17 @@ public class TerminalClass {
               while (dieMode){
                 key = terminal.readInput();
                 if (key != null){
-                  //System.out.println("In deciding dice roll mode. Press Tab to increment numbers on dieRoll. Press spacebar to move the plane");
+                  //System.out.println("In deciding dice roll mode. Press Tab to increment numbers on dieRoll. Press Enter to move the plane");
                   if (key.getKind() == Key.Kind.Tab){
                     if (dieRoll == numDieSides){
-                      dieRoll = 1;
+                      //dieRoll = 1;
+                      dieRoll++;
                     } else {
                       dieRoll++;
                     }
                     putString(20,32,terminal,"Roll: "+dieRoll);
                   }
-                  if (key.getCharacter() == ' '){
+                  if (key.getKind() == Key.Kind.Enter){
                     dieMode = false;
                   }
                   if (key.getKind() == Key.Kind.Escape) {
@@ -932,7 +975,7 @@ public class TerminalClass {
                 System.exit(0);
               }
               
-              if (key.getCharacter() == ' '){ //once we have selected a plane
+              if (key.getKind() == Key.Kind.Enter){ //once we have selected a plane
                 //happens regardless of dieRollManipulate
                 if (cursorPlane.getTileReference().getNumPlanes() < 2){ //if leaving froma tile with only 1 plane
                   erasePlaneLocation(terminal, cursorPlane, board);

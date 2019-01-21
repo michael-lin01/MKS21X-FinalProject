@@ -12,21 +12,22 @@ OR
 - Type in the terminal './run.sh'
 - To get the dieRollManipulate mode, type './dieRoll.sh'
 
-- Press Space to roll the dice.
+- Press Enter to roll the dice.
     -If in dieRollManipulate mode, you have to Press Tab immediately after this to increment the number 
      of the die roll (goes from 1 to # of max die roll selected at main menu. This max die roll is defaulted to 6).
-    -Then press Space again to finalize that die roll. You will then be allowed to swap between planes allowed by that die roll.
+    -Then press Enter again to finalize that die roll. You will then be allowed to swap between planes allowed by that die roll.
     -If not in dieRollManipulate, Tab will not increment die rolls.
-- Press Tab to swap between the planes you are allowed to select that turn. Press Space to select that plane to move.
-- Press Space again to roll the dice.
+- Press Tab to swap between the planes you are allowed to select that turn. Press Enter to select that plane to move.
+- Press Enter again to roll the dice.
 - Press Escape to exit the game (WARNING: Games cannot be saved).
+- If in dieRollManipulate mode, you can press lowercase f to make all the planes finished to skip right to the win screen.
 
 PLEASE.
 DO.
 NOT.
 BUTTON.
 MASH.
-It doesn't break the game, but the game takes button mashing the spacebar as a valid input even though it shouldn't.
+It doesn't break the game, but the game takes button mashing the Enter key as a valid input even though it shouldn't.
 
 GAME DESCRIPTION ==============================================================
 
@@ -97,7 +98,8 @@ SOLVED BUG3, but found a new bug where moving a plane doesn't subtract from prev
 ------------------------------------------------------------------------------------------------
 
 BUGS TO FIX: ====================================
-
+change dieRoll in dierollmanipulate back to normal
+theres a problem with ending the game lol (both with 4 players and with 2 players)
 TO DO: ==========================================
 do not update tilenumber when reaching the center tile, debug by testing blue or green
 + when 3 players done, end the game automatically by clearing screen
@@ -120,5 +122,5 @@ add map to display how shortcuts interacting with destroying planes
 add animating for planes climbing the ladder rungs when doing long haul shortcuts
 
 DEV NOTES: =========================================================
-so i added dieRollManipulate mode instead so you play through game normally but only change is u can control which die roll you get by pressing backspace. java -cp lanterna.jar;. TerminalClass.java dieRollManipulate
+so i added dieRollManipulate mode instead so you play through game normally but only change is u can control which die roll you get by pressing Tab. java -cp lanterna.jar;. TerminalClass.java dieRollManipulate
 when in dieRollManipulate mode, you can press 'f' to have all the planes finish to test the leaderboard at the end
