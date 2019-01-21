@@ -101,25 +101,12 @@ BUGS TO FIX: ====================================
 change dieRoll in dierollmanipulate back to normal
 theres a problem with ending the game lol (both with 4 players and with 2 players)
 TO DO: ==========================================
-do not update tilenumber when reaching the center tile, debug by testing blue or green
 + when 3 players done, end the game automatically by clearing screen
 fix dieRollManipulate so that u cant go to 900 die rolls lmao
 update game description
-update instructions for using run.sh and stuff
-select # of players u want on the main menu (no AI feature)
-endTiles and ending game (when all four planes of one color enter back terminal... idea of using brown color (implemented using RGB technique)
-to indicate what planes are @ home after reaching end... then have a victory message that says who won ... maybe even allow a 2nd and 3rd and 4th place system)
 createTextTerminal instead of createTerminal
-nicerNumberTiles
-when three 6's are rolled in a roll, retract every step?? kinda complicated tho cuz u need a memory storer...
-Settings & Pausing
 Menu so its not boring
-fixing plane attacks (outlined below)
 cleanup code (like we can have launchingTiles be part of the text map)
-remove the T's and g's and G's etc
-unicode characters for plane?
-add map to display how shortcuts interacting with destroying planes
-add animating for planes climbing the ladder rungs when doing long haul shortcuts
 
 DEV NOTES: =========================================================
 so i added dieRollManipulate mode instead so you play through game normally but only change is u can control which die roll you get by pressing Tab. java -cp lanterna.jar;. TerminalClass.java dieRollManipulate

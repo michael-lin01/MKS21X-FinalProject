@@ -709,7 +709,7 @@ public class TerminalClass {
     colorTiles();
     instantiatePlaneLocations(terminal, planes, board);
     //decides number of players on board -------------
-    //non players are considered as "finished", so therefore the leaderboard if cases do not need to be modified based on numPlayers
+    //non players are considered as "finished", so therefore the leaderboard size if case does not need to be modified based on numPlayers
     if (numPlayers < 4){
       finish(terminal, red1, board);
       finish(terminal, red2, board);
@@ -732,47 +732,8 @@ public class TerminalClass {
       diffMillis = endMillis - startMillis;
       key = terminal.readInput();
 
-      if (leaderboard.size() == 3){
-        terminal.clearScreen();
-        String lastPlace = "";
-        if (!leaderboard.contains("red")){
-          lastPlace = "red";
-        }
-        if (!leaderboard.contains("green")){
-          lastPlace = "green";
-        }
-        if (!leaderboard.contains("blue")){
-          lastPlace = "blue";
-        }
-        if (!leaderboard.contains("yellow")){
-          lastPlace = "yellow";
-        }
-        //INSERT CODE FOR WINNING THE GAME
-        boolean isEndScreen = true;
-        putString(29,7,terminal,"Leaderboard");
-        y = 12;
-        int nonPlayers = 4 - numPlayers;
-        int i = nonPlayers;
-        for (; i < leaderboard.size() + 1; i++){ //leaderboard size is always 3
-          if (i != leaderboard.size()){ //if n == 3
-            putString(29,y,terminal,""+ (i+1-nonPlayers) +". "+leaderboard.get(i));
-          } else {
-            putString(29,y,terminal,""+ (i+1-nonPlayers) + ". "+ lastPlace);
-          }
-          y+=2;
-        }
-        while (isEndScreen){
-          key = terminal.readInput();
-          if (key != null){
-            if (key.getKind() == Key.Kind.Escape){
-              terminal.exitPrivateMode();
-              System.exit(0);
-            }
-          }
-        }
-      }
-      //swaps planeturns if that player has won and leaderboard size isn't 3
-      else if (plane1.isFinished() && plane2.isFinished() && plane3.isFinished() && plane4.isFinished()){
+      //swaps planeturns if that player has won
+      if (plane1.isFinished() && plane2.isFinished() && plane3.isFinished() && plane4.isFinished()){
         if (!leaderboard.contains(planeTurn)){
           leaderboard.add(planeTurn);
         }
@@ -815,6 +776,45 @@ public class TerminalClass {
         otherPlanes.remove(plane1); otherPlanes.remove(plane2); otherPlanes.remove(plane3); otherPlanes.remove(plane4);
         putString(0,32,terminal,"                                  ");
         putString(0,32,terminal,planeTurn + "'s Turn!");
+      }
+      //if all players except one has finished
+      if (leaderboard.size() == 3){
+        terminal.clearScreen();
+        String lastPlace = "";
+        if (!leaderboard.contains("red")){
+          lastPlace = "red";
+        }
+        if (!leaderboard.contains("green")){
+          lastPlace = "green";
+        }
+        if (!leaderboard.contains("blue")){
+          lastPlace = "blue";
+        }
+        if (!leaderboard.contains("yellow")){
+          lastPlace = "yellow";
+        }
+        boolean isEndScreen = true;
+        putString(29,7,terminal,"Leaderboard");
+        y = 12;
+        int nonPlayers = 4 - numPlayers;
+        int i = nonPlayers;
+        for (; i < leaderboard.size() + 1; i++){ //leaderboard size is always 3
+          if (i != leaderboard.size()){ //if n == 3
+            putString(29,y,terminal,""+ (i+1-nonPlayers) +". "+leaderboard.get(i));
+          } else {
+            putString(29,y,terminal,""+ (i+1-nonPlayers) + ". "+ lastPlace);
+          }
+          y+=2;
+        }
+        while (isEndScreen){
+          key = terminal.readInput();
+          if (key != null){
+            if (key.getKind() == Key.Kind.Escape){
+              terminal.exitPrivateMode();
+              System.exit(0);
+            }
+          }
+        }
       }
       
       if (key != null)
@@ -1003,6 +1003,11 @@ public class TerminalClass {
                       finish(terminal, cursorPlane, board);
                       n = dieRoll + 1; //ends the movement
                       //returns plane to hangar as "finished"
+                      if (plane1.isFinished() && plane2.isFinished() && plane3.isFinished() && plane4.isFinished()){
+                        if (!leaderboard.contains(planeTurn)){
+                          leaderboard.add(planeTurn);
+                        }
+                      }
                     }
                     else {
                       terminal.applyBackgroundColor(Terminal.Color.DEFAULT); //just to remove the highlights
