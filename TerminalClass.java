@@ -786,11 +786,14 @@ public class TerminalClass {
         }
 
         //for debugging purposes only
-        if (key.getCharacter() == 'f'){
-          for (int n = 0; n < planes.size() - 4; n++){
-            finish(terminal, planes.get(n), board);
+        if (args.length>0&&args[0].equals("dieRollManipulate")){
+          if (key.getCharacter() == 'f'){
+            for (int n = 0; n < planes.size() - 4; n++){
+              finish(terminal, planes.get(n), board);
+            }
           }
         }
+      
         
         if (key.getCharacter() == ' '){ //this rolls a die
           //if the player is unfortunate enough to roll an odd number when none of their planes are on board yet...
