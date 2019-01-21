@@ -10,9 +10,8 @@ To begin the game...
 OR
 
 - Type in the terminal './run.sh'
-- To get the dieRollManipulate mode, type './dieRoll.sh'
+- To get the dieRollManipulate mode, type './dieRoll.sh' <br />
 
- 
 - Press Space to roll the dice.
     -If in dieRollManipulate mode, you have to Press Tab immediately after this to increment the number 
      of the die roll (goes from 1 to 6).
