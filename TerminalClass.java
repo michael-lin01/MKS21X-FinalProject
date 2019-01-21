@@ -512,7 +512,7 @@ public class TerminalClass {
 
   public static void main(String[] args) {
     
-    Terminal terminal = TerminalFacade.createSwingTerminal(70,36);//TextTerminal();
+    Terminal terminal = TerminalFacade.createTextTerminal();//TextTerminal();
     terminal.enterPrivateMode();
     
     terminal.setCursorVisible(false);
@@ -585,45 +585,45 @@ public class TerminalClass {
     
     
     if (args.length < 1){
-      String planeSymbol = "\u1F6EA"; //🛪
-      putString(15,20,terminal, planeSymbol+"   Welcome to Aeroplane Chess!   " + planeSymbol);
+      putString(18,8,terminal, "    Welcome to Aeroplane Chess!   ");
       terminal.applyBackgroundColor(Terminal.Color.MAGENTA);
       String currentString = "Begin Game";
-      putString(5,23,terminal,currentString);
+      putString(29,15,terminal,currentString);
       terminal.applyBackgroundColor(Terminal.Color.DEFAULT);
-      putString(20,23,terminal,"Navegate around the options with Tab. Press Enter to select the option.");
-      putString(15,26,terminal,"Please see the README.md for instructions and how to play this game.");
-      putString(15,29,terminal,"Settings");
+      putString(17,23,terminal,"Navigate around the options with Tab.");
+      putString(19,25,terminal,"Press Enter to select the option.");
+      putString(0,33,terminal,"Please see the README.md for instructions and how to play this game.");
+      putString(30,18,terminal,"Settings");
       boolean isOnSettings = false;
       while (running){
         key = terminal.readInput();
         if (key != null){
           if (key.getKind() == Key.Kind.Tab){
             if (currentString.equals("Begin Game")){
-              putString(5,23, terminal, "Begin Game");
+              putString(29,15, terminal, "Begin Game");
               currentString = "Settings";
               terminal.applyBackgroundColor(Terminal.Color.MAGENTA);
-              putString(15,29,terminal,"Settings");
+              putString(30,18,terminal,"Settings");
             } 
             else if (currentString.equals("Settings")){
-              putString(15,29, terminal, currentString);
+              putString(30,18, terminal, currentString);
               terminal.applyBackgroundColor(Terminal.Color.MAGENTA);
               currentString = "Begin Game";
-              putString(5,23,terminal,"Begin Game");
+              putString(29,15,terminal,"Begin Game");
             } 
             
             //these are for the settings menu
             else if (currentString.equals("Exit Settings")){
-              putString(15,21,terminal,"Exit Settings");
+              putString(27,20,terminal,"Exit Settings");
               terminal.applyBackgroundColor(Terminal.Color.MAGENTA);
               currentString = "Max Die Roll Possible: ";
-              putString(15,23,terminal,"Max Die Roll Possible: "+numDieSides);
+              putString(23,15,terminal,"Max Die Roll Possible: "+numDieSides);
             }
             else if (currentString.equals("Max Die Roll Possible: ")){
-              putString(15,23,terminal,"Max Die Roll Possible: " + numDieSides);
+              putString(23,15,terminal,"Max Die Roll Possible: " + numDieSides);
               terminal.applyBackgroundColor(Terminal.Color.MAGENTA);
               currentString = "Exit Settings";
-              putString(15,21,terminal,"Exit Settings");
+              putString(27,20,terminal,"Exit Settings");
             }
             terminal.applyBackgroundColor(Terminal.Color.DEFAULT);
           }
@@ -635,26 +635,27 @@ public class TerminalClass {
             }
             else if (currentString.equals("Settings")){
               terminal.clearScreen();
-              putString(15, 20, terminal, "Settings");
+              putString(30, 10, terminal, "Settings");
               isOnSettings = true;
               currentString = "Exit Settings";
               terminal.applyBackgroundColor(Terminal.Color.MAGENTA);
-              putString(15, 21, terminal, "Exit Settings");
+              putString(27, 20, terminal, "Exit Settings");
               terminal.applyBackgroundColor(Terminal.Color.DEFAULT);
-              putString(15, 23, terminal, "Max Die Roll Possible: "+numDieSides);
-              putString(15, 26, terminal, "Press Up Arrow Key when Tabbed on DieRoll Setting to increment the max die roll. Limit is 12");
-              putString(15, 27, terminal, "Press Down Arrow Key when Tabbed on dieRoll Setting to decrement the max die roll. Limit is 6");
+              putString(23, 15, terminal, "Max Die Roll Possible: "+numDieSides);
+              putString(5, 26, terminal, "Press Up Arrow Key to increase the max die roll. Limit is 12");
+              putString(5, 27, terminal, "Press Down Arrow Keyto decrease the max die roll. Limit is 6");
             }
             else if (currentString.equals("Exit Settings")){
               terminal.clearScreen();
-              putString(15,20,terminal, planeSymbol+"   Welcome to Aeroplane Chess!   " + planeSymbol);
+              putString(18,8,terminal, "    Welcome to Aeroplane Chess!   ");
               terminal.applyBackgroundColor(Terminal.Color.MAGENTA);
               currentString = "Begin Game";
-              putString(5,23,terminal,currentString);
+              putString(29,15,terminal,currentString);
               terminal.applyBackgroundColor(Terminal.Color.DEFAULT);
-              putString(20,23,terminal,"Navegate around the options with Tab. Press Enter to select the option.");
-              putString(15,26,terminal,"Please see the README.md for instructions and how to play this game.");
-              putString(15,29,terminal,"Settings");
+              putString(17,23,terminal,"Navigate around the options with Tab.");
+              putString(19,25,terminal,"Press Enter to select the option.");
+              putString(0,33,terminal,"Please see the README.md for instructions and how to play this game.");
+              putString(30,18,terminal,"Settings");
               isOnSettings = false;
             }
           }
@@ -662,14 +663,14 @@ public class TerminalClass {
           if (key.getKind() == Key.Kind.ArrowUp && currentString.equals("Max Die Roll Possible: ")){
             if (numDieSides < 12){
               numDieSides++;
-              putString(15+23,23,terminal,""+numDieSides);
+              putString(23+23,15,terminal,""+numDieSides);
             }
           }
 
           if (key.getKind() == Key.Kind.ArrowDown && currentString.equals("Max Die Roll Possible: ")){
             if (numDieSides > 6){
               numDieSides--;
-              putString(15+23,23,terminal,""+numDieSides+" ");
+              putString(23+23,15,terminal,""+numDieSides+" ");
             }
           }
 
